@@ -1,5 +1,9 @@
 # The Embedonomicon
 
+> How to bootstrap support for a no_std target
+
+This book is being temporarily hosted at https://rust-embedded.github.io/embedonomicon/
+
 ## License
 
 The Embedonomicon (this project) is distributed under the following licenses:
