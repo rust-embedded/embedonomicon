@@ -11,6 +11,6 @@ main() {
     git push -fq https://$GH_TOKEN@github.com/$TRAVIS_REPO_SLUG.git gh-pages && echo OK
 }
 
-if [ $TRAVIS_BRANCH = master && $TRAVIS_PULL_REQUEST=false ]; then
+if [ $TRAVIS_BRANCH = master ] && [ $TRAVIS_PULL_REQUEST = false ]; then
     main
 fi
