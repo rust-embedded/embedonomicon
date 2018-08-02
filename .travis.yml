@@ -7,6 +7,7 @@ script:
   - bash ci/script.sh
 
 after_success:
+  - set -e
   - bash ci/after-success.sh
 
 branches:

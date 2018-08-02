@@ -1,6 +1,7 @@
 set -euxo pipefail
 
 main() {
+    mkdir ghp-import
     curl -Ls https://github.com/davisp/ghp-import/archive/master.tar.gz |
         tar --strip-components 1 -C ghp-import -xz
 
