@@ -12,8 +12,8 @@ By reading this book you will learn
 
 - How to build a `#![no_std]` application. This is much more complex than building a `#![no_std]`
   library because the target system may not be running an OS (or you could be aiming to build an
-  OS!) and the program could be only process running in the target (or the first one), in which case
-  the program may need to be customized for the target system.
+  OS!) and the program could be the only process running in the target (or the first one). 
+  In that case, the program may need to be customized for the target system.
 
 - Tricks to finely control the memory layout of a Rust program. You'll learn about linkers, linker
   scripts and about the Rust features that let you control a bit of the ABI of Rust programs.
@@ -37,8 +37,8 @@ This book mainly targets to two audiences:
 
 ### Requirements
 
-This book is self contained. The reader doesn't need to be familiar with the Cortex-M architecture
-nor access to a Cortex-M microcontroller -- all the examples included in this book can be tested in
+This book is self contained. The reader doesn't need to be familiar with the Cortex-M architecture,
+nor is access to a Cortex-M microcontroller needed -- all the examples included in this book can be tested in
 QEMU. You will, however, need to install the following tools to run and inspect the examples in this
 book:
 
@@ -48,8 +48,7 @@ book:
 - [`cargo-edit`](https://crates.io/crates/cargo-edit). Install it with `cargo install cargo-edit`.
 
 - QEMU with support for ARM emulation. The `qemu-system-arm` program must be installed on your
-  computer.
+  computer. The name may differ for non-Debian based distributions.
 
 - LLDB. GDB with ARM support can also be used, but this book chooses LLDB as it's more likely that
-  readers that are not into Cortex-M development have LLDB installed than it's likely that they have
-  GDB with ARM support installed.
+  readers that are not into Cortex-M development have installed LLDB than GDB with ARM support.
