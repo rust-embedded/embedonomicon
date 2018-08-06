@@ -17,9 +17,9 @@ the rest of pointers are related to exceptions -- we'll ignore them for now.
 [vector table]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table
 
 Linkers decide the final memory layout of programs, but we can use [linker scripts] to have some
-control over the memory layout. The control granularity that linker scripts give us over the layout
+control over the it. The control granularity that linker scripts give us over the layout
 is at the level of *sections*. A section is a collection of *symbols* laid out in contiguous memory.
-A symbol can be a statically allocated variable, a `static` variable, or a set of instructions, a
+A symbol can be a statically allocated variable, a `static` variable, a set of instructions, or a
 monomorphized (non generic) Rust function.
 
 [linker scripts]: https://sourceware.org/binutils/docs/ld/Scripts.html
@@ -40,19 +40,20 @@ section placement via these attributes:
   `#[no_mangle] fn bar()` will produce a symbol named `bar`.
 - `#[link_section = ".bar"]` places the symbol in a section named `.bar`.
 
-With these attributes we can expose a stable ABI from the program and use it in the linker script.
+With these attributes, we can expose a stable ABI of the program and use it in the linker script.
 
 ## The Rust side
 
-We need to populate the first two entries of the vector table. The first one, the initial value for
-the stack pointer, can be populated using only the linker script. The second one, the reset vector,
-needs to be created in Rust code and placed in the right place using the linker script.
+Like mentioned before, for Cortex-M devices, we need to populate the first two entries of the
+vector table. The first one, the initial value for the stack pointer, can be populated using
+only the linker script. The second one, the reset vector, needs to be created in Rust code 
+and placed correctly using the linker script.
 
 The reset vector is a pointer into the reset handler. The reset handler is the function that the
 device will execute after a system reset, or after it powers up for the first time. The reset
 handler is always the first stack frame in the hardware call stack; returning from it is undefined
 behavior as there's no other stack frame to return to. We can enforce that the reset handler never
-returns by making it a divergent function, a function with signature `fn(/* .. */) -> !`.
+returns by making it a divergent function, which is a function with signature `fn(/* .. */) -> !`.
 
 ``` rust
 // The reset handler
@@ -70,16 +71,16 @@ pub unsafe extern "C" fn Reset() -> ! {
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
 ```
 
-We use `extern "C"` to tell the compiler to lower the function using the C ABI instead of the Rust
-ABI, which is unstable, as that's what the hardware expects.
+The hardware expects a certain format here, to which we adhere by using `extern "C"` to tell the
+compiler to lower the function using the C ABI, instead of the Rust ABI, which is unstable.
 
-To refer to the reset handler and reset vector from the linker script we need them to have a stable
-symbol name so we use `#[no_mangle]`. We need fine control over the location of `RESET_VECTOR` so we
-place it on a known section, `.vector_table.reset_vector`. The exact location of the reset handler
-itself, `Reset`, is not important so we just stick to the default compiler generated section.
+To refer to the reset handler and reset vector from the linker script, we need them to have a stable
+symbol name so we use `#[no_mangle]`. We need fine control over the location of `RESET_VECTOR`, so we
+place it in a known section, `.vector_table.reset_vector`. The exact location of the reset handler
+itself, `Reset`, is not important. We just stick to the default compiler generated section.
 
 Also, the linker will ignore symbols with internal linkage, AKA internal symbols, while traversing
-the list of input object files so we need our two symbols to have external linkage. The only way to
+the list of input object files, so we need our two symbols to have external linkage. The only way to
 make a symbol external in Rust is to make its corresponding item public (`pub`) and *reachable* (no
 private module between the item and the root of the crate).
 
@@ -137,35 +138,35 @@ in the target. The values used here correspond to the LM3S6965 microcontroller.
 
 Here we indicate to the linker that the reset handler -- whose symbol name is `Reset` -- is the
 *entry point* of the program. Linkers aggressively discard unused sections. Linkers consider the
-entry point and functions called from it as *used* so they won't discard them. Without this line the
-linker would discard the `Reset` function and all other functions called from it.
+entry point and functions called from it as *used* so they won't discard them. Without this line,
+the linker would discard the `Reset` function and all subsequent functions called from it.
 
 ### `EXTERN`
 
 Linkers are lazy; they will stop looking into the input object files once they have found all the
-symbols recursively referenced from the entry point. `EXTERN` forces the linker to look for its
-argument even after all other referenced symbol have been found. As a rule of thumb, if you need a
-symbol that's not called from the entry point to always be present in the output binary you should
-use `EXTERN` in conjunction with `KEEP`.
+symbols that are recursively referenced from the entry point. `EXTERN` forces the linker to look
+for `EXTERN`'s argument even after all other referenced symbols have been found. As a rule of thumb,
+if you need a symbol that's not called from the entry point to always be present in the output binary,
+you should use `EXTERN` in conjunction with `KEEP`.
 
 ### `SECTIONS`
 
 This part describes how sections in the input object files, AKA *input sections*, are to be arranged
-in the sections the output object file, AKA output sections; or if they should be discarded. Here we
-define two output sections:
+in the sections of the output object file, AKA output sections; or if they should be discarded. Here
+we define two output sections:
 
 ```
   .vector_table ORIGIN(FLASH) : { /* .. */ } > FLASH
 ```
 
-`.vector_table`, which contains the vector table and its located at the start of `FLASH` memory;
+`.vector_table`, which contains the vector table and is located at the start of `FLASH` memory,
 
 ```
   .text : { /* .. */ } > FLASH
 ```
 
-and `.text`, which contains the program subroutines and its located somewhere in `FLASH`. Its start
-address is not specified but the linker will place after the previous output section,
+and `.text`, which contains the program subroutines and is located somewhere in `FLASH`. Its start
+address is not specified, but the linker will place it after the previous output section,
 `.vector_table`.
 
 The output `.vector_table` section contains:
@@ -187,7 +188,7 @@ memory block.
 
 Next, we use `KEEP` to force the linker to insert all input sections named
 `.vector_table.reset_vector` right after the initial SP value. The only symbol located in that
-section is `RESET_VECTOR` so this will effectively place `RESET_VECTOR` second in the vector table.
+section is `RESET_VECTOR`, so this will effectively place `RESET_VECTOR` second in the vector table.
 
 The output `.text` section contains:
 
@@ -195,17 +196,17 @@ The output `.text` section contains:
     *(.text .text.*);
 ```
 
-All the input sections named `.text` and `.text.*`. Note that we don't use `KEEP` here to let the
-linker discard the unused sections.
+This includes all the input sections named `.text` and `.text.*`. Note that we don't use `KEEP`
+here to let the linker discard unused sections.
 
-Finally, we use the special `/DISCARD/` section to discard:
+Finally, we use the special `/DISCARD/` section to discard
 
 ```
     *(.ARM.exidx.*);
 ```
 
 input sections named `.ARM.exidx.*`. These sections are related to exception handling but we are not
-doing stack unwinding on panics and they take up space in Flash memory so we just discard them.
+doing stack unwinding on panics and they take up space in Flash memory, so we just discard them.
 
 ## Putting it all together
 
@@ -221,10 +222,13 @@ use core::panic::PanicInfo;
 // The reset handler
 #[no_mangle]
 pub unsafe extern "C" fn Reset() -> ! {
+    let x = 42;
+    
+    // can't return so we go into an infinite loop here
     loop {}
 }
 
-// The reset vector.
+// The reset vector, a pointer into the reset handler
 #[link_section = ".vector_table.reset_vector"]
 #[no_mangle]
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
@@ -236,7 +240,7 @@ fn panic(_panic: &PanicInfo) -> ! {
 }
 ```
 
-We'll use the LLVM linker, LLD, shipped with the Rust toolchain. That way you won't need to install
+We'll use the LLVM linker, LLD, shipped with the Rust toolchain. That way, you won't need to install
 the `arm-none-eabi-gcc` linker that the `thumbv7m-none-eabi` target uses by default. Changing the
 linker is done via rustc flags; the full Cargo invocation to change the linker and pass the linker
 script to the linker is shown below:
