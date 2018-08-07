@@ -1,7 +1,7 @@
 # A `main` interface
 
-We have a minimal working program but we need to package it in such a way that end user can build
-safe programs on top of it. In this section we'll implement a `main` interface like the one standard
+We have a minimal working program now, but we need to package it in a way that the end user can build
+safe programs on top of it. In this section, we'll implement a `main` interface like the one standard
 Rust programs use.
 
 First, we'll convert our binary crate into a library crate:
@@ -10,7 +10,7 @@ First, we'll convert our binary crate into a library crate:
 $ mv src/main.rs src/lib.rs
 ```
 
-And rename it to `rt` which stands for "runtime".
+And then rename it to `rt` which stands for "runtime".
 
 ``` console
 $ sed -i s/app/rt/ Cargo.toml
@@ -37,11 +37,11 @@ pub unsafe extern "C" fn Reset() -> ! {
 
 We also drop the `#![no_main]` attribute has it has no effect on library crates.
 
-> There's an orthogonal question that arises at this stage: should the `rt` library provide a
+> There's an orthogonal question that arises at this stage: Should the `rt` library provide a
 > standard panicking behavior, or should it *not* provide a `#[panic_implementation]` function and
 > leave the end user choose the panicking behavior? This document won't delve into that question and
-> for simplicity will leave the dummy `#[panic_implementation]` function in the `rt` crate, but we
-> wanted to inform the reader that there are other options.
+> for simplicity will leave the dummy `#[panic_implementation]` function in the `rt` crate.
+> However, we wanted to inform the reader that there are other options.
 
 The second change involves providing the linker script we wrote before to the application crate. You
 see the linker will search for linker scripts in the library search path (`-L`) and in the directory
@@ -134,12 +134,12 @@ Reset:
 
 ## Making it type safe
 
-The `main` interface works but it's easy to get it wrong: for example, the user could write `main`
+The `main` interface works, but it's easy to get it wrong: For example, the user could write `main`
 as a non-divergent function, and they would get no compile time error and undefined behavior (the
 compiler will misoptimize the program).
 
 We can add type safety by exposing a macro to the user instead of the symbol interface. In the
-`rt` crate we can write this macro:
+`rt` crate, we can write this macro:
 
 ``` rust
 #[macro_export]
@@ -231,9 +231,9 @@ fn main() -> ! {
 }
 ```
 
-However if you run this program on real hardware and debug it you'll observe that the `static`
-variables `BSS` and `DATA` don't have the values `0` and `1` by the time `main` have been reached.
-Instead these variables will have junk values; the problem is that the contents of RAM are
+However if you run this program on real hardware and debug it, you'll observe that the `static`
+variables `BSS` and `DATA` don't have the values `0` and `1` by the time `main` has been reached.
+Instead, these variables will have junk values. The problem is that the contents of RAM are
 random after powering up the device. You won't be able to observe this effect if you run the
 program in QEMU.
 
@@ -283,7 +283,7 @@ later use from Rust code.
 ```
 
 We set the Load Memory Address (LMA) of the `.data` section to the end of the `.rodata`
-section. The `.data` contains `static` variable with a non-zero initial value; the Virtual Memory
+section. The `.data` contains `static` variables with a non-zero initial value; the Virtual Memory
 Address (VMA) of the `.data` section is somewhere in RAM -- this is where the `static` variables are
 located. The initial values of those `static` variables, however, must be allocated in non volatile
 memory (Flash); the LMA is where in Flash those initial values are stored.
@@ -295,8 +295,11 @@ memory (Flash); the LMA is where in Flash those initial values are stored.
 Finally, we associate a symbol to the LMA of `.data`.
 
 On the Rust side, we zero the `.bss` section and initialize the `.data` section. We can reference
-the symbols we created in the linker script from the Rust code. The *addresses* of these symbols are
+the symbols we created in the linker script from the Rust code. The *addresses*[^1] of these symbols are
 the boundaries of the `.bss` and `.data` sections.
+
+[^1]: The fact that the addresses of the linker script symbols must be used here can be confusing and
+unintuitive. An elaborate explanation for this oddity can be found [here](https://stackoverflow.com/a/40392131).
 
 The updated reset handler is shown below:
 
