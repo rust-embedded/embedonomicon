@@ -17,10 +17,9 @@ the rest of pointers are related to exceptions -- we'll ignore them for now.
 [vector table]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table
 
 Linkers decide the final memory layout of programs, but we can use [linker scripts] to have some
-control over the it. The control granularity that linker scripts give us over the layout
+control over it. The control granularity that linker scripts give us over the layout
 is at the level of *sections*. A section is a collection of *symbols* laid out in contiguous memory.
-A symbol can be a statically allocated variable, a `static` variable, a set of instructions, or a
-monomorphized (non generic) Rust function.
+Symbols, in turn, can be data (a static variable), or instructions (a Rust function).
 
 [linker scripts]: https://sourceware.org/binutils/docs/ld/Scripts.html
 
