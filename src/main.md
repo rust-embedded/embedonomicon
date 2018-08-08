@@ -298,9 +298,6 @@ On the Rust side, we zero the `.bss` section and initialize the `.data` section.
 the symbols we created in the linker script from the Rust code. The *addresses*[^1] of these symbols are
 the boundaries of the `.bss` and `.data` sections.
 
-[^1]: The fact that the addresses of the linker script symbols must be used here can be confusing and
-unintuitive. An elaborate explanation for this oddity can be found [here](https://stackoverflow.com/a/40392131).
-
 The updated reset handler is shown below:
 
 ``` rust
@@ -342,3 +339,6 @@ undefined behavior!
 > are interested in learning how this can be achieved check the [`cortex-m-rt`] crate.
 
 [`cortex-m-rt`]: https://github.com/japaric/cortex-m-rt/tree/v0.5.1
+
+[^1]: The fact that the addresses of the linker script symbols must be used here can be confusing and
+unintuitive. An elaborate explanation for this oddity can be found [here](https://stackoverflow.com/a/40392131).
