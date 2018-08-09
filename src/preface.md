@@ -42,13 +42,25 @@ nor is access to a Cortex-M microcontroller needed -- all the examples included 
 QEMU. You will, however, need to install the following tools to run and inspect the examples in this
 book:
 
-- [`cargo-binutils`](https://github.com/japaric/cargo-binutils). Install it with `cargo install
-  cargo-binutils`; then run `rustup component add llvm-tools-preview`.
+- [`cargo-binutils`](https://github.com/japaric/cargo-binutils).
 
-- [`cargo-edit`](https://crates.io/crates/cargo-edit). Install it with `cargo install cargo-edit`.
+- [`cargo-edit`](https://crates.io/crates/cargo-edit).
+
+- The `thumbv7m-none-eabi` target.
 
 - QEMU with support for ARM emulation. The `qemu-system-arm` program must be installed on your
   computer. The name may differ for non-Debian based distributions.
 
 - LLDB. GDB with ARM support can also be used, but this book chooses LLDB as it's more likely that
   readers that are not into Cortex-M development have installed LLDB than GDB with ARM support.
+  
+  #### Rust toolchain setup on Linux
+  
+  ```bash
+  rustup default nightly # If you start from scratch, get rustup from https://rustup.rs/
+  rustup target add thumbv7m-none-eabi
+  cargo install cargo-binutils
+  rustup component add llvm-tools-preview
+  sudo apt-get install libssl-dev # For Debian based systems (Ubuntu)
+  cargo install cargo-edit
+  ```
