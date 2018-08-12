@@ -1,18 +1,21 @@
 # Exception handling
 
-During the "Memory layout" section we decided to start out simple and leave out handling of
-exceptions. In this section we'll add support for handling exceptions; this serves as an example of
+During the "Memory layout" section, we decided to start out simple and leave out handling of
+exceptions. In this section, we'll add support for handling them; this serves as an example of
 how to achieve compile time overridable behavior in stable Rust (i.e. without relying on the
 unstable `#[linkage = "weak"]` attribute, which makes a symbol weak).
 
 ## Background information
 
 In a nutshell, *exceptions* are a mechanism the Cortex-M and other architectures provide to let
-applications respond to asynchronous, usually external, events. The exception mechanism works like
-this: when the processor receives a signal or event associated to a type of exception it suspends
+applications respond to asynchronous, usually external, events. The most prominent type of exception,
+that most people will know, is the classical (hardware) interrupt.
+
+The Cortex-M exception mechanism works like this:
+When the processor receives a signal or event associated to a type of exception, it suspends
 the execution of the current subroutine (by stashing the state in the call stack) and then proceeds
 to execute the corresponding exception handler, another subroutine, in a new stack frame. After
-finishing the execution of the exception handler (i.e. returning from it) the processor resumes the
+finishing the execution of the exception handler (i.e. returning from it), the processor resumes the
 execution of the suspended subroutine.
 
 The processor uses the vector table to decide what handler to execute. Each entry in the table
@@ -20,14 +23,14 @@ contains a pointer to a handler, and each entry corresponds to a different excep
 example, the second entry is the reset handler, the third entry is the NMI (Non Maskable Interrupt)
 handler, and so on.
 
-As mentioned before the processor expects the vector table to be at some specific location and each
-entry in it can potentially be used by the processor at runtime so they must always contain valid
-values. Furthermore, we want the `rt` crate to be flexible so the end user can customize the
+As mentioned before, the processor expects the vector table to be at some specific location in memory,
+and each entry in it can potentially be used by the processor at runtime. Hence, the entries must always
+contain valid values. Furthermore, we want the `rt` crate to be flexible so the end user can customize the
 behavior of each exception handler. Finally, the vector table is read only memory, or rather in not
 easily modified memory, so the user has to register the handler statically, rather than at runtime.
 
-To satisfy all these constraints we'll assign a *default* value to all the entries of the vector
-table in the `rt` crate but make these values kind of *weak* to let the end user override them
+To satisfy all these constraints, we'll assign a *default* value to all the entries of the vector
+table in the `rt` crate, but make these values kind of *weak* to let the end user override them
 at compile time.
 
 ## Rust side
@@ -36,8 +39,8 @@ Let's see how all this can be implemented. For simplicity, we'll only work with 
 of the vector table; these entries are not device specific so they have the same function on any
 kind of Cortex-M microcontroller.
 
-The first thing we'll do is create an array of vectors (pointers to exception handlers) in the Rust
-code:
+The first thing we'll do is create an array of vectors (pointers to exception handlers) in the
+`rt` crate's code:
 
 ``` rust
 pub union Vector {
@@ -63,9 +66,7 @@ pub static EXCEPTIONS: [Vector; 14] = [
     Vector { handler: HardFault },
     Vector { handler: MemManage },
     Vector { handler: BusFault },
-    Vector {
-        handler: UsageFault,
-    },
+    Vector { handler: UsageFault },
     Vector { reserved: 0 },
     Vector { reserved: 0 },
     Vector { reserved: 0 },
@@ -83,7 +84,7 @@ should be assigned the value `0` so we use a union to do exactly that. The entri
 to a handler make use of *external* functions; this is important because it lets the end user
 *provide* the actual function definition.
 
-Next we define a default exception handler in the Rust code. Exceptions that have not been assigned
+Next, we define a default exception handler in the Rust code. Exceptions that have not been assigned
 a handler by the end user will make use of this default handler.
 
 ``` rust
@@ -130,8 +131,8 @@ PROVIDE(PendSV = DefaultExceptionHandler);
 PROVIDE(SysTick = DefaultExceptionHandler);
 ```
 
-`PROVIDE` only takes effect when symbol on the RHS is still undefined after inspecting all the input
-object files. This is the scenario where the user didn't assign a handler to the exception.
+`PROVIDE` only takes effect when a symbol on the RHS is still undefined after inspecting all the input
+object files. This is the scenario where the user didn't implement the handler for the respective exception.
 
 ## Testing it
 
@@ -216,7 +217,7 @@ Contents of section .vector_table:
 
 ## Overriding a handler
 
-To override an exception handler the user has to provide a function whose symbol name exactly
+To override an exception handler, the user has to provide a function whose symbol name exactly
 matches the name we used in `EXCEPTIONS`.
 
 ``` rust
@@ -262,9 +263,9 @@ Process 1 stopped
 The program now executes the user defined `HardFault` function instead of the
 `DefaultExceptionHandler` in the `rt` crate.
 
-Like our first attempt at a `main` interface this first implementation has the problem of having no
+Like our first attempt at a `main` interface, this first implementation has the problem of having no
 type safety. It's also easy to mistype the name of the exception, but that doesn't produce an error
-or warning instead the user defined handler is simply ignored. Those problems can be fixed using a
+or warning. Instead the user defined handler is simply ignored. Those problems can be fixed using a
 macro like the [`exception!`] macro defined in `cortex-m-rt`.
 
 [`exception!`]: https://github.com/japaric/cortex-m-rt/blob/v0.5.1/src/lib.rs#L79
