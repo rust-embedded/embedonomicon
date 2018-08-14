@@ -1,15 +1,18 @@
 # A note on compiler support
 
 This book makes use of a built-in *compiler* target, the `thumbv7m-none-eabi`, for which the Rust
-team distributes a `rust-std` component, a pre-compiled version of the `core` crate.
+team distributes a `rust-std` component, which is a pre-compiled collection of crates like [`core`] and [`std`].
 
-If you want to attempt replicating the contents of this book for a different target architecture you
+[`core`]: https://doc.rust-lang.org/core/index.html
+[`std`]: https://doc.rust-lang.org/std/index.html
+
+If you want to attempt replicating the contents of this book for a different target architecture, you
 need to take into account the different levels of support that Rust provides for (compilation)
 targets.
 
 ## LLVM support
 
-As of Rust 1.28 official Rust compiler, `rustc`, uses LLVM for (machine) code generation. The
+As of Rust 1.28, the official Rust compiler, `rustc`, uses LLVM for (machine) code generation. The
 minimal level of support Rust provides for an architecture is having its LLVM backend enabled in
 `rustc`. You can see all the architectures that `rustc` supports, through LLVM, by running the
 following command:
@@ -52,18 +55,18 @@ LLVM (http://llvm.org/):
     x86-64     - 64-bit X86: EM64T and AMD64
 ```
 
-If LLVM supports the architecture you are interested in but `rustc` is built with the backend
-disabled (which is the case of AVR as of Rust 1.28) then you will need to modify the Rust source
+If LLVM supports the architecture you are interested in, but `rustc` is built with the backend
+disabled (which is the case of AVR as of Rust 1.28), then you will need to modify the Rust source
 enabling it. The first two commits of PR [rust-lang/rust#52787] give you an idea of the required
 changes.
 
 [rust-lang/rust#52787]: https://github.com/rust-lang/rust/pull/52787
 
-On the other hand, if LLVM doesn't support the architecture but a fork of LLVM does you will have to
-built `rustc` against the fork. The Rust build system allows this and in principle should just
+On the other hand, if LLVM doesn't support the architecture, but a fork of LLVM does, you will have to
+built `rustc` from the fork. The Rust build system allows this and in principle should just
 require changing the `llvm` submodule to point to the fork.
 
-If your target architecture is only supported by some vendor provided GCC you have the option of
+If your target architecture is only supported by some vendor provided GCC, you have the option of
 using [`mrustc`], an unofficial Rust compiler, to translate your Rust program into C code and then
 compile that using GCC.
 
@@ -72,8 +75,8 @@ compile that using GCC.
 ## Built-in target
 
 A compilation target is more than just its architecture. Each target has a [specification]
-associated to it that describes its architecture, its operating system, the default linker among
-other things.
+associated to it that describes, among other things, its architecture, its operating system
+and the default linker.
 
 [specification]: https://github.com/rust-lang/rfcs/blob/master/text/0131-target-specification.md
 
@@ -159,20 +162,17 @@ $ rustc +nightly -Z unstable-options --print target-spec-json --target thumbv7m-
 }
 ```
 
-If none of these built-in targets seems appropriate for your target system you'll have to create a
-custom target by writing a target specification file. A target specification file is a JSON file
-that contains the specification of a compilation target. The output of the `rustc --print
-target-spec-json` command from before is the target specification in JSON format.
-
-The recommended way to write a target specification file is to dump the specification of a built-in
-target that's similar to your target system into a file and then tweak it to match the properties of
-your target system. As of Rust 1.28, there's no up to date documentation on what each of the fields
-of a target specification mean, other than [the compiler source code].
+If none of these built-in targets seems appropriate for your target system, you'll have to create a
+custom target by writing your own target specification file in JSON format. The recommended way is to
+dump the specification of a built-in target that's similar to your target system into a file and then
+tweak it to match the properties of your target system. To do so, use the previously shown command,
+`rustc --print target-spec-json`. As of Rust 1.28, there's no up to date documentation on what each of
+the fields of a target specification mean, other than [the compiler source code].
 
 [the compiler source code]: https://github.com/rust-lang/rust/blob/1.27.2/src/librustc_target/spec/mod.rs#L376-L400
 
 Once you have a target specification file you can refer to it by its path or by its name if its in
-the current directory or in `$RUST_TARGET_PATH`.
+the current directory or in `$RUST_TARGET_PATH`. 
 
 ``` console
 $ rustc +nightly -Z unstable-options --print target-spec-json \
@@ -240,7 +240,7 @@ mips-unknown-linux-gnu                  x86_64-unknown-netbsd
 mips-unknown-linux-musl                 x86_64-unknown-redox
 ```
 
-If there's no `rust-std` component for your target or you are using a custom target then you'll have
+If there's no `rust-std` component for your target or you are using a custom target, then you'll have
 to use a tool like [Xargo] to have Cargo compile the `core` crate on the fly. Note that Xargo
 requires a nightly toolchain; the long term plan is to upstream Xargo's functionality into Cargo
 and eventually have that functionality available on stable.
