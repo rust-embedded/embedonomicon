@@ -62,9 +62,9 @@ changes.
 
 [rust-lang/rust#52787]: https://github.com/rust-lang/rust/pull/52787
 
-On the other hand, if LLVM doesn't support the architecture, but a fork of LLVM does, you will have to
-built `rustc` from the fork. The Rust build system allows this and in principle should just
-require changing the `llvm` submodule to point to the fork.
+On the other hand, if LLVM doesn't support the architecture, but a fork of LLVM does, you will have
+to replace the original version of LLVM with the fork before building `rustc`. The Rust build system
+allows this and in principle it should just require changing the `llvm` submodule to point to the fork.
 
 If your target architecture is only supported by some vendor provided GCC, you have the option of
 using [`mrustc`], an unofficial Rust compiler, to translate your Rust program into C code and then
