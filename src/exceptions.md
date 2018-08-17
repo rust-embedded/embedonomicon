@@ -227,7 +227,8 @@ The vector table now resembles the results of all the code snippets in this book
         - The first bit being set to 1 does not alter the address due to alignment requirements. Instead, it causes the function to be executed in _thumb mode_.
 - Afterwards, a pattern of addresses alternating between `0x79` and `0x00` is visible.
     - Looking at the disassembly above, it is clear that `0x79` refers to the `DefaultExceptionHandler` (`0x78` executed in thumb mode).
-    - Cross referncing the pattern to the vector table that was set up earlier in this chapter (see the definition of `pub static EXCEPTIONS`) with [the vector table layout for the Cortex-M], it is clear that the address of the `DefaultExceptionHandler` is present each time a respective handler entry is present in the table.
+    - Cross referencing the pattern to the vector table that was set up earlier in this chapter (see the definition of `pub static EXCEPTIONS`) with [the vector table layout for the Cortex-M], it is clear that the address of the `DefaultExceptionHandler` is present each time a respective handler entry is present in the table.
+    - In turn, it is also visibile that the layout of the vector table data structure in the Rust code is aligned with all the reserved slots in the Cortex-M vector table. Hence, all reserved slots are correctly set to a value of zero. 
 
 [_Inspecting it_]: https://rust-embedded.github.io/embedonomicon/memory-layout.html#inspecting-it
 [the vector table layout for the Cortex-M]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table
