@@ -26,7 +26,7 @@ handler, and so on.
 As mentioned before, the processor expects the vector table to be at some specific location in memory,
 and each entry in it can potentially be used by the processor at runtime. Hence, the entries must always
 contain valid values. Furthermore, we want the `rt` crate to be flexible so the end user can customize the
-behavior of each exception handler. Finally, the vector table is read only memory, or rather in not
+behavior of each exception handler. Finally, the vector table resides in read only memory, or rather in not
 easily modified memory, so the user has to register the handler statically, rather than at runtime.
 
 To satisfy all these constraints, we'll assign a *default* value to all the entries of the vector
@@ -66,7 +66,9 @@ pub static EXCEPTIONS: [Vector; 14] = [
     Vector { handler: HardFault },
     Vector { handler: MemManage },
     Vector { handler: BusFault },
-    Vector { handler: UsageFault },
+    Vector {
+        handler: UsageFault,
+    },
     Vector { reserved: 0 },
     Vector { reserved: 0 },
     Vector { reserved: 0 },
@@ -131,8 +133,9 @@ PROVIDE(PendSV = DefaultExceptionHandler);
 PROVIDE(SysTick = DefaultExceptionHandler);
 ```
 
-`PROVIDE` only takes effect when a symbol on the RHS is still undefined after inspecting all the input
-object files. This is the scenario where the user didn't implement the handler for the respective exception.
+`PROVIDE` only takes effect when the symbol to the left of the equal sign is still undefined after
+inspecting all the input object files. This is the scenario where the user didn't implement the
+handler for the respective exception.
 
 ## Testing it
 
@@ -214,6 +217,20 @@ Contents of section .vector_table:
  0020 00000000 00000000 00000000 79000000  ............y...
  0030 00000000 00000000 79000000 79000000  ........y...y...
 ```
+
+The vector table now resembles the results of all the code snippets in this book so far. To summarize:
+- In the [_Inspecting it_] section of the earlier memory chapter, we learned that:
+    - The first entry in the vector table contains the initial value of the stack pointer.
+    - Objdump prints in `little endian` format, so the stack starts at `0x2001_0000`.
+    - The second entry points to address `0x0000_0041`, the Reset handler.
+        - The address of the Reset handler can be seen in the disassembly above, being `0x40`.
+        - The first bit being set to 1 does not alter the address due to alignment requirements. Instead, it causes the function to be executed in _thumb mode_.
+- Afterwards, a pattern of addresses alternating between `0x79` and `0x00` is visible.
+    - Looking at the disassembly above, it is clear that `0x79` refers to the `DefaultExceptionHandler` (`0x78` executed in thumb mode).
+    - Cross referncing the pattern to the vector table that was set up earlier in this chapter (see the definition of `pub static EXCEPTIONS`) with [the vector table layout for the Cortex-M], it is clear that the address of the `DefaultExceptionHandler` is present each time a respective handler entry is present in the table.
+
+[_Inspecting it_]: https://rust-embedded.github.io/embedonomicon/memory-layout.html#inspecting-it
+[the vector table layout for the Cortex-M]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table
 
 ## Overriding a handler
 
