@@ -1,0 +1,6 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+name = "app"
+version = "0.1.0"
+
+[dependencies]

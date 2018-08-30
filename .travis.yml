@@ -1,4 +1,5 @@
 language: rust
+rust: nightly
 
 install:
   - bash ci/install.sh

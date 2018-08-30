@@ -45,7 +45,7 @@ With these attributes, we can expose a stable ABI of the program and use it in t
 
 Like mentioned before, for Cortex-M devices, we need to populate the first two entries of the
 vector table. The first one, the initial value for the stack pointer, can be populated using
-only the linker script. The second one, the reset vector, needs to be created in Rust code 
+only the linker script. The second one, the reset vector, needs to be created in Rust code
 and placed correctly using the linker script.
 
 The reset vector is a pointer into the reset handler. The reset handler is the function that the
@@ -55,19 +55,7 @@ behavior as there's no other stack frame to return to. We can enforce that the r
 returns by making it a divergent function, which is a function with signature `fn(/* .. */) -> !`.
 
 ``` rust
-// The reset handler
-#[no_mangle]
-pub unsafe extern "C" fn Reset() -> ! {
-    let x = 42;
-
-    // can't return so we go into an infinite loop here
-    loop {}
-}
-
-// The reset vector, a pointer into the reset handler
-#[link_section = ".vector_table.reset_vector"]
-#[no_mangle]
-pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
+{{#include ../ci/memory-layout/src/main.rs:7:19}}
 ```
 
 The hardware expects a certain format here, to which we adhere by using `extern "C"` to tell the
@@ -90,41 +78,10 @@ walk through it.
 
 ``` console
 $ cat link.x
+```
 
-/* Memory layout of the LM3S6965 microcontroller */
-/* 1K = 1 KiBi = 1024 bytes */
-MEMORY
-{
-  FLASH : ORIGIN = 0x00000000, LENGTH = 256K
-  RAM : ORIGIN = 0x20000000, LENGTH = 64K
-}
-
-/* The entry point is the reset handler */
-ENTRY(Reset);
-
-EXTERN(RESET_VECTOR);
-
-SECTIONS
-{
-  .vector_table ORIGIN(FLASH) :
-  {
-    /* First entry: initial Stack Pointer value */
-    LONG(ORIGIN(RAM) + LENGTH(RAM));
-
-    /* Second entry: reset vector */
-    KEEP(*(.vector_table.reset_vector));
-  } > FLASH
-
-  .text :
-  {
-    *(.text .text.*);
-  } > FLASH
-
-  /DISCARD/ :
-  {
-    *(.ARM.exidx.*);
-  }
-}
+``` text
+{{#include ../ci/memory-layout/link.x}}
 ```
 
 ### `MEMORY`
@@ -154,13 +111,13 @@ This part describes how sections in the input object files, AKA *input sections*
 in the sections of the output object file, AKA output sections; or if they should be discarded. Here
 we define two output sections:
 
-```
+``` text
   .vector_table ORIGIN(FLASH) : { /* .. */ } > FLASH
 ```
 
 `.vector_table`, which contains the vector table and is located at the start of `FLASH` memory,
 
-```
+``` text
   .text : { /* .. */ } > FLASH
 ```
 
@@ -170,9 +127,8 @@ address is not specified, but the linker will place it after the previous output
 
 The output `.vector_table` section contains:
 
-```
-    /* First entry: initial Stack Pointer value */
-    LONG(ORIGIN(RAM) + LENGTH(RAM));
+``` text
+{{#include ../ci/memory-layout/link.x:18:19}}
 ```
 
 We'll place the (call) stack at the end of RAM (the stack is *full descending*; it grows towards
@@ -181,8 +137,7 @@ That address is computed in the linker script itself using the information we en
 memory block.
 
 ```
-    /* Second entry: reset vector */
-    KEEP(*(.vector_table.reset_vector));
+{{#include ../ci/memory-layout/link.x:21:22}}
 ```
 
 Next, we use `KEEP` to force the linker to insert all input sections named
@@ -191,8 +146,8 @@ section is `RESET_VECTOR`, so this will effectively place `RESET_VECTOR` second 
 
 The output `.text` section contains:
 
-```
-    *(.text .text.*);
+``` text
+{{#include ../ci/memory-layout/link.x:27}}
 ```
 
 This includes all the input sections named `.text` and `.text.*`. Note that we don't use `KEEP`
@@ -200,8 +155,8 @@ here to let the linker discard unused sections.
 
 Finally, we use the special `/DISCARD/` section to discard
 
-```
-    *(.ARM.exidx.*);
+``` text
+{{#include ../ci/memory-layout/link.x:32}}
 ```
 
 input sections named `.ARM.exidx.*`. These sections are related to exception handling but we are not
@@ -212,73 +167,54 @@ doing stack unwinding on panics and they take up space in Flash memory, so we ju
 Now we can link the application. For reference, here's the complete Rust program:
 
 ``` rust
-#![feature(panic_implementation)]
-#![no_main]
-#![no_std]
-
-use core::panic::PanicInfo;
-
-// The reset handler
-#[no_mangle]
-pub unsafe extern "C" fn Reset() -> ! {
-    let x = 42;
-    
-    // can't return so we go into an infinite loop here
-    loop {}
-}
-
-// The reset vector, a pointer into the reset handler
-#[link_section = ".vector_table.reset_vector"]
-#[no_mangle]
-pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
-
-#[no_mangle]
-#[panic_implementation]
-fn panic(_panic: &PanicInfo) -> ! {
-    loop {}
-}
+{{#include ../ci/memory-layout/src/main.rs}}
 ```
 
-We'll use the LLVM linker, LLD, shipped with the Rust toolchain. That way, you won't need to install
-the `arm-none-eabi-gcc` linker that the `thumbv7m-none-eabi` target uses by default. Changing the
-linker is done via rustc flags; the full Cargo invocation to change the linker and pass the linker
-script to the linker is shown below:
+We have to tweak linker process to make it use our linker script. This is done
+passing the `-C link-arg` flag to `rustc` but there are two ways to do it: you
+can use the `cargo-rustc` subcommand instead of `cargo-build` as shown below:
 
 ``` console
-$ cargo rustc -- \
-      -C linker=rust-lld \
-      -Z linker-flavor=ld.lld \
-      -C link-arg=-Tlink.x
+$ cargo rustc -- -C link-arg=-Tlink.x
 ```
+
+Or you can set the rustflags in `.cargo/config` and continue using the
+`cargo-build` subcommand. We'll do the latter because it better integrates with
+`cargo-binutils`.
+
+``` console
+# modify .cargo/config so it has these contents
+$ cat .cargo/config
+```
+
+``` toml
+{{#include ../ci/memory-layout/.cargo/config}}
+```
+
+The `[target.thumbv7m-none-eabi]` part says that these flags will only be used
+when cross compiling to that target.
 
 ## Inspecting it
 
 Now let's inspect the output binary to confirm the memory layout looks the way we want:
 
 ``` console
-$ cargo objdump -- -d -no-show-raw-insn target/thumbv7m-none-eabi/debug/app
+$ cargo objdump --bin app -- -d -no-show-raw-insn
+```
 
-target/thumbv7m-none-eabi/debug/app:    file format ELF32-arm-little
-
-Disassembly of section .text:
-Reset:
-       8:       sub     sp, #4
-       a:       movs    r0, #42
-       c:       str     r0, [sp]
-       e:       b       #-2 <Reset+0x8>
-      10:       b       #-4 <Reset+0x8>
+``` text
+{{#include ../ci/memory-layout/app.text.objdump}}
 ```
 
 This is the disassembly of the `.text` section. We see that the reset handler, named `Reset`, is
 located at address `0x8`.
 
 ``` console
-$ cargo objdump -- -s -j .vector_table target/thumbv7m-none-eabi/debug/app
+$ cargo objdump --bin app -- -s -section .vector_table
+```
 
-target/thumbv7m-none-eabi/debug/app:    file format ELF32-arm-little
-
-Contents of section .vector_table:
- 0000 00000120 09000000                    ... ....
+``` text
+{{#include ../ci/memory-layout/app.vector_table.objdump}}
 ```
 
 This shows the contents of the `.vector_table` section. We can see that the section starts at
@@ -311,20 +247,20 @@ $ lldb target/thumbv7m-none-eabi/debug/app
 Process 1 stopped
 * thread #1, stop reason = signal SIGTRAP
     frame #0: 0x00000008 app`Reset at main.rs:23
-   20   #[no_mangle]
-   21   #[panic_implementation]
+   20
+   21   #[panic_handler]
    22   fn panic(_panic: &PanicInfo) -> ! {
 -> 23       loop {}
    24   }
 
-(lldb) # ^ that source is wrong; the processor is about to execute Reset
+(lldb) # ^ that source is wrong; the processor is about to execute Reset; see below
 (lldb) disassemble -frame
 app`Reset:
 ->  0x8 <+0>:  sub    sp, #0x4
     0xa <+2>:  movs   r0, #0x2a
     0xc <+4>:  str    r0, [sp]
-    0xe <+6>:  b      0x10                      ; <+8> at main.rs:12
-    0x10 <+8>: b      0x10                      ; <+8> at main.rs:12
+    0xe <+6>:  b      0x10                      ; <+8> at main.rs:13
+    0x10 <+8>: b      0x10                      ; <+8> at main.rs:13
 
 (lldb) # the SP has the initial value we programmed in the vector table
 (lldb) print/x $sp
@@ -335,20 +271,20 @@ app`Reset:
 (lldb) step
 Process 1 stopped
 * thread #1, stop reason = step in
-    frame #0: 0x0000000e app`Reset at main.rs:12
-   9    pub unsafe extern "C" fn Reset() -> ! {
-   10       let x = 42;
+    frame #0: 0x0000000e app`Reset at main.rs:13
+   10       let _x = 42;
    11
--> 12       loop {}
-   13   }
-   14
-   15   // The reset vector.
+   12       // can't return so we go into an infinite loop here
+-> 13       loop {}
+   14   }
+   15
+   16   // The reset vector, a pointer into the reset handler
 
-(lldb) # next we inspect the stack variable `x`
-(lldb) print x
+(lldb) # next we inspect the stack variable `_x`
+(lldb) print _x
 (int) $1 = 42
 
-(lldb) print &x
+(lldb) print &_x
 (int *) $2 = 0x2000fffc
 
 (lldb) exit

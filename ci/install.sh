@@ -9,6 +9,8 @@ main() {
     curl -LSfs https://japaric.github.io/trust/install.sh | \
         sh -s -- --git rust-lang-nursery/mdbook --tag $tag
 
+    rustup target add thumbv7m-none-eabi
+
     pip install linkchecker --user
 }
 

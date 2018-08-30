@@ -48,20 +48,8 @@ $ # modify main.rs so it has these contents
 $ cat src/main.rs
 ```
 
-<!-- TODO(rust-lang/rust#52795) remove #[no_mangle] from the #[panic_implementation] function -->
-
 ``` rust
-#![feature(panic_implementation)]
-#![no_main]
-#![no_std]
-
-use core::panic::PanicInfo;
-
-#[panic_implementation]
-#[no_mangle]
-fn panic(_panic: &PanicInfo) -> ! {
-     loop {}
-}
+{{#include ../ci/smallest-no-std/src/main.rs}}
 ```
 
 This program contains some things that you won't see in standard Rust programs:
@@ -73,28 +61,29 @@ its entry point. At the time of writing, Rust's `main` interface makes some assu
 environment the program executes in: For example, it assumes the existence of command line
 arguments, so in general, it's not appropriate for `#![no_std]` programs.
 
-The `#[panic_implementation]` attribute. The function marked with this attribute defines the
-behavior of panics, both library level panics (`core::panic!`) and language level panics (out of
-bounds indexing).
+The `#[panic_handler]` attribute. The function marked with this attribute defines the behavior
+of panics, both library level panics (`core::panic!`) and language level panics (out of bounds
+indexing).
 
-This program doesn't produce anything useful; in fact it won't even *link*.
+This program doesn't produce anything useful. In fact, it will produce an empty binary.
 
 ``` console
-$ cargo rustc --target=thumbv7m-none-eabi -- --emit=obj
-$ # you'll get a linker error here; that's expected
+$ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
 
-$ # note the hash will be different in your case
-$ cargo nm -- ./target/thumbv7m-none-eabi/debug/deps/app-e223b941430cb13d.o | tail
-00000446 n
-0000045c n
-0000047a n
-00000483 n
-00000488 n
-0000048d n
-00000491 n
-0000049a n
-000004a4 n
-00000000 T rust_begin_unwind
+$ # equivalent to `size target/thumbv7m-none-eabi/debug/app`
+$ cargo size --target thumbv7m-none-eabi --bin app
+```
+
+``` text
+{{#include ../ci/smallest-no-std/app.size}}
+```
+
+``` console
+$ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^n] '
+```
+
+``` text
+{{#include ../ci/smallest-no-std/app.o.nm}}
 ```
 
 However, it's our starting point. In the next section, we'll build something useful. But before
@@ -109,6 +98,5 @@ $ cat .cargo/config
 ```
 
 ``` toml
-[build]
-target = "thumbv7m-none-eabi"
+{{#include ../ci/smallest-no-std/.cargo/config}}
 ```
