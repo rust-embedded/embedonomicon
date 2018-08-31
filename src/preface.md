@@ -12,7 +12,7 @@ By reading this book you will learn
 
 - How to build a `#![no_std]` application. This is much more complex than building a `#![no_std]`
   library because the target system may not be running an OS (or you could be aiming to build an
-  OS!) and the program could be the only process running in the target (or the first one). 
+  OS!) and the program could be the only process running in the target (or the first one).
   In that case, the program may need to be customized for the target system.
 
 - Tricks to finely control the memory layout of a Rust program. You'll learn about linkers, linker
@@ -42,7 +42,9 @@ nor is access to a Cortex-M microcontroller needed -- all the examples included 
 QEMU. You will, however, need to install the following tools to run and inspect the examples in this
 book:
 
-- [`cargo-binutils`](https://github.com/japaric/cargo-binutils).
+- A nightly toolchain from 2018-08-28 or newer.
+
+- [`cargo-binutils`](https://github.com/japaric/cargo-binutils). v0.1.2 or newer.
 
 - [`cargo-edit`](https://crates.io/crates/cargo-edit).
 
@@ -53,9 +55,9 @@ book:
 
 - LLDB. GDB with ARM support can also be used, but this book chooses LLDB as it's more likely that
   readers that are not into Cortex-M development have installed LLDB than GDB with ARM support.
-  
+
   #### Rust toolchain setup on Linux
-  
+
   ```bash
   rustup default nightly # If you start from scratch, get rustup from https://rustup.rs/
   rustup target add thumbv7m-none-eabi

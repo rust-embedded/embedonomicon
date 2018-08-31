@@ -16,32 +16,30 @@ And then rename it to `rt` which stands for "runtime".
 $ sed -i s/app/rt/ Cargo.toml
 
 $ head -n2 Cargo.toml
-[package]
-name = "rt"
+```
+
+``` toml
+{{#include ../ci/main/rt/Cargo.toml:1:2}}
 ```
 
 The first change is to have the reset handler call an external `main` function:
 
+``` console
+$ head -n14 src/lib.rs
+```
+
 ``` rust
-// #![no_main]
-
-#[no_mangle]
-pub unsafe extern "C" fn Reset() -> ! {
-    extern "Rust" {
-        fn main() -> !;
-    }
-
-    main()
-}
+{{#include ../ci/main/rt/src/lib.rs:1:14}}
 ```
 
 We also drop the `#![no_main]` attribute has it has no effect on library crates.
 
-> There's an orthogonal question that arises at this stage: Should the `rt` library provide a
-> standard panicking behavior, or should it *not* provide a `#[panic_implementation]` function and
-> leave the end user choose the panicking behavior? This document won't delve into that question and
-> for simplicity will leave the dummy `#[panic_implementation]` function in the `rt` crate.
-> However, we wanted to inform the reader that there are other options.
+> There's an orthogonal question that arises at this stage: Should the `rt`
+> library provide a standard panicking behavior, or should it *not* provide a
+> `#[panic_handler]` function and leave the end user choose the panicking
+> behavior? This document won't delve into that question and for simplicity will
+> leave the dummy `#[panic_handler]` function in the `rt` crate. However, we
+> wanted to inform the reader that there are other options.
 
 The second change involves providing the linker script we wrote before to the application crate. You
 see the linker will search for linker scripts in the library search path (`-L`) and in the directory
@@ -56,38 +54,22 @@ $ cat build.rs
 ```
 
 ``` rust
-use std::env;
-use std::error::Error;
-use std::fs::File;
-use std::io::Write;
-use std::path::PathBuf;
-
-fn main() -> Result<(), Box<Error>> {
-    // build directory for this crate
-    let mut out = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-
-    // extend the library search path
-    println!("cargo:rustc-link-search={}", out.display());
-
-    // put `link.x` in the build directory
-    out.push("link.x");
-    File::create(out)?.write_all(include_bytes!("link.x"))?;
-
-    Ok(())
-}
+{{#include ../ci/main/rt/build.rs}}
 ```
 
 Now the user can write an application that exposes the `main` symbol and link it to the `rt` crate.
 The `rt` will take care of giving the program the right memory layout.
 
 ``` console
+$ cd ..
+
 $ cargo new --bin app
 
 $ cd app
 
 $ cargo add rt --path ../rt
 
-$ # copy over the Cargo config file that sets the default build target
+$ # copy over the config file that sets a default target and tweaks the linker invocation
 $ cp -r ../rt/.cargo .
 
 $ # change the contents of `main.rs` to
@@ -95,41 +77,17 @@ $ cat src/main.rs
 ```
 
 ``` rust
-#![no_std]
-#![no_main]
-
-extern crate rt;
-
-#[no_mangle]
-pub fn main() -> ! {
-    let x = 42;
-
-    loop {}
-}
+{{#include ../ci/main/app/src/main.rs}}
 ```
 
+The disassembly will be similar but will now include the user `main` function.
+
 ``` console
-$ cargo rustc -- \
-      -C linker=rust-lld \
-      -Z linker-flavor=ld.lld \
-      -C link-arg=-Tlink.x
+$ cargo objdump --bin app -- -d -no-show-raw-insn
+```
 
-$ cargo objdump -- \
-      -d -no-show-raw-insn target/thumbv7m-none-eabi/debug/app
-
-target/thumbv7m-none-eabi/debug/app:    file format ELF32-arm-little
-
-Disassembly of section .text:
-main:
-       8:       sub     sp, #4
-       a:       movs    r0, #42
-       c:       str     r0, [sp]
-       e:       b       #-2 <main+0x8>
-      10:       b       #-4 <main+0x8>
-
-Reset:
-      12:       bl      #-14
-      16:       trap
+``` text
+{{#include ../ci/main/app/app.objdump}}
 ```
 
 ## Making it type safe
@@ -141,41 +99,26 @@ compiler will misoptimize the program).
 We can add type safety by exposing a macro to the user instead of the symbol interface. In the
 `rt` crate, we can write this macro:
 
-``` rust
-#[macro_export]
-macro_rules! entry {
-    ($path:path) => {
-        #[export_name = "main"]
-        pub unsafe fn __main() -> ! {
-            // type check the given path
-            let f: fn() -> ! = $path;
+``` console
+$ tail -n12 ../rt/src/lib.rs
+```
 
-            f()
-        }
-    }
-}
+``` rust
+{{#include ../ci/main/rt/src/lib.rs:26:37}}
 ```
 
 Then the application writers can invoke it like this:
 
-``` rust
-#![no_std]
-#![no_main]
-
-#[macro_use]
-extern crate rt;
-
-entry!(main);
-
-fn main() -> ! {
-    let x = 42;
-
-    loop {}
-}
+``` console
+$ cat src/main.rs
 ```
 
-Now the author will get an error if they change the signature of `main` to be non divergent, e.g.
-`fn()`.
+``` rust
+{{#include ../ci/main/app2/src/main.rs}}
+```
+
+Now the author will get an error if they change the signature of `main` to be
+non divergent function, e.g. `fn()`.
 
 ## Life before main
 
@@ -185,23 +128,13 @@ Now the author will get an error if they change the signature of `main` to be no
 
 The first step is to define these sections in the linker script:
 
+``` console
+$ # showing just a fragment of the file
+$ sed -n 25,46p ../rt/link.x
 ```
-  /* inside SECTIONS; after .text */
 
-  .rodata :
-  {
-    *(.rodata .rodata.*);
-  } > FLASH
-
-  .bss :
-  {
-    *(.bss .bss.*);
-  } > RAM
-
-  .data :
-  {
-    *(.data .data.*);
-  } > RAM
+``` text
+{{#include ../ci/main/rt/link.x:25:46}}
 ```
 
 They just re-export the input sections and specify in which memory region each output section will
@@ -210,25 +143,7 @@ go.
 With these changes, the following program will compile:
 
 ``` rust
-#![no_std]
-#![no_main]
-
-#[macro_use]
-extern crate rt;
-
-entry!(main);
-
-static RODATA: &[u8] = b"Hello, world!";
-static mut BSS: u8 = 0;
-static mut DATA: u16 = 1;
-
-fn main() -> ! {
-    let _x = RODATA;
-    let _y = unsafe { &BSS };
-    let _z = unsafe { &DATA };
-
-    loop {}
-}
+{{#include ../ci/main/app3/src/main.rs}}
 ```
 
 However if you run this program on real hardware and debug it, you'll observe that the `static`
@@ -243,43 +158,38 @@ calling `main`.
 
 We'll need to tweak the linker script a bit more to do the RAM initialization:
 
+``` console
+$ # showing just a fragment of the file
+$ sed -n 25,52p ../rt/link.x
 ```
-  .rodata :
-  {
-    *(.rodata .rodata.*);
-  } > FLASH
 
-  .bss :
-  {
-    _sbss = .;
-    *(.bss .bss.*);
-    _ebss = .;
-  } > RAM
-
-  .data : AT(ADDR(.rodata) + SIZEOF(.rodata))
-  {
-    _sdata = .;
-    *(.data .data.*);
-    _edata = .;
-  } > RAM
-
-  _sidata = LOADADDR(.data);
+``` text
+{{#include ../ci/main/rt2/link.x:25:52}}
 ```
 
 Let's go into the details of these changes:
 
+``` text
+{{#include ../ci/main/rt2/link.x:38}}
 ```
-    _sbss = .;
-    _ebss = .;
-    _sdata = .;
-    _edata = .;
+
+``` text
+{{#include ../ci/main/rt2/link.x:40}}
+```
+
+``` text
+{{#include ../ci/main/rt2/link.x:45}}
+```
+
+``` text
+{{#include ../ci/main/rt2/link.x:47}}
 ```
 
 We associate symbols to the start and end addresses of the `.bss` and `.data` sections, which we'll
 later use from Rust code.
 
-```
-  .data : AT(ADDR(.rodata) + SIZEOF(.rodata))
+``` text
+{{#include ../ci/main/rt2/link.x:43}}
 ```
 
 We set the Load Memory Address (LMA) of the `.data` section to the end of the `.rodata`
@@ -288,8 +198,8 @@ Address (VMA) of the `.data` section is somewhere in RAM -- this is where the `s
 located. The initial values of those `static` variables, however, must be allocated in non volatile
 memory (Flash); the LMA is where in Flash those initial values are stored.
 
-```
-  _sidata = LOADADDR(.data);
+``` text
+{{#include ../ci/main/rt2/link.x:50}}
 ```
 
 Finally, we associate a symbol to the LMA of `.data`.
@@ -300,34 +210,12 @@ the boundaries of the `.bss` and `.data` sections.
 
 The updated reset handler is shown below:
 
+``` console
+$ head -n32 ../rt/src/lib.rs
+```
+
 ``` rust
-use core::ptr;
-
-#[no_mangle]
-pub unsafe extern "C" fn Reset() -> ! {
-    // Initialize RAM
-    extern "C" {
-        static mut _sbss: u8;
-        static mut _ebss: u8;
-
-        static mut _sdata: u8;
-        static mut _edata: u8;
-        static _sidata: u8;
-    }
-
-    let count = &_ebss as *const u8 as usize - &_sbss as *const u8 as usize;
-    ptr::write_bytes(&mut _sbss as *mut u8, 0, count);
-
-    let count = &_edata as *const u8 as usize - &_sdata as *const u8 as usize;
-    ptr::copy_nonoverlapping(&_sidata as *const u8, &mut _sdata as *mut u8, count);
-
-    // Call user entry point
-    extern "Rust" {
-        fn main() -> !;
-    }
-
-    main()
-}
+{{#include ../ci/main/rt2/src/lib.rs:1:32}}
 ```
 
 Now end users can directly and indirectly make use of `static` variables without running into

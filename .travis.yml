@@ -1,4 +1,10 @@
 language: rust
+rust: nightly
+
+addons:
+  apt:
+    packages:
+      - qemu-system-arm
 
 install:
   - bash ci/install.sh

@@ -1,1 +1,5 @@
+.stderr
+.stdout
+Cargo.lock
 book
+target
