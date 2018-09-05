@@ -19,6 +19,6 @@ pub unsafe extern "C" fn Reset() -> ! {
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
 
 #[panic_handler]
-fn panic(_panic: &PanicInfo) -> ! {
+fn panic(_panic: &PanicInfo<'_>) -> ! {
     loop {}
 }

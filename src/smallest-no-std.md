@@ -44,6 +44,15 @@ $ cargo new --bin app
 
 $ cd app
 
+$ # don't forget to move the project to the 2018 edition
+$ head -n5 Cargo.toml
+```
+
+``` toml
+{{#include ../ci/smallest-no-std/Cargo.toml:1:5}}
+```
+
+``` console
 $ # modify main.rs so it has these contents
 $ cat src/main.rs
 ```

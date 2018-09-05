@@ -23,6 +23,8 @@ main() {
     diff app.o.nm \
          <(cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^n] ')
 
+    edition_check
+
     popd
 
     # # memory-layout
@@ -38,6 +40,8 @@ main() {
 
     qemu_check target/thumbv7m-none-eabi/debug/app
 
+    edition_check
+
     popd
 
     # # main
@@ -47,20 +51,25 @@ main() {
     pushd app
     diff app.objdump \
          <(cargo objdump --bin app -- -d -no-show-raw-insn)
+    # disabled because of rust-lang/rust#53964
+    # edition_check
     popd
 
     # check that it builds
     pushd app2
     cargo build
+    edition_check
     popd
 
     pushd app3
     cargo build
+    edition_check
     popd
 
     pushd app4
     cargo build
     qemu_check target/thumbv7m-none-eabi/debug/app
+    edition_check
     popd
 
     popd
@@ -72,14 +81,21 @@ main() {
     pushd app
     diff app.vector_table.objdump \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
+    edition_check
     popd
 
     # check that it builds
     pushd app2
     cargo build
+    edition_check
     popd
 
     popd
+}
+
+# checks that 2018 idioms are being used
+edition_check() {
+    RUSTFLAGS="-D rust_2018_compatibility -D rust_2018_idioms" cargo check
 }
 
 # checks that QEMU doesn't crash and that it produces no error messages

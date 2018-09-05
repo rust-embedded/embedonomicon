@@ -15,11 +15,11 @@ And then rename it to `rt` which stands for "runtime".
 ``` console
 $ sed -i s/app/rt/ Cargo.toml
 
-$ head -n2 Cargo.toml
+$ head -n5 Cargo.toml
 ```
 
 ``` toml
-{{#include ../ci/main/rt/Cargo.toml:1:2}}
+{{#include ../ci/main/rt/Cargo.toml:1:5}}
 ```
 
 The first change is to have the reset handler call an external `main` function:
@@ -67,6 +67,15 @@ $ cargo new --bin app
 
 $ cd app
 
+$ # again, don't forget to move the project to the 2018 edition
+$ head -n5 Cargo.toml
+```
+
+``` toml
+{{#include ../ci/main/app/Cargo.toml:1:5}}
+```
+
+``` console
 $ cargo add rt --path ../rt
 
 $ # copy over the config file that sets a default target and tweaks the linker invocation

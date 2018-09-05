@@ -42,6 +42,23 @@ nor is access to a Cortex-M microcontroller needed -- all the examples included 
 QEMU. You will, however, need to install the following tools to run and inspect the examples in this
 book:
 
+- All the code in this book uses the 2018 edition. If you are not familiar with
+the 2018 features and idioms check [the edition guide]. Please also note that
+until the 2018 edition is officially released you'll have to *manually modify
+the Cargo.toml of new projects* to make use the 2018 edition. The required
+changes are shown below:
+
+[the edition guide]: https://rust-lang-nursery.github.io/edition-guide/
+
+``` diff
++cargo-features = ["edition"]
++
+ [package]
++edition = "2018"
+ name = "hello"
+ version = "0.1.0"
+```
+
 - A nightly toolchain from 2018-08-28 or newer.
 
 - [`cargo-binutils`](https://github.com/japaric/cargo-binutils). v0.1.2 or newer.

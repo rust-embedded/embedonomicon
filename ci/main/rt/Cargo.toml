@@ -1,6 +1,9 @@
+cargo-features = ["edition"]
+
 [package]
-name = "rt"
-version = "0.1.0"
+name = "rt" # <-
 authors = ["Jorge Aparicio <jorge@japaric.io>"]
+edition = "2018"
+version = "0.1.0"
 
 [dependencies]
