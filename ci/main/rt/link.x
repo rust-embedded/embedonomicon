@@ -48,3 +48,5 @@ SECTIONS
     *(.ARM.exidx.*);
   }
 }
+
+ASSERT(SIZEOF(.vector_table) == 8, "malformed / incomplete vector table");
