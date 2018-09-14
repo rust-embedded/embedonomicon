@@ -43,11 +43,11 @@ The first thing we'll do is create an array of vectors (pointers to exception ha
 `rt` crate's code:
 
 ``` console
-$ sed -n 57,92p ../rt/src/lib.rs
+$ sed -n 56,91p ../rt/src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/exceptions/rt/src/lib.rs:57:92}}
+{{#include ../ci/exceptions/rt/src/lib.rs:56:91}}
 ```
 
 Some of the entries in the vector table are *reserved*; the ARM documentation states that they
@@ -63,7 +63,7 @@ $ tail -n4 ../rt/src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/exceptions/rt/src/lib.rs:94:97}}
+{{#include ../ci/exceptions/rt/src/lib.rs:93:97}}
 ```
 
 ## Linker script side
@@ -105,24 +105,31 @@ handler for the respective exception.
 That's it! The `rt` crate now has support for exception handlers. We can test it out with following
 application:
 
+> **NOTE**: Turns out it's hard to generate an exception in QEMU. On real
+> hardware a read to an invalid memory address (i.e. outside of the Flash and
+> RAM regions) would be enough but QEMU happily accepts the operation and
+> returns zero. A trap instruction works on both QEMU and hardware but
+> unfortunately it's not available on stable so you'll have to temporarily
+> switch to nightly to run this and the next example.
+
 ``` rust
 {{#include ../ci/exceptions/app/src/main.rs}}
 ```
 
 ``` console
 (lldb) b DefaultExceptionHandler
-Breakpoint 1: where = app`DefaultExceptionHandler at lib.rs:96, address = 0x000000ec
+Breakpoint 1: where = app`DefaultExceptionHandler at lib.rs:95, address = 0x000000ec
 
 (lldb) continue
 Process 1 resuming
 Process 1 stopped
 * thread #1, stop reason = breakpoint 1.1
-    frame #0: 0x000000ec app`DefaultExceptionHandler at lib.rs:96
-   93
-   94   #[no_mangle]
-   95   pub extern "C" fn DefaultExceptionHandler() {
--> 96       loop {}
-   97   }
+    frame #0: 0x000000ec app`DefaultExceptionHandler at lib.rs:95
+   92
+   93   #[no_mangle]
+   94   pub extern "C" fn DefaultExceptionHandler() {
+-> 95       loop {}
+   96   }
 ```
 
 And for completeness, here's the disassembly of the optimized version of the program:
@@ -220,12 +227,12 @@ You can test it in QEMU
 Process 1 resuming
 Process 1 stopped
 * thread #1, stop reason = breakpoint 1.1
-    frame #0: 0x00000044 app`HardFault at main.rs:19
-   16   #[no_mangle]
-   17   pub extern "C" fn HardFault() -> ! {
-   18       // do something interesting here
--> 19       loop {}
-   20   }
+    frame #0: 0x00000044 app`HardFault at main.rs:18
+   15   #[no_mangle]
+   16   pub extern "C" fn HardFault() -> ! {
+   17       // do something interesting here
+-> 18       loop {}
+   19   }
 ```
 
 The program now executes the user defined `HardFault` function instead of the
@@ -234,6 +241,8 @@ The program now executes the user defined `HardFault` function instead of the
 Like our first attempt at a `main` interface, this first implementation has the problem of having no
 type safety. It's also easy to mistype the name of the exception, but that doesn't produce an error
 or warning. Instead the user defined handler is simply ignored. Those problems can be fixed using a
-macro like the [`exception!`] macro defined in `cortex-m-rt`.
+macro like the [`exception!`] macro defined in `cortex-m-rt` v0.5.x or the
+[`exception`] attribute in `cortex-m-rt` v0.6.x.
 
-[`exception!`]: https://github.com/japaric/cortex-m-rt/blob/v0.5.1/src/lib.rs#L79
+[`exception!`]: https://github.com/japaric/cortex-m-rt/blob/v0.5.1/src/lib.rs#L792
+[`exception`]: https://github.com/rust-embedded/cortex-m-rt/blob/v0.6.3/macros/src/lib.rs#L254

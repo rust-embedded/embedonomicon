@@ -1,4 +1,3 @@
-#![feature(panic_handler)]
 #![no_std]
 
 use core::panic::PanicInfo;

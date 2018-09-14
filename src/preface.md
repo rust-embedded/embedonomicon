@@ -37,49 +37,54 @@ This book mainly targets to two audiences:
 
 ### Requirements
 
-This book is self contained. The reader doesn't need to be familiar with the Cortex-M architecture,
-nor is access to a Cortex-M microcontroller needed -- all the examples included in this book can be tested in
-QEMU. You will, however, need to install the following tools to run and inspect the examples in this
+This book is self contained. The reader doesn't need to be familiar with the
+Cortex-M architecture, nor is access to a Cortex-M microcontroller needed -- all
+the examples included in this book can be tested in QEMU. You will, however,
+need to install the following tools to run and inspect the examples in this
 book:
 
 - All the code in this book uses the 2018 edition. If you are not familiar with
-the 2018 features and idioms check [the edition guide]. Please also note that
-until the 2018 edition is officially released you'll have to *manually modify
-the Cargo.toml of new projects* to make use the 2018 edition. The required
-changes are shown below:
+  the 2018 features and idioms check [the edition guide].
 
-[the edition guide]: https://rust-lang-nursery.github.io/edition-guide/
+- Rust 1.30, 1.30-beta, nightly-2018-09-13, or a newer toolchain PLUS ARM
+  Cortex-M compilation support.
 
-``` diff
-+cargo-features = ["edition"]
-+
- [package]
-+edition = "2018"
- name = "hello"
- version = "0.1.0"
-```
-
-- A nightly toolchain from 2018-08-28 or newer.
-
-- [`cargo-binutils`](https://github.com/japaric/cargo-binutils). v0.1.2 or newer.
+- [`cargo-binutils`](https://github.com/japaric/cargo-binutils). v0.1.4 or newer.
 
 - [`cargo-edit`](https://crates.io/crates/cargo-edit).
 
-- The `thumbv7m-none-eabi` target.
+- QEMU with support for ARM emulation. The `qemu-system-arm` program must be
+  installed on your computer.
 
-- QEMU with support for ARM emulation. The `qemu-system-arm` program must be installed on your
-  computer. The name may differ for non-Debian based distributions.
+- LLDB. GDB with ARM support can also be used, but this book chooses LLDB as
+  it's more likely that readers that are not into Cortex-M development have
+  installed LLDB than GDB with ARM support.
 
-- LLDB. GDB with ARM support can also be used, but this book chooses LLDB as it's more likely that
-  readers that are not into Cortex-M development have installed LLDB than GDB with ARM support.
+#### Example setup on Ubuntu 18.04
 
-  #### Rust toolchain setup on Linux
+``` console
+$ # Rust toolchain
+$ # If you start from scratch, get rustup from https://rustup.rs/
+$ rustup default beta
 
-  ```bash
-  rustup default nightly # If you start from scratch, get rustup from https://rustup.rs/
-  rustup target add thumbv7m-none-eabi
-  cargo install cargo-binutils
-  rustup component add llvm-tools-preview
-  sudo apt-get install libssl-dev # For Debian based systems (Ubuntu)
-  cargo install cargo-edit
-  ```
+$ rustc -V
+rustc 1.30.0-beta (????????? 2018-09-1?)
+
+$ rustup target add thumbv7m-none-eabi
+
+$ # cargo-binutils
+$ cargo install cargo-binutils
+
+$ rustup component add llvm-tools-preview
+
+$ # cargo-edit
+$ sudo apt-get install gcc libssl-dev pkg-config
+
+$ cargo install cargo-edit
+
+$ # QEMU
+$ sudo apt-get install qemu-system-arm
+
+$ # LLDB
+$ sudo apt-get install lldb
+```
