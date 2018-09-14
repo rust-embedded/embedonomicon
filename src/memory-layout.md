@@ -246,12 +246,12 @@ $ lldb target/thumbv7m-none-eabi/debug/app
 (lldb) gdb-remote 3333
 Process 1 stopped
 * thread #1, stop reason = signal SIGTRAP
-    frame #0: 0x00000008 app`Reset at main.rs:23
-   20
-   21   #[panic_handler]
-   22   fn panic(_panic: &PanicInfo) -> ! {
--> 23       loop {}
-   24   }
+    frame #0: 0x00000008 app`Reset at main.rs:22
+   19
+   20   #[panic_handler]
+   21   fn panic(_panic: &PanicInfo<'_>) -> ! {
+-> 22       loop {}
+   23   }
 
 (lldb) # ^ that source is wrong; the processor is about to execute Reset; see below
 (lldb) disassemble -frame
@@ -259,8 +259,8 @@ app`Reset:
 ->  0x8 <+0>:  sub    sp, #0x4
     0xa <+2>:  movs   r0, #0x2a
     0xc <+4>:  str    r0, [sp]
-    0xe <+6>:  b      0x10                      ; <+8> at main.rs:13
-    0x10 <+8>: b      0x10                      ; <+8> at main.rs:13
+    0xe <+6>:  b      0x10                      ; <+8> at main.rs:12
+    0x10 <+8>: b      0x10                      ; <+8> at main.rs:12
 
 (lldb) # the SP has the initial value we programmed in the vector table
 (lldb) print/x $sp

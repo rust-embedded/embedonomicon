@@ -40,10 +40,12 @@ runs on a system. It can be many things that a standard Rust application can nev
 With that out of the way, we can move on to the smallest `#![no_std]` program that compiles:
 
 ``` console
-$ cargo new --bin app
+$ cargo new --edition 2018 --bin app
 
 $ cd app
+```
 
+``` console
 $ # modify main.rs so it has these contents
 $ cat src/main.rs
 ```
@@ -68,8 +70,6 @@ indexing).
 This program doesn't produce anything useful. In fact, it will produce an empty binary.
 
 ``` console
-$ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
-
 $ # equivalent to `size target/thumbv7m-none-eabi/debug/app`
 $ cargo size --target thumbv7m-none-eabi --bin app
 ```
@@ -78,7 +78,11 @@ $ cargo size --target thumbv7m-none-eabi --bin app
 {{#include ../ci/smallest-no-std/app.size}}
 ```
 
+Before linking the crate does contain the panicking symbol.
+
 ``` console
+$ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
+
 $ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^n] '
 ```
 

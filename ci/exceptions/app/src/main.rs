@@ -2,10 +2,9 @@
 #![no_main]
 #![no_std]
 
-#[macro_use]
-extern crate rt;
-
 use core::intrinsics;
+
+use rt::entry;
 
 entry!(main);
 

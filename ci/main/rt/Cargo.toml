@@ -1,5 +1,6 @@
 [package]
-name = "rt"
+edition = "2018"
+name = "rt" # <-
 version = "0.1.0"
 authors = ["Jorge Aparicio <jorge@japaric.io>"]
 

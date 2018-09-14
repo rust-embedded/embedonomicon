@@ -15,21 +15,21 @@ And then rename it to `rt` which stands for "runtime".
 ``` console
 $ sed -i s/app/rt/ Cargo.toml
 
-$ head -n2 Cargo.toml
+$ head -n4 Cargo.toml
 ```
 
 ``` toml
-{{#include ../ci/main/rt/Cargo.toml:1:2}}
+{{#include ../ci/main/rt/Cargo.toml:1:4}}
 ```
 
 The first change is to have the reset handler call an external `main` function:
 
 ``` console
-$ head -n14 src/lib.rs
+$ head -n13 src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/main/rt/src/lib.rs:1:14}}
+{{#include ../ci/main/rt/src/lib.rs:1:13}}
 ```
 
 We also drop the `#![no_main]` attribute has it has no effect on library crates.
@@ -63,7 +63,7 @@ The `rt` will take care of giving the program the right memory layout.
 ``` console
 $ cd ..
 
-$ cargo new --bin app
+$ cargo new --edition 2018 --bin app
 
 $ cd app
 
@@ -104,7 +104,7 @@ $ tail -n12 ../rt/src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/main/rt/src/lib.rs:26:37}}
+{{#include ../ci/main/rt/src/lib.rs:25:37}}
 ```
 
 Then the application writers can invoke it like this:
@@ -215,7 +215,7 @@ $ head -n32 ../rt/src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/main/rt2/src/lib.rs:1:32}}
+{{#include ../ci/main/rt2/src/lib.rs:1:31}}
 ```
 
 Now end users can directly and indirectly make use of `static` variables without running into

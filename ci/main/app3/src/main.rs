@@ -1,8 +1,7 @@
 #![no_std]
 #![no_main]
 
-#[macro_use]
-extern crate rt;
+use rt::entry;
 
 entry!(main);
 
