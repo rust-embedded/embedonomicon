@@ -117,57 +117,39 @@ application:
 ```
 
 ``` console
-(lldb) b DefaultExceptionHandler
-Breakpoint 1: where = app`DefaultExceptionHandler at lib.rs:95, address = 0x000000ec
+(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at ../rt/src/lib.rs:7
+7       pub unsafe extern "C" fn Reset() -> ! {
 
-(lldb) continue
-Process 1 resuming
-Process 1 stopped
-* thread #1, stop reason = breakpoint 1.1
-    frame #0: 0x000000ec app`DefaultExceptionHandler at lib.rs:95
-   92
-   93   #[no_mangle]
-   94   pub extern "C" fn DefaultExceptionHandler() {
--> 95       loop {}
-   96   }
+(gdb) b DefaultExceptionHandler
+Breakpoint 1 at 0xec: file ../rt/src/lib.rs, line 95.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, DefaultExceptionHandler ()
+    at ../rt/src/lib.rs:95
+95          loop {}
+
+(gdb) list
+90          Vector { handler: SysTick },
+91      ];
+92
+93      #[no_mangle]
+94      pub extern "C" fn DefaultExceptionHandler() {
+95          loop {}
+96      }
 ```
 
 And for completeness, here's the disassembly of the optimized version of the program:
 
 ``` console
-$ cargo objdump --bin app --release -- -d
+$ cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex
 ```
 
-> **NOTE** `llvm-objdump`, which is what `cargo-objdump` invokes, produces
-> broken output for this particular file so the output below is actually the
-> output from `arm-none-eabi-objdump`
-
-
 ``` text
-00000040 <main>:
-  40:   defe            udf     #254    ; 0xfe
-  42:   defe            udf     #254    ; 0xfe
-
-00000044 <Reset>:
-  44:   f240 0100       movw    r1, #0
-  48:   f240 0000       movw    r0, #0
-  4c:   f2c2 0100       movt    r1, #8192       ; 0x2000
-  50:   f2c2 0000       movt    r0, #8192       ; 0x2000
-  54:   1a09            subs    r1, r1, r0
-  56:   f000 f869       bl      12c <__aeabi_memclr>
-  5a:   f240 0100       movw    r1, #0
-  5e:   f240 0000       movw    r0, #0
-  62:   f2c2 0100       movt    r1, #8192       ; 0x2000
-  66:   f2c2 0000       movt    r0, #8192       ; 0x2000
-  6a:   1a0a            subs    r2, r1, r0
-  6c:   f240 1132       movw    r1, #306        ; 0x132
-  70:   f2c0 0100       movt    r1, #0
-  74:   f000 f804       bl      80 <__aeabi_memcpy>
-  78:   f7ff ffe2       bl      40 <main>
-  7c:   defe            udf     #254    ; 0xfe
-
-0000007e <DefaultExceptionHandler>:
-  7e:   e7fe            b.n     7e <DefaultExceptionHandler>
+{{#include ../ci/exceptions/app/app.objdump:1:28}}
 ```
 
 ``` console
@@ -221,18 +203,28 @@ matches the name we used in `EXCEPTIONS`.
 You can test it in QEMU
 
 ``` console
-(lldb) b HardFault
+(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at /home/japaric/rust/embedonomicon/ci/exceptions/rt/src/lib.rs:7
+7       pub unsafe extern "C" fn Reset() -> ! {
 
-(lldb) continue
-Process 1 resuming
-Process 1 stopped
-* thread #1, stop reason = breakpoint 1.1
-    frame #0: 0x00000044 app`HardFault at main.rs:18
-   15   #[no_mangle]
-   16   pub extern "C" fn HardFault() -> ! {
-   17       // do something interesting here
--> 18       loop {}
-   19   }
+(gdb) b HardFault
+Breakpoint 1 at 0x44: file src/main.rs, line 18.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, HardFault () at src/main.rs:18
+18          loop {}
+
+(gdb) list
+13      }
+14
+15      #[no_mangle]
+16      pub extern "C" fn HardFault() -> ! {
+17          // do something interesting here
+18          loop {}
+19      }
 ```
 
 The program now executes the user defined `HardFault` function instead of the

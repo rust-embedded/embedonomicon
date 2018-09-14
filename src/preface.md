@@ -1,12 +1,10 @@
 # The embedonomicon
 
-## Preface
-
 The embedonomicon walks you through the process of creating a `#![no_std]` application from scratch
 and through the iterative process of building architecture-specific functionality for Cortex-M
 microcontrollers.
 
-### Objectives
+## Objectives
 
 By reading this book you will learn
 
@@ -20,7 +18,7 @@ By reading this book you will learn
 
 - A trick to implement default functionality that can be statically overridden (no runtime cost).
 
-### Target audience
+## Target audience
 
 This book mainly targets to two audiences:
 
@@ -35,7 +33,7 @@ This book mainly targets to two audiences:
 [`msp430-rt`]: https://crates.io/crates/msp430-rt
 [`riscv-rt`]: https://crates.io/crates/riscv-rt
 
-### Requirements
+## Requirements
 
 This book is self contained. The reader doesn't need to be familiar with the
 Cortex-M architecture, nor is access to a Cortex-M microcontroller needed -- all
@@ -56,11 +54,11 @@ book:
 - QEMU with support for ARM emulation. The `qemu-system-arm` program must be
   installed on your computer.
 
-- LLDB. GDB with ARM support can also be used, but this book chooses LLDB as
-  it's more likely that readers that are not into Cortex-M development have
-  installed LLDB than GDB with ARM support.
+- GDB with ARM support.
 
-#### Example setup on Ubuntu 18.04
+### Example setup
+
+Instructions common to all OSes
 
 ``` console
 $ # Rust toolchain
@@ -77,14 +75,32 @@ $ cargo install cargo-binutils
 
 $ rustup component add llvm-tools-preview
 
-$ # cargo-edit
-$ sudo apt-get install gcc libssl-dev pkg-config
+```
 
-$ cargo install cargo-edit
+#### macOS
+
+``` console
+$ # arm-none-eabi-gdb
+$ # you may need to run `brew tap Caskroom/tap` first
+$ brew cask install gcc-arm-embedded
+
+$ # QEMU
+$ brew install qemu
+```
+
+#### Ubuntu 16.04
+
+``` console
+$ # arm-none-eabi-gdb
+$ sudo apt-get install gdb-arm-none-eabi
 
 $ # QEMU
 $ sudo apt-get install qemu-system-arm
-
-$ # LLDB
-$ sudo apt-get install lldb
 ```
+
+#### Windows
+
+- [arm-none-eabi-gdb](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads).
+  The GNU Arm Embedded Toolchain includes GDB.
+
+- [QEMU](https://www.qemu.org/download/#windows)
