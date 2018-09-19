@@ -174,6 +174,9 @@ We have to tweak linker process to make it use our linker script. This is done
 passing the `-C link-arg` flag to `rustc` but there are two ways to do it: you
 can use the `cargo-rustc` subcommand instead of `cargo-build` as shown below:
 
+**IMPORTANT**: Make sure you have the `.cargo/config` file that was added at the
+end of the last section before running this command.
+
 ``` console
 $ cargo rustc -- -C link-arg=-Tlink.x
 ```
@@ -241,51 +244,30 @@ $ qemu-system-arm \
 
 ``` console
 $ # on a different terminal
-$ lldb target/thumbv7m-none-eabi/debug/app
+$ arm-none-eabi-gdb -q target/thumbv7m-none-eabi/debug/app
+Reading symbols from target/thumbv7m-none-eabi/debug/app...done.
 
-(lldb) gdb-remote 3333
-Process 1 stopped
-* thread #1, stop reason = signal SIGTRAP
-    frame #0: 0x00000008 app`Reset at main.rs:22
-   19
-   20   #[panic_handler]
-   21   fn panic(_panic: &PanicInfo<'_>) -> ! {
--> 22       loop {}
-   23   }
+(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at src/main.rs:8
+8       pub unsafe extern "C" fn Reset() -> ! {
 
-(lldb) # ^ that source is wrong; the processor is about to execute Reset; see below
-(lldb) disassemble -frame
-app`Reset:
-->  0x8 <+0>:  sub    sp, #0x4
-    0xa <+2>:  movs   r0, #0x2a
-    0xc <+4>:  str    r0, [sp]
-    0xe <+6>:  b      0x10                      ; <+8> at main.rs:12
-    0x10 <+8>: b      0x10                      ; <+8> at main.rs:12
+(gdb) # the SP has the initial value we programmed in the vector table
+(gdb) print/x $sp
+$1 = 0x20010000
 
-(lldb) # the SP has the initial value we programmed in the vector table
-(lldb) print/x $sp
-(unsigned int) $0 = 0x20010000
+(gdb) step
+9           let _x = 42;
 
-(lldb) step
-(lldb) step
-(lldb) step
-Process 1 stopped
-* thread #1, stop reason = step in
-    frame #0: 0x0000000e app`Reset at main.rs:13
-   10       let _x = 42;
-   11
-   12       // can't return so we go into an infinite loop here
--> 13       loop {}
-   14   }
-   15
-   16   // The reset vector, a pointer into the reset handler
+(gdb) step
+12          loop {}
 
-(lldb) # next we inspect the stack variable `_x`
-(lldb) print _x
-(int) $1 = 42
+(gdb) # next we inspect the stack variable `_x`
+(gdb) print _x
+$2 = 42
 
-(lldb) print &_x
-(int *) $2 = 0x2000fffc
+(gdb) print &_x
+$3 = (i32 *) 0x2000fffc
 
-(lldb) exit
+(gdb) quit
 ```

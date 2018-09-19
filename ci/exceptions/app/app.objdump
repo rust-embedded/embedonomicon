@@ -1,0 +1,113 @@
+
+app:	file format ELF32-arm-little
+
+Disassembly of section .text:
+main:
+      40:	trap
+      42:	trap
+
+Reset:
+      44:	movw	r1, #0x0
+      48:	movw	r0, #0x0
+      4c:	movt	r1, #0x2000
+      50:	movt	r0, #0x2000
+      54:	subs	r1, r1, r0
+      56:	bl	#0xd2
+      5a:	movw	r1, #0x0
+      5e:	movw	r0, #0x0
+      62:	movt	r1, #0x2000
+      66:	movt	r0, #0x2000
+      6a:	subs	r2, r1, r0
+      6c:	movw	r1, #0x0
+      70:	movt	r1, #0x0
+      74:	bl	#0x8
+      78:	bl	#-0x3c
+      7c:	trap
+
+DefaultExceptionHandler:
+      7e:	b	#-0x4 <DefaultExceptionHandler>
+
+UsageFault:
+      7f:	sub	sp, #0x19c
+
+__aeabi_memcpy:
+      80:	push	{r4, r5, r7, lr}
+      82:	cbz	r2, #0x56
+      84:	subs	r3, r2, #0x1
+      86:	and	r12, r2, #0x3
+      8a:	cmp	r3, #0x3
+      8c:	bhs	#0x8 <__aeabi_memcpy+0x18>
+      8e:	movs	r2, #0x0
+      90:	cmp.w	r12, #0x0
+      94:	bne	#0x26 <__aeabi_memcpy+0x3e>
+      96:	b	#0x42 <__aeabi_memcpy+0x5c>
+      98:	sub.w	lr, r2, r12
+      9c:	movs	r2, #0x0
+      9e:	ldrb	r3, [r1, r2]
+      a0:	adds	r4, r1, r2
+      a2:	strb	r3, [r0, r2]
+      a4:	adds	r3, r0, r2
+      a6:	adds	r2, #0x4
+      a8:	ldrb	r5, [r4, #0x1]
+      aa:	cmp	lr, r2
+      ac:	strb	r5, [r3, #0x1]
+      ae:	ldrb	r5, [r4, #0x2]
+      b0:	strb	r5, [r3, #0x2]
+      b2:	ldrb	r4, [r4, #0x3]
+      b4:	strb	r4, [r3, #0x3]
+      b6:	bne	#-0x1c <__aeabi_memcpy+0x1e>
+      b8:	cmp.w	r12, #0x0
+      bc:	beq	#0x1c <__aeabi_memcpy+0x5c>
+      be:	ldrb	r3, [r1, r2]
+      c0:	cmp.w	r12, #0x1
+      c4:	strb	r3, [r0, r2]
+      c6:	beq	#0x12 <__aeabi_memcpy+0x5c>
+      c8:	adds	r3, r2, #0x1
+      ca:	cmp.w	r12, #0x2
+      ce:	ldrb	r5, [r1, r3]
+      d0:	strb	r5, [r0, r3]
+      d2:	it	eq
+      d4:	popeq	{r4, r5, r7, pc}
+      d6:	adds	r2, #0x2
+      d8:	ldrb	r1, [r1, r2]
+      da:	strb	r1, [r0, r2]
+      dc:	pop	{r4, r5, r7, pc}
+
+__aeabi_memset:
+      de:	cmp	r1, #0x0
+      e0:	it	eq
+      e2:	bxeq	lr
+      e4:	push	{r7, lr}
+      e6:	subs	r3, r1, #0x1
+      e8:	and	r12, r1, #0x3
+      ec:	cmp	r3, #0x3
+      ee:	bhs	#0x2 <__aeabi_memset+0x16>
+      f0:	movs	r1, #0x0
+      f2:	b	#0x14 <__aeabi_memset+0x2c>
+      f4:	sub.w	lr, r1, r12
+      f8:	movs	r1, #0x0
+      fa:	strb	r2, [r0, r1]
+      fc:	adds	r3, r0, r1
+      fe:	adds	r1, #0x4
+     100:	cmp	lr, r1
+     102:	strb	r2, [r3, #0x1]
+     104:	strb	r2, [r3, #0x2]
+     106:	strb	r2, [r3, #0x3]
+     108:	bne	#-0x12 <__aeabi_memset+0x1c>
+     10a:	cmp.w	r12, #0x0
+     10e:	pop.w	{r7, lr}
+     112:	itt	ne
+     114:	strbne	r2, [r0, r1]
+     116:	cmpne.w	r12, #0x1
+     11a:	bne	#0x0 <__aeabi_memset+0x40>
+     11c:	bx	lr
+     11e:	add	r0, r1
+     120:	cmp.w	r12, #0x2
+     124:	strb	r2, [r0, #0x1]
+     126:	it	ne
+     128:	strbne	r2, [r0, #0x2]
+     12a:	bx	lr
+
+__aeabi_memclr:
+     12c:	movs	r2, #0x0
+     12e:	b.w	#-0x54 <__aeabi_memset>

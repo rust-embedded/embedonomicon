@@ -79,6 +79,8 @@ main() {
 
     # check that the disassembly matches
     pushd app
+    diff app.objdump \
+         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex)
     diff app.vector_table.objdump \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check

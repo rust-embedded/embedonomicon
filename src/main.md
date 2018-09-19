@@ -67,8 +67,15 @@ $ cargo new --edition 2018 --bin app
 
 $ cd app
 
-$ cargo add rt --path ../rt
+$ # modify Cargo.toml to include the `rt` crate as a dependency
+$ tail -n2 Cargo.toml
+```
 
+``` toml
+{{#include ../ci/main/app/src/Cargo.toml:7:8}}
+```
+
+``` console
 $ # copy over the config file that sets a default target and tweaks the linker invocation
 $ cp -r ../rt/.cargo .
 

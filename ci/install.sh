@@ -14,7 +14,7 @@ main() {
     rustup component add llvm-tools-preview
 
     curl -LSfs https://japaric.github.io/trust/install.sh | \
-        sh -s -- --git rust-embedded/cargo-binutils --tag v0.1.2
+        sh -s -- --git rust-embedded/cargo-binutils --tag v0.1.4
 
     pip install linkchecker --user
 }
