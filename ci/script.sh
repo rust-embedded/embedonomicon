@@ -66,33 +66,39 @@ main() {
     edition_check
     popd
 
-    pushd app4
-    cargo build
-    qemu_check target/thumbv7m-none-eabi/debug/app
-    edition_check
-    popd
+    # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
+    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+        pushd app4
+        cargo build
+        qemu_check target/thumbv7m-none-eabi/debug/app
+        edition_check
+        popd
+    fi
 
     popd
 
     # # exception handling
-    pushd exceptions
+    # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
+    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+        pushd exceptions
 
-    # check that the disassembly matches
-    pushd app
-    diff app.objdump \
-         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex)
-    diff app.vector_table.objdump \
-         <(cargo objdump --bin app --release -- -s -j .vector_table)
-    edition_check
-    popd
+        # check that the disassembly matches
+        pushd app
+        diff app.objdump \
+             <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex)
+        diff app.vector_table.objdump \
+             <(cargo objdump --bin app --release -- -s -j .vector_table)
+        edition_check
+        popd
 
-    # check that it builds
-    pushd app2
-    cargo build
-    edition_check
-    popd
+        # check that it builds
+        pushd app2
+        cargo build
+        edition_check
+        popd
 
-    popd
+        popd
+    fi
 }
 
 # checks that 2018 idioms are being used
