@@ -1,10 +1,17 @@
 language: rust
-rust: nightly
 
 addons:
   apt:
     packages:
       - qemu-system-arm
+
+matrix:
+  include:
+    - rust: beta
+
+matrix:
+  include:
+    - rust: nightly
 
 install:
   - bash ci/install.sh

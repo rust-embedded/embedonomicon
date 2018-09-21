@@ -65,8 +65,9 @@ $ # Rust toolchain
 $ # If you start from scratch, get rustup from https://rustup.rs/
 $ rustup default beta
 
+$ # toolchain should be newer than this one
 $ rustc -V
-rustc 1.30.0-beta (????????? 2018-09-1?)
+rustc 1.30.0-beta.1 (14f51b05d 2018-09-18)
 
 $ rustup target add thumbv7m-none-eabi
 
