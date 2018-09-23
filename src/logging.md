@@ -1,6 +1,6 @@
 # Logging with symbols
 
-This section will show you how to exploit symbols and the ELF format to achieve
+This section will show you how to utilize symbols and the ELF format to achieve
 super cheap logging.
 
 ## Arbitrary symbols
