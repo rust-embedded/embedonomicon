@@ -1,3 +1,4 @@
+*.o
 .stderr
 .stdout
 Cargo.lock
