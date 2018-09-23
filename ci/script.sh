@@ -130,6 +130,51 @@ main() {
     popd
 
     popd
+
+    # # Logging with symbols
+    pushd logging
+
+    # check that the output and disassembly matches
+    pushd app
+    diff dev.out \
+         <(cargo run)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.rodata\s*0*1\b')
+    diff release.out \
+         <(cargo run --release)
+    diff release.objdump \
+         <(cargo objdump --bin app --release -- -t | grep '\.rodata\s*0*1\b')
+    edition_check
+    popd
+
+    # check that the output and disassembly matches
+    pushd app2
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    edition_check
+    popd
+
+    # check that the output and disassembly matches
+    pushd app3
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    edition_check
+    popd
+
+    # check that the output and disassembly matches
+    pushd app4
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    edition_check
+    popd
+
+    popd
 }
 
 # checks that 2018 idioms are being used

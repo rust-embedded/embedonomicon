@@ -6,5 +6,6 @@
 - [A `main` interface](./main.md)
 - [Exception handling](./exceptions.md)
 - [Assembly on stable](./asm.md)
+- [Logging with symbols](./logging.md)
 ---
 [A note on compiler support](./compiler-support.md)
