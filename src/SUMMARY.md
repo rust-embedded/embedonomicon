@@ -7,5 +7,6 @@
 - [Exception handling](./exceptions.md)
 - [Assembly on stable](./asm.md)
 - [Logging with symbols](./logging.md)
+- [Global singletons](./singleton.md)
 ---
 [A note on compiler support](./compiler-support.md)
