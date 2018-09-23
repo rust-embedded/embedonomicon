@@ -1,0 +1,8 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+edition = "2018"
+name = "app"
+version = "0.1.0"
+
+[dependencies]
+rt = { path = "../rt" }

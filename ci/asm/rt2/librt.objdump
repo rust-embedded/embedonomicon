@@ -1,0 +1,10 @@
+In archive librt.a:
+
+asm.o:     file format elf32-littlearm
+
+
+Disassembly of section .text.HardFaultTrampoline:
+
+00000000 <HardFaultTrampoline>:
+   0:	f3ef 8008 	mrs	r0, MSP
+   4:	e7fe      	b.n	0 <HardFault>

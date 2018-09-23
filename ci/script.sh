@@ -99,6 +99,37 @@ main() {
 
         popd
     fi
+
+    # # Assembly on stable
+    pushd asm
+
+    # check that the disassembly matches
+    pushd app
+    diff release.objdump \
+         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex)
+    diff release.vector_table \
+         <(cargo objdump --bin app --release -- -s -j .vector_table)
+    edition_check
+    popd
+
+    # check that the binary blob is up to date
+    pushd rt2
+    arm-none-eabi-as -march=armv7-m asm.s -o asm.o
+    ar crs librt.a asm.o
+    diff librt.objdump \
+         <(arm-none-eabi-objdump -Cd librt.a)
+    popd
+
+    # check that the disassembly matches
+    pushd app2
+    diff release.objdump \
+         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex)
+    diff release.vector_table \
+         <(cargo objdump --bin app --release -- -s -j .vector_table)
+    edition_check
+    popd
+
+    popd
 }
 
 # checks that 2018 idioms are being used
