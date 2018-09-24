@@ -130,6 +130,70 @@ main() {
     popd
 
     popd
+
+    # # Logging with symbols
+    pushd logging
+
+    # check that the ~output~ and disassembly matches
+    # the output won't exactly match because addresses of static variables won't
+    # remain the same when the toolchain is updated. Instead we'll that the
+    # printed address is contained in the output of `cargo objdump -- -t`
+    pushd app
+    cargo run > dev.out
+    cargo objdump --bin app -- -t | grep '\.rodata\s*0*1\b' > dev.objdump
+    for address in $(cat dev.out); do
+        grep ${address#0x} dev.objdump
+    done
+
+    cargo run --release > release.out
+    cargo objdump --bin app --release -- -t | grep '\.rodata\s*0*1\b' > dev.objdump
+    for address in $(cat release.out); do
+        grep ${address#0x} release.objdump
+    done
+
+    # sanity check the committed files
+    git checkout dev.out
+    git checkout dev.objdump
+    for address in $(cat dev.out); do
+        grep ${address#0x} dev.objdump
+    done
+
+    git checkout release.out
+    git checkout release.objdump
+    for address in $(cat release.out); do
+        grep ${address#0x} release.objdump
+    done
+    edition_check
+    popd
+
+    # check that the output and disassembly matches
+    pushd app2
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    edition_check
+    popd
+
+    # check that the output and disassembly matches
+    pushd app3
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    edition_check
+    popd
+
+    # check that the output and disassembly matches
+    pushd app4
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    edition_check
+    popd
+
+    popd
 }
 
 # checks that 2018 idioms are being used
