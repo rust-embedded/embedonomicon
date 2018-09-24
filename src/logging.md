@@ -104,6 +104,10 @@ $ qemu-system-arm \
 {{#include ../ci/logging/app/dev.out}}
 ```
 
+> **NOTE**: These addresses may not be the ones you get locally because
+> addresses of `static` variable are not guaranteed to remain the same when the
+> toolchain is changed (e.g. optimizations may have improved).
+
 Now we have two addresses printed to the console.
 
 ## Decoding
