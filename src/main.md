@@ -72,7 +72,7 @@ $ tail -n2 Cargo.toml
 ```
 
 ``` toml
-{{#include ../ci/main/app/src/Cargo.toml:7:8}}
+{{#include ../ci/main/app/Cargo.toml:7:8}}
 ```
 
 ``` console
