@@ -194,6 +194,21 @@ main() {
     popd
 
     popd
+
+    # # Logging with symbols
+    pushd singleton
+
+    pushd app
+    diff dev.out \
+         <(cargo run | xxd -p)
+    diff dev.objdump \
+         <(cargo objdump --bin app -- -t | grep '\.log')
+    diff release.objdump \
+         <(cargo objdump --bin app --release -- -t | grep LOGGER)
+    edition_check
+    popd
+
+    popd
 }
 
 # checks that 2018 idioms are being used
