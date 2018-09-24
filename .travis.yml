@@ -1,12 +1,5 @@
 language: rust
 
-addons:
-  apt:
-    sources:
-      - debian-sid
-    packages:
-      - qemu-system-arm
-
 matrix:
   include:
     - rust: beta
@@ -17,7 +10,7 @@ matrix:
 
 install:
   - bash ci/install.sh
-  - export PATH="$PATH:$PWD/gcc/bin"
+  - export PATH="$PATH:$PWD/gcc/bin:$PWD/qemu"
 
 script:
   - bash ci/script.sh
