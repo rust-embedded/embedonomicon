@@ -188,7 +188,7 @@ The vector table now resembles the results of all the code snippets in this book
       Cortex-M vector table. Hence, all reserved slots are correctly set to a
       value of zero.
 
-[_Inspecting it_]: https://rust-embedded.github.io/embedonomicon/memory-layout.html#inspecting-it
+[_Inspecting it_]: https://docs.rust-embedded.org/embedonomicon/memory-layout.html#inspecting-it
 [the vector table layout for the Cortex-M]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table
 
 ## Overriding a handler

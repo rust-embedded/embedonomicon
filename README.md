@@ -2,7 +2,7 @@
 
 > How to bootstrap support for a no_std target
 
-This book is being temporarily hosted at https://rust-embedded.github.io/embedonomicon/
+This book is hosted at https://docs.rust-embedded.org/embedonomicon/
 
 This project is developed and maintained by the [Resources team][team].
 
