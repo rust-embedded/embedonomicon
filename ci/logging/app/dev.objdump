@@ -1,2 +1,2 @@
-00001fe1 l       .rodata		 00000001 Goodbye
-00001fe0 l       .rodata		 00000001 Hello, world!
+00001fe1 g       .rodata		 00000001 Goodbye
+00001fe0 g       .rodata		 00000001 Hello, world!
