@@ -146,7 +146,7 @@ main() {
     done
 
     cargo run --release > release.out
-    cargo objdump --bin app --release -- -t | grep '\.rodata\s*0*1\b' > dev.objdump
+    cargo objdump --bin app --release -- -t | grep '\.rodata\s*0*1\b' > release.objdump
     for address in $(cat release.out); do
         grep ${address#0x} release.objdump
     done
