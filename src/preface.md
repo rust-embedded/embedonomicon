@@ -42,7 +42,7 @@ need to install the following tools to run and inspect the examples in this
 book:
 
 - All the code in this book uses the 2018 edition. If you are not familiar with
-  the 2018 features and idioms check [the edition guide].
+  the 2018 features and idioms check the [`edition guide`].
 
 - Rust 1.30, 1.30-beta, nightly-2018-09-13, or a newer toolchain PLUS ARM
   Cortex-M compilation support.
@@ -55,6 +55,8 @@ book:
   installed on your computer.
 
 - GDB with ARM support.
+
+[`edition guide`]: https://rust-lang-nursery.github.io/edition-guide/
 
 ### Example setup
 
