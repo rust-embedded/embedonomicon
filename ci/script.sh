@@ -16,7 +16,8 @@ main() {
     cargo rustc -- --emit=obj
 
     # check that the output is an empty binary
-    diff app.size \
+    # NOTE(-b) ignore change in whitespace
+    diff -b app.size \
          <(cargo size --bin app)
 
     # check presence of the `rust_begin_unwind` symbol

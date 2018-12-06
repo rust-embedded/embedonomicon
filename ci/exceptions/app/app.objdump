@@ -90,9 +90,9 @@ __aeabi_memset:
       fc:	adds	r3, r0, r1
       fe:	adds	r1, #0x4
      100:	cmp	lr, r1
-     102:	strb	r2, [r3, #0x1]
+     102:	strb	r2, [r3, #0x3]
      104:	strb	r2, [r3, #0x2]
-     106:	strb	r2, [r3, #0x3]
+     106:	strb	r2, [r3, #0x1]
      108:	bne	#-0x12 <__aeabi_memset+0x1c>
      10a:	cmp.w	r12, #0x0
      10e:	pop.w	{r7, lr}
