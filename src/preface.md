@@ -44,8 +44,7 @@ book:
 - All the code in this book uses the 2018 edition. If you are not familiar with
   the 2018 features and idioms check [the edition guide].
 
-- Rust 1.30, 1.30-beta, nightly-2018-09-13, or a newer toolchain PLUS ARM
-  Cortex-M compilation support.
+- Rust 1.31 or a newer toolchain PLUS ARM Cortex-M compilation support.
 
 - [`cargo-binutils`](https://github.com/japaric/cargo-binutils). v0.1.4 or newer.
 
@@ -63,11 +62,11 @@ Instructions common to all OSes
 ``` console
 $ # Rust toolchain
 $ # If you start from scratch, get rustup from https://rustup.rs/
-$ rustup default beta
+$ rustup default stable
 
 $ # toolchain should be newer than this one
 $ rustc -V
-rustc 1.30.0-beta.1 (14f51b05d 2018-09-18)
+rustc 1.31.0 (abe02cefd 2018-12-04)
 
 $ rustup target add thumbv7m-none-eabi
 
