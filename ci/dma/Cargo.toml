@@ -1,0 +1,9 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+edition = "2018"
+name = "shared"
+version = "0.1.0"
+
+[dependencies]
+as-slice = "0.1.0"
+pin-utils = "0.1.0-alpha.4"
