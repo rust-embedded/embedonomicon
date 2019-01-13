@@ -20,5 +20,8 @@ fn main() -> Result<(), Box<Error>> {
     fs::copy("librt.a", out_dir.join("librt.a"))?; // <- NEW!
     println!("cargo:rustc-link-lib=static=rt"); // <- NEW!
 
+    // rebuild if `librt.a` changed
+    println!("cargo:rerun-if-changed=librt.a"); // <- NEW!
+
     Ok(())
 }
