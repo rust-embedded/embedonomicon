@@ -53,7 +53,7 @@ impl<B> Transfer<B> {
     /// Blocks until the transfer is done and returns the buffer
     pub fn wait(self) -> (B, Serial1) {
         // NOTE: this is a volatile *read*
-        while self.is_done() {}
+        while !self.is_done() {}
 
         // NOTE: added
         atomic::compiler_fence(Ordering::Acquire);
