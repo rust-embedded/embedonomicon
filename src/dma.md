@@ -199,9 +199,27 @@ the fences will prevent the operations on `x` from being merged even though we
 know that `buf` doesn't overlap with `x` (due to Rust aliasing rules). However,
 there exist no intrinsic that's more fine grained than `compiler_fence`.
 
-> **NOTE:** You *may* need to use a [`atomic::fence`][] (a memory barrier)
-> instead of a `compiler_fence` if you expect your API to be used with buffers
-> shared between different cores. But this depends on how you design your API.
+### Don't we need a memory barrier?
+
+That depends on the target architecture. In the case of Cortex-M cores, [AN321]
+says:
+
+[AN321]: https://static.docs.arm.com/dai0321/a/DAI0321A_programming_guide_memory_barriers_for_m_profile.pdf
+
+> The use of DMB is rarely needed in Cortex-M processors because they do not
+> reorder memory transactions. However, it is needed if the software is to be
+> reused on other ARM processors, especially multi-master systems. For example:
+>
+> - DMA controller configuration. A barrier is required between a CPU memory
+>   access and a DMA operation.
+>
+> (..)
+
+If your target is a multi-core system then it's very likely that you'll need
+memory barriers.
+
+If you do need the memory barrier then you need to use [`atomic::fence`] instead
+of `compiler_fence`.
 
 [`atomic::fence`]: https://doc.rust-lang.org/core/sync/atomic/fn.fence.html
 
