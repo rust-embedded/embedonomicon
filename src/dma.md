@@ -19,8 +19,8 @@ Consider the following DMA primitives:
 ```
 
 Assume that the `Dma1Channel1` is statically configured to work with serial port
-(AKA UART or USART) #1: `Serial1`. `Serial1` provides the following *blocking*
-API:
+(AKA UART or USART) #1, `Serial1`, in one-shot mode (i.e. not circular mode).
+`Serial1` provides the following *blocking* API:
 
 ``` rust
 {{#include ../ci/dma/src/lib.rs:62:72}}
