@@ -30,7 +30,7 @@ struct Inner<B> {
 impl<B> Transfer<B> {
     /// Blocks until the transfer is done and returns the buffer
     pub fn wait(mut self) -> (Pin<B>, Serial1) {
-        while self.is_done() {}
+        while !self.is_done() {}
 
         atomic::compiler_fence(Ordering::Acquire);
 
