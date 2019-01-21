@@ -201,11 +201,15 @@ there exist no intrinsic that's more fine grained than `compiler_fence`.
 
 ### Don't we need a memory barrier?
 
-That depends on the target architecture. In the case of Cortex-M cores, [AN321]
-says:
+That depends on the target architecture. In the case of Cortex M0 to M4F cores,
+[AN321] says:
 
 [AN321]: https://static.docs.arm.com/dai0321/a/DAI0321A_programming_guide_memory_barriers_for_m_profile.pdf
 
+> 3.2 Typical usages
+>
+> (..)
+>
 > The use of DMB is rarely needed in Cortex-M processors because they do not
 > reorder memory transactions. However, it is needed if the software is to be
 > reused on other ARM processors, especially multi-master systems. For example:
@@ -214,12 +218,29 @@ says:
 >   access and a DMA operation.
 >
 > (..)
+>
+> 4.18 Multi-master systems
+>
+> (..)
+>
+> Omitting the DMB or DSB instruction in the examples in Figure 41 on page 47
+> and Figure 42 would not cause any error because the Cortex-M processors:
+>
+> - do not re-order memory transfers
+> - do not permit two write transfers to be overlapped.
+
+Where Figure 41 shows a DMB (memory barrier) instruction being used before
+starting a DMA transaction.
+
+In the case of Cortex-M7 cores you'll need memory barriers (DMB/DSB) if you are
+using the data cache (DCache), unless you manually invalidate the buffer used by
+the DMA.
 
 If your target is a multi-core system then it's very likely that you'll need
 memory barriers.
 
 If you do need the memory barrier then you need to use [`atomic::fence`] instead
-of `compiler_fence`.
+of `compiler_fence`. That should generate a DMB instruction on Cortex-M devices.
 
 [`atomic::fence`]: https://doc.rust-lang.org/core/sync/atomic/fn.fence.html
 
