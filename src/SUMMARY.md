@@ -8,5 +8,6 @@
 - [Assembly on stable](./asm.md)
 - [Logging with symbols](./logging.md)
 - [Global singletons](./singleton.md)
+- [DMA](./dma.md)
 ---
 [A note on compiler support](./compiler-support.md)

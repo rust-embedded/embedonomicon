@@ -219,6 +219,14 @@ main() {
     popd
 
     popd
+
+    # # DMA
+    # NOTE(nightly) this will require nightly until core::pin is stabilized (1.33)
+    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+        pushd dma
+        cargo build --examples
+        popd
+    fi
 }
 
 # checks that 2018 idioms are being used
