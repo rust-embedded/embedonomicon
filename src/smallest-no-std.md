@@ -104,3 +104,7 @@ $ cat .cargo/config
 ``` toml
 {{#include ../ci/smallest-no-std/.cargo/config}}
 ```
+
+Note: if you encountered an error `language item required, but not found: 'eh_personality'` when attempting to build 
+your project, check your `Cargo.toml` file to be both your `.dev` and `.release` profiles specify `panic = "abort"` (and
+not `panic = "unwind"`) for now.
