@@ -98,6 +98,17 @@ $ # QEMU
 $ sudo apt-get install qemu-system-arm
 ```
 
+#### Ubuntu 18.04
+- [gcc-arm-none-eabi](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
+``` console
+$ tar xvjf gcc-arm-none-eabi-8-2018-q4-major-linux.tar.bz2
+$ mv gcc-arm-none-eabi-<version_downloaded> <your_desired_path> # optional
+$ export PATH=${PATH}:<path_to_arm_none_eabi_folder>/bin # add this line to .bashrc to make persistent
+
+$ # QEMU
+$ sudo apt-get install qemu-system-arm
+```
+
 #### Windows
 
 - [arm-none-eabi-gdb](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads).
