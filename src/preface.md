@@ -98,9 +98,32 @@ $ # QEMU
 $ sudo apt-get install qemu-system-arm
 ```
 
+#### Ubuntu 18.04
+
+``` console
+$ # gdb-multiarch -- use `gdb-multiarch` when you wish to invoke gdb
+$ sudo apt-get install gdb-multiarch
+
+$ # QEMU
+$ sudo apt-get install qemu-system-arm
+```
+
 #### Windows
 
 - [arm-none-eabi-gdb](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads).
   The GNU Arm Embedded Toolchain includes GDB.
 
 - [QEMU](https://www.qemu.org/download/#windows)
+
+## Installing a toolchain bundle from ARM (optional step) (tested on Ubuntu 18.04)
+- With the late 2018 switch from
+[GCC's linker to LLD](https://rust-embedded.github.io/blog/2018-08-2x-psa-cortex-m-breakage/) for Cortex-M 
+microcontrollers, [gcc-arm-none-eabi][1] is no longer 
+required.  But for those wishing to use the toolchain 
+anyway, install from [here][1] and follow the steps outlined below:
+``` console
+$ tar xvjf gcc-arm-none-eabi-8-2018-q4-major-linux.tar.bz2
+$ mv gcc-arm-none-eabi-<version_downloaded> <your_desired_path> # optional
+$ export PATH=${PATH}:<path_to_arm_none_eabi_folder>/bin # add this line to .bashrc to make persistent
+```
+[1]: https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads
