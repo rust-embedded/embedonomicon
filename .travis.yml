@@ -4,6 +4,7 @@ matrix:
   include:
     - rust: stable
     - rust: beta
+    - rust: nightly
   allow_failures:
     - rust: nightly
 
