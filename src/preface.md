@@ -100,7 +100,7 @@ $ # QEMU
 $ sudo apt install qemu-system-arm
 ```
 
-#### Ubuntu 18.04
+#### Ubuntu 18.04 or Debian
 
 ``` console
 $ # gdb-multiarch -- use `gdb-multiarch` when you wish to invoke gdb
