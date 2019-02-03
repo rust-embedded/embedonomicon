@@ -94,20 +94,20 @@ $ brew install qemu
 
 ``` console
 $ # arm-none-eabi-gdb
-$ sudo apt-get install gdb-arm-none-eabi
+$ sudo apt install gdb-arm-none-eabi
 
 $ # QEMU
-$ sudo apt-get install qemu-system-arm
+$ sudo apt install qemu-system-arm
 ```
 
-#### Ubuntu 18.04
+#### Ubuntu 18.04 or Debian
 
 ``` console
 $ # gdb-multiarch -- use `gdb-multiarch` when you wish to invoke gdb
-$ sudo apt-get install gdb-multiarch
+$ sudo apt install gdb-multiarch
 
 $ # QEMU
-$ sudo apt-get install qemu-system-arm
+$ sudo apt install qemu-system-arm
 ```
 
 #### Windows
