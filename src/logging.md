@@ -189,7 +189,7 @@ linker script will collect all the symbols in the `.log` sections of input
 object files and put them in an output `.log` section. We have seen this pattern
 in the [Memory layout] chapter.
 
-[Memory layout]: /memory-layout.html
+[Memory layout]: memory-layout.html
 
 The new bit here is the `(INFO)` part; this tells the linker that this section
 is a non-allocatable section. Non-allocatable sections are kept in the ELF
