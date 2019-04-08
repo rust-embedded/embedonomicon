@@ -227,6 +227,14 @@ main() {
         cargo build --examples
         popd
     fi
+
+    # # Concurrency
+    # NOTE(nightly) this will require nightly until `MaybeUninit` is stabilized
+    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+        pushd concurrency
+        cargo build --examples
+        popd
+    fi
 }
 
 # checks that 2018 idioms are being used
@@ -250,6 +258,25 @@ qemu_check() {
             ( cat .stdout && cat .stderr && exit 1)
     rm .stdout .stderr
 }
+
+# fake Travis variables to be able to run this on a local machine
+if [ -z ${TRAVIS_BRANCH-} ]; then
+    TRAVIS_BRANCH=auto
+fi
+
+if [ -z ${TRAVIS_RUST_VERSION-} ]; then
+    case $(rustc -V) in
+        *nightly*)
+            TRAVIS_RUST_VERSION=nightly
+            ;;
+        *beta*)
+            TRAVIS_RUST_VERSION=beta
+            ;;
+        *)
+            TRAVIS_RUST_VERSION=stable
+            ;;
+    esac
+fi
 
 # don't run this on successful merges
 if [[ $TRAVIS_BRANCH != main || $TRAVIS_PULL_REQUEST != false ]]; then

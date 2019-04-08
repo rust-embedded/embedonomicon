@@ -1,7 +1,8 @@
+**/.idea/
 *.o
+.#*
 .stderr
 .stdout
 Cargo.lock
 book
 target
-**/.idea/

@@ -9,5 +9,6 @@
 - [Logging with symbols](./logging.md)
 - [Global singletons](./singleton.md)
 - [DMA](./dma.md)
+- [Concurrency](./concurrency.md)
 ---
 [A note on compiler support](./compiler-support.md)
