@@ -437,14 +437,22 @@ context, though they can be implemented on top of interrupts. We'll broaden the
 definition of these two marker traits to include bare metal code:
 
 - `Sync`: types for which it is safe to share references between *execution
-  contexts*.
+  contexts* that may preempt each other.
 
-- `Send`: types that can be transferred between *execution contexts*.
+- `Send`: types that can be transferred between *execution contexts* that may
+  preempt each other.
 
 An interrupt handler is an execution context independent of the `main` function,
 which can be seen as the "bottom" execution context. An OS thread is also an
 execution context. Each execution context has its own (call) stack and operates
 independently of other execution contexts though they can share state.
+
+Preemption between any two execution contexts may or may not be possible. For
+example, preemption can occur between two interrupt handlers if they have
+different priorities, but no preemption can occur between the two if they have
+the same priority. In the case of OS threads, it depends on the exact
+implementation; in the most common case, any two threads can preempt each other
+because the scheduler periodically context switches between them.
 
 Broadening the definitions of these marker traits does not change the rules
 around `static` variables. They must still hold values that implement the `Sync`
@@ -557,6 +565,12 @@ unsafe impl<T> Sync for Mutex<T> where T: Send {}
 ```
 
 This constraint applies to all types of critical sections.
+
+### Cooperative handlers
+
+In the case of interrupt handlers that run at the same priority and access the
+same static variable (see `examples/coop.rs`) no bound is required as no
+preemption is possible.
 
 ### Runtime initialization
 
@@ -714,6 +728,11 @@ architecture / device supports assigning a handler to a single core and the
 program has been configured to not share stateful interrupts between cores --
 that is cores should *not* execute the exact same handler when the corresponding
 signal arrives.
+
+### Cooperative handlers
+
+The cooperative handlers pattern remains sound if and only if the handlers that
+share state are serviced by a single core.
 
 ### Runtime initialization
 
