@@ -719,4 +719,4 @@ signal arrives.
 
 As the runtime initialization pattern is used to initialize the "state" of
 interrupt handlers so all the additional constraints required for multi-core
-memory safety of the State pattern are also required here.
+memory safety of the state pattern are also required here.
