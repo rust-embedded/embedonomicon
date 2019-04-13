@@ -250,10 +250,12 @@ access to memory.
 
 ### Atomics
 
-Accessing atomics stored in `static` variables is memory safe. If you are
+Accessing [atomic types] stored in `static` variables is memory safe. If you are
 building abstractions like channels on top of them (which likely will require
 `unsafe` code to access some shared buffer) make sure you use the right
 `Ordering` or your abstraction will be unsound.
+
+[atomic types]: https://doc.rust-lang.org/core/sync/atomic/index.html
 
 Here's an example of using a static variable for synchronization (a delay in
 this case).
@@ -480,6 +482,13 @@ bound is required for this pattern.
 We can abstract the "disable all interrupts" critical section pattern into a
 `Mutex` type.
 
+> Aside: "MutEx" stands for Mutual Exclusion and it's a synchronization
+> mechanism that ensures that execution contexts (threads or interrupt handlers)
+> get access to a single memory location in a "mutually exclusive" fashion.
+> Meaning that at any point in time at most one execution context gets exclusive
+> access over the memory location; only the execution context with exclusive
+> access can read / write to said memory location.
+
 ``` rust
 {{#include ../ci/concurrency/examples/mutex.rs}}```
 
@@ -695,6 +704,16 @@ instructions are inserted where appropriate. If you are using the correct
 `Ordering` then the compiler will insert the required barriers for you. Critical
 sections based on atomics, AKA spinlocks, are memory safe to use on multi-core
 devices though they can deadlock.
+
+> Aside: an spinlock is a Mutual Exclusion mechanism that uses an atomic
+> variable to synchronize access to a memory location. While an execution
+> context has exclusive access over the memory location, any other execution
+> context that attempts to access the memory location will continuously check
+> the state of the atomic variable in a loop ("spin") until it indicates that
+> the shared memory location is free to access. It's probably easiest to look at
+> the [implementation] of a spinlock to understand how it works.
+
+[implementation]: https://docs.rs/spin/0.5.0/src/spin/mutex.rs.html#129-164
 
 ``` rust
 // spin = "0.5.0"
