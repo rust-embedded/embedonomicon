@@ -96,13 +96,13 @@ fires periodically. The interrupt is handled using the `SysTick` handler
 {{#include ../ci/concurrency/examples/systick.rs}}```
 
 If you are not familiar with embedded / Cortex-M programs the most important
-thing to point note here is that the function marked with the `entry` attribute
-is the entry point of the user program. When the device (re)boots (e.g. it's
-first powered) the "runtime" (the `cortex-m-rt` crate) initializes `static`
-variables (the content of RAM is random on power on) and then calls the user
-program entry point. As the user program is the only process running it is not
-allowed to end / exit; this is enforced in the signature of the `entry`
-function: `fn() -> !` -- a divergent function can't return.
+thing to note here is that the function marked with the `entry` attribute is the
+entry point of the user program. When the device (re)boots (e.g. it's first
+powered) the "runtime" (the `cortex-m-rt` crate) initializes `static` variables
+(the content of RAM is random on power on) and then calls the user program entry
+point. As the user program is the only process running it is not allowed to end
+/ exit; this is enforced in the signature of the `entry` function: `fn() -> !`
+-- a divergent function can't return.
 
 You can run this example on an x86 machine using QEMU. Make sure you have
 `qemu-system-arm` installed and run the following command
