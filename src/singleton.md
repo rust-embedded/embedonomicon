@@ -83,7 +83,7 @@ variable called `LOGGER` to log the message. This variable *is* the global
 logger that's defined somewhere else; that's why we use the `extern` block. We
 saw this pattern in the [main interface] chapter.
 
-[main interface]: /main.html
+[main interface]: main.html
 
 We need to declare a type for `LOGGER` or the code won't type check. We don't
 know the concrete type of `LOGGER` at this point but we know, or rather require,
@@ -93,7 +93,7 @@ The rest of the macro expansion looks very similar to the expansion of the local
 version of the `log!` macro so I won't explain it here as it's explained in the
 [previous] chapter.
 
-[previous]: /logging.html
+[previous]: logging.html
 
 Now that we know that `LOGGER` has to be a trait object it's clearer why we
 omitted the associated `Error` type in `GlobalLog`. If we had not omitted then
