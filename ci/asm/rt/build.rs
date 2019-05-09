@@ -15,5 +15,8 @@ fn main() -> Result<(), Box<Error>> {
     // assemble the `asm.s` file
     Build::new().file("asm.s").compile("asm"); // <- NEW!
 
+    // rebuild if `asm.s` changed
+    println!("cargo:rerun-if-changed=asm.s"); // <- NEW!
+
     Ok(())
 }
