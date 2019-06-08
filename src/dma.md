@@ -84,12 +84,12 @@ not the case; consider the following example:
 {{#include ../ci/dma/examples/one.rs:105:112}}
 ```
 
-Here we start a DMA transfer, in `foo`, to fill an array allocated on the stack
-and then `mem::forget` the returned `Transfer` value. Then we proceed to return
-from `foo` and execute the function `bar`.
+Here we start a DMA transfer, in `start`, to fill an array allocated on the
+stack and then `mem::forget` the returned `Transfer` value. Then we proceed to
+return from `start` and execute the function `bar`.
 
 This series of operations results in undefined behavior. The DMA transfer writes
-to stack memory but that memory is released when `foo` returns and then reused
+to stack memory but that memory is released when `start` returns and then reused
 by `bar` to allocate variables like `x` and `y`. At runtime this could result in
 variables `x` and `y` changing their value at random times. The DMA transfer
 could also overwrite the state (e.g. link register) pushed onto the stack by the
