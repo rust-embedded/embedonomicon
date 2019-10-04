@@ -83,9 +83,15 @@ Before linking the crate does contain the panicking symbol.
 ``` console
 $ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
 
-$ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^n] '
+$ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-* | grep '[0-9]* [^n] '
 ```
 
+Depending on how many times you have built, you may see the following 1 or more times:
+``` console
+00000004 R RESET_VECTOR
+00000008 T Reset
+```
+Note: as opposed to: 
 ``` text
 {{#include ../ci/smallest-no-std/app.o.nm}}
 ```
