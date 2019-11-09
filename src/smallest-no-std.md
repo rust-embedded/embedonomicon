@@ -83,7 +83,7 @@ Before linking the crate does contain the panicking symbol.
 ``` console
 $ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
 
-$ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^n] '
+$ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] '
 ```
 
 ``` text
