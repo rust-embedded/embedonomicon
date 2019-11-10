@@ -1,23 +1,25 @@
 
 app:	file format ELF32-arm-little
 
+
 Disassembly of section .text:
+
 HardFault:
-	b	#-0x4 <HardFault>
+               	b	#-0x4 <HardFault>
 
 main:
-	trap
+               	trap
 
 Reset:
-	bl	#-0x6
-	trap
+               	bl	#-0x6
+               	trap
 
 DefaultExceptionHandler:
-	b	#-0x4 <DefaultExceptionHandler>
+               	b	#-0x4 <DefaultExceptionHandler>
 
 UsageFault:
- <unknown>
+               	<unknown>
 
 HardFaultTrampoline:
-	mrs	r0, msp
-	b	#-0x14 <HardFault>
+               	mrs	r0, msp
+               	b	#-0x14 <HardFault>
