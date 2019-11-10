@@ -149,7 +149,7 @@ $ cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex
 ```
 
 ``` text
-{{#include ../ci/exceptions/app/app.objdump:1:28}}
+{{#include ../ci/exceptions/app/app.objdump:1:30}}
 ```
 
 ``` console
