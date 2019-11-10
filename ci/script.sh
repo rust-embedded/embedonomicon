@@ -1,5 +1,14 @@
 set -euxo pipefail
 
+# All objdumps are compared to their expected output using the `-b` flag, which
+# ignores whitespace changes within lines. This is good to avoid the necessity
+# of regenerating blessed outputs each time `cargo objdump` makes minor
+# formatting changes.
+#
+# Note that `diff -b` does _not_ allow whitespace changes to span multiple
+# lines (i.e. the addition or removal of whitespace-only lines). This is a good
+# thing, since some files are included in the book based on line number.
+
 main() {
     # build the book and check that it has no dead links
     mdbook build
@@ -41,11 +50,11 @@ main() {
     pushd memory-layout
 
     # check that the Reset symbol is there
-    diff app.text.objdump \
+    diff -b app.text.objdump \
          <(cargo objdump --bin app -- -d -no-show-raw-insn -no-leading-addr)
 
     # check that the reset vector is there and has the right address
-    diff app.vector_table.objdump \
+    diff -b app.vector_table.objdump \
          <(cargo objdump --bin app -- -s -section .vector_table)
 
     qemu_check target/thumbv7m-none-eabi/debug/app
@@ -59,7 +68,7 @@ main() {
 
     # check that the disassembly matches
     pushd app
-    diff app.objdump \
+    diff -b app.objdump \
          <(cargo objdump --bin app -- -d -no-show-raw-insn -no-leading-addr)
     # disabled because of rust-lang/rust#53964
     # edition_check
@@ -94,9 +103,9 @@ main() {
 
         # check that the disassembly matches
         pushd app
-        diff app.objdump \
+        diff -b app.objdump \
              <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
-        diff app.vector_table.objdump \
+        diff -b app.vector_table.objdump \
              <(cargo objdump --bin app --release -- -s -j .vector_table)
         edition_check
         popd
@@ -115,7 +124,7 @@ main() {
 
     # check that the disassembly matches
     pushd app
-    diff release.objdump \
+    diff -b release.objdump \
          <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
@@ -126,13 +135,13 @@ main() {
     pushd rt2
     arm-none-eabi-as -march=armv7-m asm.s -o asm.o
     ar crs librt.a asm.o
-    diff librt.objdump \
+    diff -b librt.objdump \
          <(arm-none-eabi-objdump -Cd librt.a)
     popd
 
     # check that the disassembly matches
     pushd app2
-    diff release.objdump \
+    diff -b release.objdump \
          <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
@@ -180,7 +189,7 @@ main() {
     pushd app2
     diff dev.out \
          <(cargo run | xxd -p)
-    diff dev.objdump \
+    diff -b dev.objdump \
          <(cargo objdump --bin app -- -t | grep '\.log')
     edition_check
     popd
@@ -189,7 +198,7 @@ main() {
     pushd app3
     diff dev.out \
          <(cargo run | xxd -p)
-    diff dev.objdump \
+    diff -b dev.objdump \
          <(cargo objdump --bin app -- -t | grep '\.log')
     edition_check
     popd
@@ -198,7 +207,7 @@ main() {
     pushd app4
     diff dev.out \
          <(cargo run | xxd -p)
-    diff dev.objdump \
+    diff -b dev.objdump \
          <(cargo objdump --bin app -- -t | grep '\.log')
     edition_check
     popd
@@ -211,9 +220,9 @@ main() {
     pushd app
     diff dev.out \
          <(cargo run | xxd -p)
-    diff dev.objdump \
+    diff -b dev.objdump \
          <(cargo objdump --bin app -- -t | grep '\.log')
-    diff release.objdump \
+    diff -b release.objdump \
          <(cargo objdump --bin app --release -- -t | grep LOGGER)
     edition_check
     popd
