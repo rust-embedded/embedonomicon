@@ -15,9 +15,9 @@ fn main() -> ! {
     let hstdout = hio::hstdout().unwrap();
     let mut logger = Logger { hstdout };
 
-    warn!(logger, "Hello, world!"); // <- CHANGED!
+    let _ = warn!(logger, "Hello, world!"); // <- CHANGED!
 
-    error!(logger, "Goodbye"); // <- CHANGED!
+    let _ = error!(logger, "Goodbye"); // <- CHANGED!
 
     debug::exit(debug::EXIT_SUCCESS);
 
