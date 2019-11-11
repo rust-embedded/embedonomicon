@@ -14,12 +14,12 @@ fn main() -> ! {
     #[export_name = "Hello, world!"]
     static A: u8 = 0;
 
-    writeln!(hstdout, "{:#x}", &A as *const u8 as usize);
+    let _ = writeln!(hstdout, "{:#x}", &A as *const u8 as usize);
 
     #[export_name = "Goodbye"]
     static B: u8 = 0;
 
-    writeln!(hstdout, "{:#x}", &B as *const u8 as usize);
+    let _ = writeln!(hstdout, "{:#x}", &B as *const u8 as usize);
 
     debug::exit(debug::EXIT_SUCCESS);
 
