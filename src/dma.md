@@ -234,7 +234,8 @@ starting a DMA transaction.
 
 In the case of Cortex-M7 cores you'll need memory barriers (DMB/DSB) if you are
 using the data cache (DCache), unless you manually invalidate the buffer used by
-the DMA.
+the DMA. Even with the data cache disabled, memory barriers might still be
+required to avoid reordering in the store buffer.
 
 If your target is a multi-core system then it's very likely that you'll need
 memory barriers.
