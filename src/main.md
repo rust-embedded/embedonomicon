@@ -32,7 +32,7 @@ $ head -n13 src/lib.rs
 {{#include ../ci/main/rt/src/lib.rs:1:13}}
 ```
 
-We also drop the `#![no_main]` attribute has it has no effect on library crates.
+We also drop the `#![no_main]` attribute as it has no effect on library crates.
 
 > There's an orthogonal question that arises at this stage: Should the `rt`
 > library provide a standard panicking behavior, or should it *not* provide a
