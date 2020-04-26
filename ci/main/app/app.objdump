@@ -12,5 +12,7 @@ main:
                	b	#-4 <main+0x8>
 
 Reset:
-               	bl	#-14
+                push	{r7, lr}
+                mov	r7, sp
+                bl	#-18
                	trap
