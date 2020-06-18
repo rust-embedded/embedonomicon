@@ -11,7 +11,7 @@ main:
                	trap
 
 Reset:
-                push	{r7, lr}
+               	push	{r7, lr}
                	mov	r7, sp
                	bl	#-0xa
                	trap
