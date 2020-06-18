@@ -13,6 +13,6 @@ main:
 
 Reset:
                	push	{r7, lr}
-                mov	r7, sp
-                bl	#-18
+               	mov	r7, sp
+               	bl	#-18
                	trap

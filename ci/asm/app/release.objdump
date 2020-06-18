@@ -11,9 +11,9 @@ main:
                	trap
 
 Reset:
-               	push	{r7, lr}
-                mov	r7, sp
-                bl	#-0xa
+                push	{r7, lr}
+               	mov	r7, sp
+               	bl	#-0xa
                	trap
 
 DefaultExceptionHandler:
