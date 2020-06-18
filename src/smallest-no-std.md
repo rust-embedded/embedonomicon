@@ -104,3 +104,18 @@ $ cat .cargo/config
 ``` toml
 {{#include ../ci/smallest-no-std/.cargo/config}}
 ```
+
+## eh_personality
+
+If your [target][custom-target] does not contain `"panic-strategy": "abort"`, which most targets for full operating systems don't, then you must add an `eh_personality` function, which requires a nightly compiler. [Here is Rust's documentation about it][more-about-lang-items], and [here is some discussion about it][til-why-eh-personality]. A simple implementation that does not do anything special when unwinding is as follows:
+
+``` rust
+#![feature(lang_items)]
+
+#[lang = "eh_personality"]
+extern "C" fn eh_personality() {}
+```
+
+[custom-target]: ./custom-target.md
+[more-about-lang-items]: https://doc.rust-lang.org/unstable-book/language-features/lang-items.html#more-about-the-language-items
+[til-why-eh-personality]: https://www.reddit.com/r/rust/comments/estvau/til_why_the_eh_personality_language_item_is/

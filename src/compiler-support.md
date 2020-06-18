@@ -80,56 +80,85 @@ and the default linker.
 
 [specification]: https://github.com/rust-lang/rfcs/blob/master/text/0131-target-specification.md
 
-The Rust compiler knows about several targets. These are said to be *built into* the compiler and
+The Rust compiler knows about several targets. These are *built into* the compiler and
 can be listed by running the following command:
 
 ``` console
 $ rustc --print target-list | column
-aarch64-fuchsia                 mips64el-unknown-linux-gnuabi64
-aarch64-linux-android           mipsel-unknown-linux-gnu
-aarch64-unknown-cloudabi        mipsel-unknown-linux-musl
-aarch64-unknown-freebsd         mipsel-unknown-linux-uclibc
-aarch64-unknown-linux-gnu       msp430-none-elf
-aarch64-unknown-linux-musl      powerpc-unknown-linux-gnu
-aarch64-unknown-openbsd         powerpc-unknown-linux-gnuspe
-arm-linux-androideabi           powerpc-unknown-netbsd
-arm-unknown-linux-gnueabi       powerpc64-unknown-linux-gnu
-arm-unknown-linux-gnueabihf     powerpc64le-unknown-linux-gnu
-arm-unknown-linux-musleabi      powerpc64le-unknown-linux-musl
-arm-unknown-linux-musleabihf    s390x-unknown-linux-gnu
-armebv7r-none-eabihf            sparc-unknown-linux-gnu
-armv4t-unknown-linux-gnueabi    sparc64-unknown-linux-gnu
-armv5te-unknown-linux-gnueabi   sparc64-unknown-netbsd
-armv5te-unknown-linux-musleabi  sparcv9-sun-solaris
-armv6-unknown-netbsd-eabihf     thumbv6m-none-eabi
-armv7-linux-androideabi         thumbv7em-none-eabi
-armv7-unknown-cloudabi-eabihf   thumbv7em-none-eabihf
-armv7-unknown-linux-gnueabihf   thumbv7m-none-eabi
-armv7-unknown-linux-musleabihf  wasm32-experimental-emscripten
-armv7-unknown-netbsd-eabihf     wasm32-unknown-emscripten
-asmjs-unknown-emscripten        wasm32-unknown-unknown
-i586-pc-windows-msvc            x86_64-apple-darwin
-i586-unknown-linux-gnu          x86_64-fuchsia
-i586-unknown-linux-musl         x86_64-linux-android
-i686-apple-darwin               x86_64-pc-windows-gnu
-i686-linux-android              x86_64-pc-windows-msvc
-i686-pc-windows-gnu             x86_64-rumprun-netbsd
-i686-pc-windows-msvc            x86_64-sun-solaris
-i686-unknown-cloudabi           x86_64-unknown-bitrig
-i686-unknown-dragonfly          x86_64-unknown-cloudabi
-i686-unknown-freebsd            x86_64-unknown-dragonfly
-i686-unknown-haiku              x86_64-unknown-freebsd
-i686-unknown-linux-gnu          x86_64-unknown-haiku
-i686-unknown-linux-musl         x86_64-unknown-l4re-uclibc
-i686-unknown-netbsd             x86_64-unknown-linux-gnu
-i686-unknown-openbsd            x86_64-unknown-linux-gnux32
-mips-unknown-linux-gnu          x86_64-unknown-linux-musl
-mips-unknown-linux-musl         x86_64-unknown-netbsd
-mips-unknown-linux-uclibc       x86_64-unknown-openbsd
-mips64-unknown-linux-gnuabi64   x86_64-unknown-redox
+aarch64-fuchsia                   mipsisa32r6el-unknown-linux-gnu
+aarch64-linux-android             mipsisa64r6-unknown-linux-gnuabi64
+aarch64-pc-windows-msvc           mipsisa64r6el-unknown-linux-gnuabi64
+aarch64-unknown-cloudabi          msp430-none-elf
+aarch64-unknown-freebsd           nvptx64-nvidia-cuda
+aarch64-unknown-hermit            powerpc-unknown-linux-gnu
+aarch64-unknown-linux-gnu         powerpc-unknown-linux-gnuspe
+aarch64-unknown-linux-musl        powerpc-unknown-linux-musl
+aarch64-unknown-netbsd            powerpc-unknown-netbsd
+aarch64-unknown-none              powerpc-wrs-vxworks
+aarch64-unknown-none-softfloat    powerpc-wrs-vxworks-spe
+aarch64-unknown-openbsd           powerpc64-unknown-freebsd
+aarch64-unknown-redox             powerpc64-unknown-linux-gnu
+aarch64-uwp-windows-msvc          powerpc64-unknown-linux-musl
+aarch64-wrs-vxworks               powerpc64-wrs-vxworks
+arm-linux-androideabi             powerpc64le-unknown-linux-gnu
+arm-unknown-linux-gnueabi         powerpc64le-unknown-linux-musl
+arm-unknown-linux-gnueabihf       riscv32i-unknown-none-elf
+arm-unknown-linux-musleabi        riscv32imac-unknown-none-elf
+arm-unknown-linux-musleabihf      riscv32imc-unknown-none-elf
+armebv7r-none-eabi                riscv64gc-unknown-linux-gnu
+armebv7r-none-eabihf              riscv64gc-unknown-none-elf
+armv4t-unknown-linux-gnueabi      riscv64imac-unknown-none-elf
+armv5te-unknown-linux-gnueabi     s390x-unknown-linux-gnu
+armv5te-unknown-linux-musleabi    sparc-unknown-linux-gnu
+armv6-unknown-freebsd             sparc64-unknown-linux-gnu
+armv6-unknown-netbsd-eabihf       sparc64-unknown-netbsd
+armv7-linux-androideabi           sparc64-unknown-openbsd
+armv7-unknown-cloudabi-eabihf     sparcv9-sun-solaris
+armv7-unknown-freebsd             thumbv6m-none-eabi
+armv7-unknown-linux-gnueabi       thumbv7a-pc-windows-msvc
+armv7-unknown-linux-gnueabihf     thumbv7em-none-eabi
+armv7-unknown-linux-musleabi      thumbv7em-none-eabihf
+armv7-unknown-linux-musleabihf    thumbv7m-none-eabi
+armv7-unknown-netbsd-eabihf       thumbv7neon-linux-androideabi
+armv7-wrs-vxworks-eabihf          thumbv7neon-unknown-linux-gnueabihf
+armv7a-none-eabi                  thumbv7neon-unknown-linux-musleabihf
+armv7a-none-eabihf                thumbv8m.base-none-eabi
+armv7r-none-eabi                  thumbv8m.main-none-eabi
+armv7r-none-eabihf                thumbv8m.main-none-eabihf
+asmjs-unknown-emscripten          wasm32-unknown-emscripten
+hexagon-unknown-linux-musl        wasm32-unknown-unknown
+i586-pc-windows-msvc              wasm32-wasi
+i586-unknown-linux-gnu            x86_64-apple-darwin
+i586-unknown-linux-musl           x86_64-fortanix-unknown-sgx
+i686-apple-darwin                 x86_64-fuchsia
+i686-linux-android                x86_64-linux-android
+i686-pc-windows-gnu               x86_64-linux-kernel
+i686-pc-windows-msvc              x86_64-pc-solaris
+i686-unknown-cloudabi             x86_64-pc-windows-gnu
+i686-unknown-freebsd              x86_64-pc-windows-msvc
+i686-unknown-haiku                x86_64-rumprun-netbsd
+i686-unknown-linux-gnu            x86_64-sun-solaris
+i686-unknown-linux-musl           x86_64-unknown-cloudabi
+i686-unknown-netbsd               x86_64-unknown-dragonfly
+i686-unknown-openbsd              x86_64-unknown-freebsd
+i686-unknown-uefi                 x86_64-unknown-haiku
+i686-uwp-windows-gnu              x86_64-unknown-hermit
+i686-uwp-windows-msvc             x86_64-unknown-hermit-kernel
+i686-wrs-vxworks                  x86_64-unknown-illumos
+mips-unknown-linux-gnu            x86_64-unknown-l4re-uclibc
+mips-unknown-linux-musl           x86_64-unknown-linux-gnu
+mips-unknown-linux-uclibc         x86_64-unknown-linux-gnux32
+mips64-unknown-linux-gnuabi64     x86_64-unknown-linux-musl
+mips64-unknown-linux-muslabi64    x86_64-unknown-netbsd
+mips64el-unknown-linux-gnuabi64   x86_64-unknown-openbsd
+mips64el-unknown-linux-muslabi64  x86_64-unknown-redox
+mipsel-unknown-linux-gnu          x86_64-unknown-uefi
+mipsel-unknown-linux-musl         x86_64-uwp-windows-gnu
+mipsel-unknown-linux-uclibc       x86_64-uwp-windows-msvc
+mipsisa32r6-unknown-linux-gnu     x86_64-wrs-vxworks
 ```
 
-You can print the specification of any of these targets using the following command:
+You can print the specification of one of these targets using the following command:
 
 ``` console
 $ rustc +nightly -Z unstable-options --print target-spec-json --target thumbv7m-none-eabi
@@ -163,38 +192,10 @@ $ rustc +nightly -Z unstable-options --print target-spec-json --target thumbv7m-
 ```
 
 If none of these built-in targets seems appropriate for your target system, you'll have to create a
-custom target by writing your own target specification file in JSON format. The recommended way is to
-dump the specification of a built-in target that's similar to your target system into a file and then
-tweak it to match the properties of your target system. To do so, use the previously shown command,
-`rustc --print target-spec-json`. As of Rust 1.28, there's no up to date documentation on what each of
-the fields of a target specification mean, other than [the compiler source code].
+custom target by writing your own target specification file in JSON format which is described in the
+[next section][custom-target].
 
-[the compiler source code]: https://github.com/rust-lang/rust/blob/1.27.2/src/librustc_target/spec/mod.rs#L376-L400
-
-Once you have a target specification file you can refer to it by its path or by its name if its in
-the current directory or in `$RUST_TARGET_PATH`. 
-
-``` console
-$ rustc +nightly -Z unstable-options --print target-spec-json \
-      --target thumbv7m-none-eabi \
-      > foo.json
-
-$ rustc --print cfg --target foo.json # or just --target foo
-debug_assertions
-target_arch="arm"
-target_endian="little"
-target_env=""
-target_feature="mclass"
-target_feature="v7"
-target_has_atomic="16"
-target_has_atomic="32"
-target_has_atomic="8"
-target_has_atomic="cas"
-target_has_atomic="ptr"
-target_os="none"
-target_pointer_width="32"
-target_vendor=""
-```
+[custom-target]: ./custom-target.md
 
 ## `rust-std` component
 
@@ -241,8 +242,8 @@ mips-unknown-linux-musl                 x86_64-unknown-redox
 ```
 
 If there's no `rust-std` component for your target or you are using a custom target, then you'll have
-to use a tool like [Xargo] to have Cargo compile the `core` crate on the fly. Note that Xargo
-requires a nightly toolchain; the long term plan is to upstream Xargo's functionality into Cargo
-and eventually have that functionality available on stable.
+to use a nightly toolchain to build the standard library. See the next page about [building for custom targets][use-target-file].
+
+[use-target-file]: ./custom-target.md#use-the-target-file
 
 [Xargo]: https://github.com/japaric/xargo
