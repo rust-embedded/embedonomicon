@@ -11,7 +11,9 @@ main:
                	trap
 
 Reset:
-               	bl	#-0x6
+               	push	{r7, lr}
+                mov	r7, sp
+                bl	#-0xa
                	trap
 
 DefaultExceptionHandler:
@@ -22,4 +24,4 @@ UsageFault:
 
 HardFaultTrampoline:
                	mrs	r0, msp
-               	b	#-0x14 <HardFault>
+               	b	#-0x18 <HardFault>
