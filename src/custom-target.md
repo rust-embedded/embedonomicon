@@ -51,8 +51,8 @@ You can pretty much copy that output into your file. Start with a few modificati
 - Remove `"is-builtin": true`
 - Fill `llvm-target` with [the triple that LLVM expects][llvm-target-triple]
 - Decide on a panicking strategy. A bare metal implementation will likely use
-  `"panic-strategy": "abort"`. If you decide not to `abort` on panicking, even if you [tell Cargo
-  to][aborting-on-panic], you must define an [eh_personality] function.
+  `"panic-strategy": "abort"`. If you decide not to `abort` on panicking, unless you [tell Cargo
+  to][eh_personality], you must define an [eh_personality] function.
 - Configure atomics. Pick the first option that describes your target:
   - I have a single-core processor, no threads, no interrupts, or any way for multiple things to be
     happening in parallel: if you are **sure** that is the case, such as WASM (for now), you may set
@@ -166,6 +166,7 @@ exclude `std` when compiling for bare-metal. To do so, specify the crated you'd 
 ### language item required, but not found: `eh_personality`
 
 Either add `"panic-strategy": "abort"` to your target file, or define an [eh_personality] function.
+Alternatively, [tell Cargo to ignore it][eh_personality].
 
 ### undefined reference to `__sync_val_compare_and_swap_#`
 

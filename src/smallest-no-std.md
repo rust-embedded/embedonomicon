@@ -108,11 +108,24 @@ $ cat .cargo/config
 
 ## eh_personality
 
-If your [target][custom-target] does not contain `"panic-strategy": "abort"`, which most targets for
-full operating systems don't, then you must add an `eh_personality` function, which requires a
-nightly compiler. [Here is Rust's documentation about it][more-about-lang-items], and [here is some
-discussion about it][til-why-eh-personality]. A simple implementation that does not do anything
-special when unwinding is as follows:
+If your configuration does not unconditionally abort on panic, which most targets for full operating
+systems don't (or if your [custom target][custom-target] does not contain
+`"panic-strategy": "abort"`), then you must tell Cargo to do so or add an `eh_personality` function,
+which requires a nightly compiler. [Here is Rust's documentation about it][more-about-lang-items],
+and [here is some discussion about it][til-why-eh-personality].
+
+In your Cargo.toml, add:
+
+``` toml
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+```
+
+Alternatively, declare the `eh_personality` function. A simple implementation that does not do
+anything special when unwinding is as follows:
 
 ``` rust
 #![feature(lang_items)]
@@ -120,6 +133,9 @@ special when unwinding is as follows:
 #[lang = "eh_personality"]
 extern "C" fn eh_personality() {}
 ```
+
+You will receive the error `language item required, but not found: 'eh_personality'` if not
+included.
 
 [custom-target]: ./custom-target.md
 [more-about-lang-items]:
