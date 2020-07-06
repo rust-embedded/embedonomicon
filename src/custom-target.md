@@ -54,10 +54,10 @@ You can pretty much copy that output into your file. Start with a few modificati
   `"panic-strategy": "abort"`. If you decide not to `abort` on panicking, unless you [tell Cargo
   to][eh_personality], you must define an [eh_personality] function.
 - Configure atomics. Pick the first option that describes your target:
-  - I have a single-core processor, no threads, **no interrupts**, or any way for multiple things to
-    be happening in parallel: if you are **sure** that is the case, such as WASM (for now), you may
-    set `"singlethread": true`. This will configure LLVM to convert all atomic operations to use
-    their single threaded counterparts.
+  - I have a single-core processor, no threads, [**no interrupts**][interrupts-note], or any way for
+    multiple things to be happening in parallel: if you are **sure** that is the case, such as WASM
+    (for now), you may set `"singlethread": true`. This will configure LLVM to convert all atomic
+    operations to use their single threaded counterparts.
   - I have native atomic operations: set `max-atomic-width` to the biggest type in bits that your
     target can operate on atomically. For example, many ARM cores have 32-bit atomic operations. You
     may set `"max-atomic-width": 32` in that case.
@@ -108,6 +108,7 @@ You can pretty much copy that output into your file. Start with a few modificati
   https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/aborting-on-panic.html
 [built-in-target]: ./compiler-support.md#built-in-target
 [eh_personality]: ./smallest-no-std.md#eh_personality
+[interrupts-note]: https://github.com/rust-lang/rust/issues/58500#issuecomment-654341233
 [libcalls-atomic]: http://llvm.org/docs/Atomics.html#libcalls-atomic
 [libcalls-sync]: http://llvm.org/docs/Atomics.html#libcalls-sync
 [gcc-sync]: https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html
