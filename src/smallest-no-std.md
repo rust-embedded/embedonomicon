@@ -4,8 +4,8 @@ In this section we'll write the smallest `#![no_std]` program that *compiles*.
 
 ## What does `#![no_std]` mean?
 
-`#![no_std]` is a crate level attribute that indicates that the crate will link to the [`core`] crate
-instead of the [`std`] crate, but what does this mean for applications?
+`#![no_std]` is a crate level attribute that indicates that the crate will link to the [`core`]
+crate instead of the [`std`] crate, but what does this mean for applications?
 
 [`core`]: https://doc.rust-lang.org/core/
 [`std`]: https://doc.rust-lang.org/std/
@@ -31,6 +31,7 @@ required.
 
 Because of these properties, a `#![no_std]` application can be the first and / or the only code that
 runs on a system. It can be many things that a standard Rust application can never be, for example:
+
 - The kernel of an OS.
 - Firmware.
 - A bootloader.
@@ -63,8 +64,8 @@ its entry point. At the time of writing, Rust's `main` interface makes some assu
 environment the program executes in: For example, it assumes the existence of command line
 arguments, so in general, it's not appropriate for `#![no_std]` programs.
 
-The `#[panic_handler]` attribute. The function marked with this attribute defines the behavior
-of panics, both library level panics (`core::panic!`) and language level panics (out of bounds
+The `#[panic_handler]` attribute. The function marked with this attribute defines the behavior of
+panics, both library level panics (`core::panic!`) and language level panics (out of bounds
 indexing).
 
 This program doesn't produce anything useful. In fact, it will produce an empty binary.
@@ -104,3 +105,40 @@ $ cat .cargo/config
 ``` toml
 {{#include ../ci/smallest-no-std/.cargo/config}}
 ```
+
+## eh_personality
+
+If your configuration does not unconditionally abort on panic, which most targets for full operating
+systems don't (or if your [custom target][custom-target] does not contain
+`"panic-strategy": "abort"`), then you must tell Cargo to do so or add an `eh_personality` function,
+which requires a nightly compiler. [Here is Rust's documentation about it][more-about-lang-items],
+and [here is some discussion about it][til-why-eh-personality].
+
+In your Cargo.toml, add:
+
+``` toml
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+```
+
+Alternatively, declare the `eh_personality` function. A simple implementation that does not do
+anything special when unwinding is as follows:
+
+``` rust
+#![feature(lang_items)]
+
+#[lang = "eh_personality"]
+extern "C" fn eh_personality() {}
+```
+
+You will receive the error `language item required, but not found: 'eh_personality'` if not
+included.
+
+[custom-target]: ./custom-target.md
+[more-about-lang-items]:
+  https://doc.rust-lang.org/unstable-book/language-features/lang-items.html#more-about-the-language-items
+[til-why-eh-personality]:
+  https://www.reddit.com/r/rust/comments/estvau/til_why_the_eh_personality_language_item_is/
