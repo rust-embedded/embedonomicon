@@ -6,7 +6,7 @@ that describes your target to rustc.
 Keep in mind that it is required to use a nightly compiler to build the core library, which must be
 done for a target unknown to rustc.
 
-## Decide on a target triple
+## Deciding on a target triple
 
 Many targets already have a known triple used to describe them, typically in the form
 ARCH-VENDOR-SYS-ABI. You should aim to use the same triple that [LLVM uses][llvm-target-triple];
@@ -19,7 +19,7 @@ example, you would probably use x86_64 for those processors, but specify the exa
 version. Typical values might be `armv7`, `armv5te`, or `thumbv7neon`. Take a look at the names of
 the [built-in targets][built-in-target] for inspiration.
 
-The VENDOR part is optional, and describes the manufacturer. Omitting this field is the same as
+The VENDOR part is optional and describes the manufacturer. Omitting this field is the same as
 using `unknown`.
 
 The SYS part describes the OS that is used. Typical values include `win32`, `linux`, and `darwin`
