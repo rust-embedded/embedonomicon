@@ -54,15 +54,15 @@ You can pretty much copy that output into your file. Start with a few modificati
   `"panic-strategy": "abort"`. If you decide not to `abort` on panicking, unless you [tell Cargo
   to][eh_personality], you must define an [eh_personality] function.
 - Configure atomics. Pick the first option that describes your target:
-  - I have a single-core processor, no threads, no interrupts, or any way for multiple things to be
-    happening in parallel: if you are **sure** that is the case, such as WASM (for now), you may set
-    `"singlethread": true`. This will configure LLVM to convert all atomic operations to use their
-    single threaded counterparts.
+  - I have a single-core processor, no threads, **no interrupts**, or any way for multiple things to
+    be happening in parallel: if you are **sure** that is the case, such as WASM (for now), you may
+    set `"singlethread": true`. This will configure LLVM to convert all atomic operations to use
+    their single threaded counterparts.
   - I have native atomic operations: set `max-atomic-width` to the biggest type in bits that your
     target can operate on atomically. For example, many ARM cores have 32-bit atomic operations. You
     may set `"max-atomic-width": 32` in that case.
   - I have no native atomic operations, but I can emulate them myself: set `max-atomic-width` to the
-    highest number of bits that you can emulate up to 64, then implement all of the
+    highest number of bits that you can emulate up to 128, then implement all of the
     [atomic][libcalls-atomic] and [sync][libcalls-atomic] functions expected by LLVM as
     `#[no_mangle] unsafe extern "C"`. These functions have been standardized by gcc, so the [gcc
     documentation][gcc-sync] may have more notes. Missing functions will cause a linker error, while
