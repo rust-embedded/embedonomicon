@@ -52,12 +52,13 @@ You can pretty much copy that output into your file. Start with a few modificati
 - Fill `llvm-target` with [the triple that LLVM expects][llvm-target-triple]
 - Decide on a panicking strategy. A bare metal implementation will likely use
   `"panic-strategy": "abort"`. If you decide not to `abort` on panicking, unless you [tell Cargo
-  to][eh_personality], you must define an [eh_personality] function.
+  to][eh_personality] per-project, you must define an [eh_personality] function.
 - Configure atomics. Pick the first option that describes your target:
   - I have a single-core processor, no threads, [**no interrupts**][interrupts-note], or any way for
     multiple things to be happening in parallel: if you are **sure** that is the case, such as WASM
     (for now), you may set `"singlethread": true`. This will configure LLVM to convert all atomic
-    operations to use their single threaded counterparts.
+    operations to use their single threaded counterparts. Incorrectly using this option may result
+    in UB if using threads or interrupts.
   - I have native atomic operations: set `max-atomic-width` to the biggest type in bits that your
     target can operate on atomically. For example, many ARM cores have 32-bit atomic operations. You
     may set `"max-atomic-width": 32` in that case.
@@ -66,7 +67,9 @@ You can pretty much copy that output into your file. Start with a few modificati
     [atomic][libcalls-atomic] and [sync][libcalls-atomic] functions expected by LLVM as
     `#[no_mangle] unsafe extern "C"`. These functions have been standardized by gcc, so the [gcc
     documentation][gcc-sync] may have more notes. Missing functions will cause a linker error, while
-    incorrectly implemented functions will possibly cause UB.
+    incorrectly implemented functions will possibly cause UB. For example, if you have a
+    single-core, single-thread processor with interrupts, you can implement these functions to
+    disable interrupts, perform the regular operation, and then re-enable them.
   - I have no native atomic operations: you'll have to do some unsafe work to manually ensure
     synchronization in your code. You must set `"max-atomic-width": 0`.
 - Change the linker if integrating with an existing toolchain. For example, if you're using a
