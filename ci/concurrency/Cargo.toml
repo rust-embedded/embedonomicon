@@ -1,0 +1,18 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+edition = "2018"
+readme = "README.md"
+name = "concurrency"
+version = "0.1.0"
+
+[dependencies]
+cortex-m = "0.5.8"
+cortex-m-rt = "=0.6.7"
+cortex-m-semihosting = "0.3.2"
+panic-halt = "0.2.0"
+bare-metal = "0.2.4"
+
+[profile.release]
+codegen-units = 1 # better optimizations
+debug = true # symbols are nice and they don't increase the size on Flash
+lto = true # better optimizations
