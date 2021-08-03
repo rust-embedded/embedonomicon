@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [master, staging, trying]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+          - 1.51.0  # Minimum supported rust version (MSRV)
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt, clippy
+
+      - name: Install additional tooling
+        run: |
+          bash ci/install.sh
+          echo "PATH=$PATH:$PWD/gcc/bin:$PWD/qemu" >> $GITHUB_ENV
+        env:
+          RUST_VERSION: ${{ matrix.rust }}
+
+      - name: Test
+        run: bash ci/script.sh
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: [build]
+
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install mdbook
+        run: sh ci/install-mdbook.sh
+
+      - name: Build the book
+        run: mdbook build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: book
