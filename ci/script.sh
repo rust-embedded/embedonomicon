@@ -86,7 +86,7 @@ main() {
     popd
 
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly ]; then
         pushd app4
         cargo build
         qemu_check target/thumbv7m-none-eabi/debug/app
@@ -98,7 +98,7 @@ main() {
 
     # # exception handling
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly ]; then
         pushd exceptions
 
         # check that the disassembly matches
@@ -231,7 +231,7 @@ main() {
 
     # # DMA
     # NOTE(nightly) this will require nightly until core::pin is stabilized (1.33)
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly ]; then
         pushd dma
         cargo build --examples
         popd
@@ -260,7 +260,4 @@ qemu_check() {
     rm .stdout .stderr
 }
 
-# don't run this on successful merges
-if [[ $TRAVIS_BRANCH != main || $TRAVIS_PULL_REQUEST != false ]]; then
-    main
-fi
+main
