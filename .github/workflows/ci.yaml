@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     strategy:
       matrix:
@@ -28,34 +28,83 @@ jobs:
           override: true
           components: rustfmt, clippy
 
-      - name: Install additional tooling
+      - name: Install Python dependencies
         run: |
-          bash ci/install.sh
-          echo "PATH=$PATH:$PWD/gcc/bin:$PWD/qemu" >> $GITHUB_ENV
-        env:
-          RUST_VERSION: ${{ matrix.rust }}
+          pip3 install --user python-dateutil linkchecker
+
+      - name: Cache installed binaries
+        uses: actions/cache@v1
+        id: cache-bin
+        with:
+          path: ~/cache-bin
+          key: cache-bin
+
+      - name: Install mdbook
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: mdbook
+          version: latest
+
+      - name: Install cargo-binutils
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-binutils
+          version: latest
+
+      - name: Install arm-none-eabi-gcc and qemu
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        run: |
+          mkdir gcc
+          curl -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2?revision=bc2c96c0-14b5-4bb4-9f18-bceb4050fee7?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,7-2018-q2-update \
+            | tar --strip-components=1 -C gcc -xj
+          cp gcc/bin/* ~/cache-bin
+
+          curl -L https://github.com/japaric/qemu-bin/raw/master/14.04/qemu-system-arm-2.12.0 \
+            > ~/cache-bin/qemu-system-arm
+          chmod a+x ~/cache-bin/qemu-system-arm
+
+      - name: Copy installed binaries to cache directory
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        run: |
+          mkdir ~/cache-bin
+          cp ~/.cargo/bin/* ~/cache-bin
+
+      - name: Put new bin directory into path
+        run: echo "~/cache-bin" >> $GITHUB_PATH
 
       - name: Test
         run: bash ci/script.sh
+        env:
+          RUST_VERSION: ${{ matrix.rust }}
 
   deploy:
     runs-on: ubuntu-latest
 
     needs: [build]
 
-    if: github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install mdbook
-        run: sh ci/install-mdbook.sh
+      - name: Cache installed binaries
+        uses: actions/cache@v1
+        id: cache-bin
+        with:
+          path: ~/cache-bin
+          key: cache-bin
+
+      - name: Put new bin directory into path
+        run: echo "~/cache-bin" >> $GITHUB_PATH
 
       - name: Build the book
         run: mdbook build
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+      - name: Deploy book
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: book
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: book
+          force_orphan: true
