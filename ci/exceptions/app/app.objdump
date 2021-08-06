@@ -1,14 +1,14 @@
 
-app:	file format ELF32-arm-little
+app:	file format elf32-littlearm
 
 
 Disassembly of section .text:
 
-main:
+<main>:
                	trap
                	trap
 
-Reset:
+<Reset>:
                	movw	r1, #0x0
                	movw	r0, #0x0
                	movt	r1, #0x2000

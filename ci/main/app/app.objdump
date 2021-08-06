@@ -1,17 +1,17 @@
 
-app:	file format ELF32-arm-little
+app:	file format elf32-littlearm
 
 
 Disassembly of section .text:
 
-main:
+<main>:
                	sub	sp, #4
                	movs	r0, #42
                	str	r0, [sp]
                	b	#-2 <main+0x8>
                	b	#-4 <main+0x8>
 
-Reset:
+<Reset>:
                	push	{r7, lr}
                	mov	r7, sp
                	bl	#-18

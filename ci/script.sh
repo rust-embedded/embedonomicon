@@ -51,11 +51,11 @@ main() {
 
     # check that the Reset symbol is there
     diff -b app.text.objdump \
-         <(cargo objdump --bin app -- -d -no-show-raw-insn -no-leading-addr)
+         <(cargo objdump --bin app -- -d --no-show-raw-insn --no-leading-addr)
 
     # check that the reset vector is there and has the right address
     diff -b app.vector_table.objdump \
-         <(cargo objdump --bin app -- -s -section .vector_table)
+         <(cargo objdump --bin app -- -s --section .vector_table)
 
     qemu_check target/thumbv7m-none-eabi/debug/app
 
@@ -69,7 +69,7 @@ main() {
     # check that the disassembly matches
     pushd app
     diff -b app.objdump \
-         <(cargo objdump --bin app -- -d -no-show-raw-insn -no-leading-addr)
+         <(cargo objdump --bin app -- -d --no-show-raw-insn --no-leading-addr)
     # disabled because of rust-lang/rust#53964
     # edition_check
     popd
@@ -104,7 +104,7 @@ main() {
         # check that the disassembly matches
         pushd app
         diff -b app.objdump \
-             <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
+             <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
         diff -b app.vector_table.objdump \
              <(cargo objdump --bin app --release -- -s -j .vector_table)
         edition_check
@@ -125,7 +125,7 @@ main() {
     # check that the disassembly matches
     pushd app
     diff -b release.objdump \
-         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check
@@ -142,7 +142,7 @@ main() {
     # check that the disassembly matches
     pushd app2
     diff -b release.objdump \
-         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check
