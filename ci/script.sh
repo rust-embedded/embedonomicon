@@ -40,7 +40,7 @@ main() {
 
     # check presence of the `rust_begin_unwind` symbol
     diff app.o.nm \
-         <(cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
+        <(cargo nm -- $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
 
     edition_check
 
