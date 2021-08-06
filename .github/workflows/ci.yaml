@@ -85,7 +85,7 @@ jobs:
           RUST_VERSION: ${{ matrix.rust }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     needs: [build]
 
