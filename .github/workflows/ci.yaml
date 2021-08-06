@@ -18,7 +18,7 @@ jobs:
           - beta
           - nightly
           - 1.51.0  # Minimum supported rust version (MSRV)
-        include: 
+        include:
           - rust: nightly
             experimental: true
 
@@ -31,7 +31,7 @@ jobs:
           profile: minimal
           toolchain: ${{ matrix.rust }}
           override: true
-          components: rustfmt, clippy
+          components: rustfmt, clippy, llvm-tools-preview
           target: thumbv7m-none-eabi
 
       - name: Install Python dependencies
