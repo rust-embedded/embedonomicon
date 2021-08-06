@@ -32,6 +32,7 @@ jobs:
           toolchain: ${{ matrix.rust }}
           override: true
           components: rustfmt, clippy
+          target: thumbv7m-none-eabi
 
       - name: Install Python dependencies
         run: |
