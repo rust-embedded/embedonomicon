@@ -62,10 +62,9 @@ jobs:
       - name: Install arm-none-eabi-gcc and qemu
         if: steps.cache-bin.outputs.cache-hit != 'true'
         run: |
-          mkdir -p gcc ~/cache-bin
-          curl -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2?revision=bc2c96c0-14b5-4bb4-9f18-bceb4050fee7?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,7-2018-q2-update \
-            | tar --strip-components=1 -C gcc -xj
-          cp gcc/bin/* ~/cache-bin
+          mkdir -p ~/cache-bin/arm_gcc
+          curl -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 \
+            | tar --strip-components=1 -C ~/cache-bin/arm_gcc -xj
 
           curl -L https://github.com/japaric/qemu-bin/raw/master/14.04/qemu-system-arm-2.12.0 \
             > ~/cache-bin/qemu-system-arm
@@ -77,7 +76,9 @@ jobs:
           cp ~/.cargo/bin/* ~/cache-bin
 
       - name: Put new bin directory into path
-        run: echo "~/cache-bin" >> $GITHUB_PATH
+        run: |
+          echo "/home/runner/cache-bin" >> $GITHUB_PATH
+          echo "/home/runner/cache-bin/arm_gcc/bin" >> $GITHUB_PATH
 
       - name: Test
         run: bash ci/script.sh
@@ -102,7 +103,7 @@ jobs:
           key: cache-bin
 
       - name: Put new bin directory into path
-        run: echo "~/cache-bin" >> $GITHUB_PATH
+        run: echo "$HOME/cache-bin" >> $GITHUB_PATH
 
       - name: Build the book
         run: mdbook build
