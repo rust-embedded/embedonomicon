@@ -1,27 +1,24 @@
 
-app:	file format ELF32-arm-little
+app:	file format elf32-littlearm
 
 
 Disassembly of section .text:
 
-HardFault:
+<HardFault>:
                	b	#-0x4 <HardFault>
 
-main:
-               	trap
+<main>:
+               	b	#-0x4 <main>
 
-Reset:
+<Reset>:
                	push	{r7, lr}
                	mov	r7, sp
                	bl	#-0xa
                	trap
 
-DefaultExceptionHandler:
-               	b	#-0x4 <DefaultExceptionHandler>
+<UsageFault>:
+               	b	#-0x4 <UsageFault>
 
-UsageFault:
-               	<unknown>
-
-HardFaultTrampoline:
+<HardFaultTrampoline>:
                	mrs	r0, msp
                	b	#-0x18 <HardFault>

@@ -40,7 +40,7 @@ main() {
 
     # check presence of the `rust_begin_unwind` symbol
     diff app.o.nm \
-         <(cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
+        <(cargo nm -- $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
 
     edition_check
 
@@ -51,11 +51,11 @@ main() {
 
     # check that the Reset symbol is there
     diff -b app.text.objdump \
-         <(cargo objdump --bin app -- -d -no-show-raw-insn -no-leading-addr)
+         <(cargo objdump --bin app -- -d --no-show-raw-insn --no-leading-addr)
 
     # check that the reset vector is there and has the right address
     diff -b app.vector_table.objdump \
-         <(cargo objdump --bin app -- -s -section .vector_table)
+         <(cargo objdump --bin app -- -s --section .vector_table)
 
     qemu_check target/thumbv7m-none-eabi/debug/app
 
@@ -69,7 +69,7 @@ main() {
     # check that the disassembly matches
     pushd app
     diff -b app.objdump \
-         <(cargo objdump --bin app -- -d -no-show-raw-insn -no-leading-addr)
+         <(cargo objdump --bin app -- -d --no-show-raw-insn --no-leading-addr)
     # disabled because of rust-lang/rust#53964
     # edition_check
     popd
@@ -86,7 +86,7 @@ main() {
     popd
 
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly ]; then
         pushd app4
         cargo build
         qemu_check target/thumbv7m-none-eabi/debug/app
@@ -98,13 +98,13 @@ main() {
 
     # # exception handling
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly ]; then
         pushd exceptions
 
         # check that the disassembly matches
         pushd app
         diff -b app.objdump \
-             <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
+             <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
         diff -b app.vector_table.objdump \
              <(cargo objdump --bin app --release -- -s -j .vector_table)
         edition_check
@@ -125,7 +125,7 @@ main() {
     # check that the disassembly matches
     pushd app
     diff -b release.objdump \
-         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check
@@ -142,7 +142,7 @@ main() {
     # check that the disassembly matches
     pushd app2
     diff -b release.objdump \
-         <(cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex -no-leading-addr)
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check
@@ -231,7 +231,7 @@ main() {
 
     # # DMA
     # NOTE(nightly) this will require nightly until core::pin is stabilized (1.33)
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly ]; then
         pushd dma
         cargo build --examples
         popd
@@ -260,7 +260,4 @@ qemu_check() {
     rm .stdout .stderr
 }
 
-# don't run this on successful merges
-if [[ $TRAVIS_BRANCH != main || $TRAVIS_PULL_REQUEST != false ]]; then
-    main
-fi
+main
