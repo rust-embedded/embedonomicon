@@ -10,8 +10,8 @@ initializing the device.
 [LM3S6965]: http://www.ti.com/product/LM3S6965
 
 Cortex-M devices require a [vector table] to be present at the start of their [code memory region].
-The vector table is an array of pointers; the first two pointers are required to boot the device;
-the rest of pointers are related to exceptions -- we'll ignore them for now.
+The vector table is an array of pointers; the first two pointers are required to boot the device,
+the rest of the pointers are related to exceptions. We'll ignore them for now.
 
 [code memory region]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/memory-model
 [vector table]: https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table
@@ -23,11 +23,11 @@ Symbols, in turn, can be data (a static variable), or instructions (a Rust funct
 
 [linker scripts]: https://sourceware.org/binutils/docs/ld/Scripts.html
 
-Every symbol has a name assigned by the compiler. As of Rust 1.28 , the Rust compiler assigns to
-symbols names of the form: `_ZN5krate6module8function17he1dfc17c86fe16daE`, which demangles to
+Every symbol has a name assigned by the compiler. As of Rust 1.28 , the names that the Rust compiler
+assigns to symbols are of the form: `_ZN5krate6module8function17he1dfc17c86fe16daE`, which demangles to
 `krate::module::function::he1dfc17c86fe16da` where `krate::module::function` is the path of the
 function or variable and `he1dfc17c86fe16da` is some sort of hash. The Rust compiler will place each
-symbol into its own and unique section; for example the symbol mentioned before will be placed in a
+symbol into its own unique section; for example the symbol mentioned before will be placed in a
 section named `.text._ZN5krate6module8function17he1dfc17c86fe16daE`.
 
 These compiler generated symbol and section names are not guaranteed to remain constant across
@@ -43,7 +43,7 @@ With these attributes, we can expose a stable ABI of the program and use it in t
 
 ## The Rust side
 
-Like mentioned before, for Cortex-M devices, we need to populate the first two entries of the
+As mentioned above, for Cortex-M devices, we need to populate the first two entries of the
 vector table. The first one, the initial value for the stack pointer, can be populated using
 only the linker script. The second one, the reset vector, needs to be created in Rust code
 and placed correctly using the linker script.
@@ -66,14 +66,14 @@ symbol name so we use `#[no_mangle]`. We need fine control over the location of 
 place it in a known section, `.vector_table.reset_vector`. The exact location of the reset handler
 itself, `Reset`, is not important. We just stick to the default compiler generated section.
 
-Also, the linker will ignore symbols with internal linkage, AKA internal symbols, while traversing
+The linker will ignore symbols with internal linkage (also known as internal symbols) while traversing
 the list of input object files, so we need our two symbols to have external linkage. The only way to
 make a symbol external in Rust is to make its corresponding item public (`pub`) and *reachable* (no
 private module between the item and the root of the crate).
 
 ## The linker script side
 
-Below is shown a minimal linker script that places the vector table in the right location. Let's
+A minimal linker script that places the vector table in the correct location is shown below. Let's
 walk through it.
 
 ``` console
@@ -92,7 +92,7 @@ in the target. The values used here correspond to the LM3S6965 microcontroller.
 
 ### `ENTRY`
 
-Here we indicate to the linker that the reset handler -- whose symbol name is `Reset` -- is the
+Here we indicate to the linker that the reset handler, whose symbol name is `Reset`, is the
 *entry point* of the program. Linkers aggressively discard unused sections. Linkers consider the
 entry point and functions called from it as *used* so they won't discard them. Without this line,
 the linker would discard the `Reset` function and all subsequent functions called from it.
@@ -107,21 +107,21 @@ you should use `EXTERN` in conjunction with `KEEP`.
 
 ### `SECTIONS`
 
-This part describes how sections in the input object files, AKA *input sections*, are to be arranged
-in the sections of the output object file, AKA output sections; or if they should be discarded. Here
+This part describes how sections in the input object files (also known as *input sections*) are to be arranged
+in the sections of the output object file (also known as output sections) or if they should be discarded. Here
 we define two output sections:
 
 ``` text
   .vector_table ORIGIN(FLASH) : { /* .. */ } > FLASH
 ```
 
-`.vector_table`, which contains the vector table and is located at the start of `FLASH` memory,
+`.vector_table` contains the vector table and is located at the start of `FLASH` memory.
 
 ``` text
   .text : { /* .. */ } > FLASH
 ```
 
-and `.text`, which contains the program subroutines and is located somewhere in `FLASH`. Its start
+`.text` contains the program subroutines and is located somewhere in `FLASH`. Its start
 address is not specified, but the linker will place it after the previous output section,
 `.vector_table`.
 
@@ -170,12 +170,14 @@ Now we can link the application. For reference, here's the complete Rust program
 {{#include ../ci/memory-layout/src/main.rs}}
 ```
 
-We have to tweak linker process to make it use our linker script. This is done
-passing the `-C link-arg` flag to `rustc` but there are two ways to do it: you
-can use the `cargo-rustc` subcommand instead of `cargo-build` as shown below:
+We have to tweak the linker process to make it use our linker script. This is done
+passing the `-C link-arg` flag to `rustc`. This can be done with `cargo-rustc` or
+`cargo-build`.
 
 **IMPORTANT**: Make sure you have the `.cargo/config` file that was added at the
 end of the last section before running this command.
+
+Using the `cargo-rustc` subcommand:
 
 ``` console
 $ cargo rustc -- -C link-arg=-Tlink.x
@@ -199,7 +201,8 @@ when cross compiling to that target.
 
 ## Inspecting it
 
-Now let's inspect the output binary to confirm the memory layout looks the way we want:
+Now let's inspect the output binary to confirm the memory layout looks the way we want
+(this requires [`cargo-binutils`](https://github.com/rust-embedded/cargo-binutils#readme)):
 
 ``` console
 $ cargo objdump --bin app -- -d -no-show-raw-insn

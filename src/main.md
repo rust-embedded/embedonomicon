@@ -36,13 +36,12 @@ We also drop the `#![no_main]` attribute as it has no effect on library crates.
 
 > There's an orthogonal question that arises at this stage: Should the `rt`
 > library provide a standard panicking behavior, or should it *not* provide a
-> `#[panic_handler]` function and leave the end user choose the panicking
+> `#[panic_handler]` function and leave the end user to choose the panicking
 > behavior? This document won't delve into that question and for simplicity will
 > leave the dummy `#[panic_handler]` function in the `rt` crate. However, we
 > wanted to inform the reader that there are other options.
 
-The second change involves providing the linker script we wrote before to the application crate. You
-see the linker will search for linker scripts in the library search path (`-L`) and in the directory
+The second change involves providing the linker script we wrote before to the application crate. The linker will search for linker scripts in the library search path (`-L`) and in the directory
 from which it's invoked. The application crate shouldn't need to carry around a copy of `link.x` so
 we'll have the `rt` crate put the linker script in the library search path using a [build script].
 
@@ -99,7 +98,7 @@ $ cargo objdump --bin app -- -d -no-show-raw-insn
 
 ## Making it type safe
 
-The `main` interface works, but it's easy to get it wrong: For example, the user could write `main`
+The `main` interface works, but it's easy to get it wrong. For example, the user could write `main`
 as a non-divergent function, and they would get no compile time error and undefined behavior (the
 compiler will misoptimize the program).
 
