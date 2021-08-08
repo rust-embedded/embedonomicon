@@ -10,5 +10,5 @@ entry!(main);
 
 fn main() -> ! {
     // this executes the undefined instruction (UDF) and causes a HardFault exception
-    unsafe { intrinsics::abort() }
+    intrinsics::abort()
 }

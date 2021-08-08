@@ -9,7 +9,7 @@ use rt::entry;
 entry!(main);
 
 fn main() -> ! {
-    unsafe { intrinsics::abort() }
+    intrinsics::abort()
 }
 
 #[no_mangle]
