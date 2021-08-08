@@ -15,7 +15,7 @@ fn main() -> ! {
         // check that DATA is properly initialized
         if ptr::read_volatile(&DATA) != 1 {
             // this makes QEMU crash
-            asm!("BKPT" :::: "volatile");
+            asm!("BKPT");
         }
     }
 

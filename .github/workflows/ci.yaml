@@ -77,8 +77,8 @@ jobs:
 
       - name: Put new bin directory into path
         run: |
-          echo "/home/runner/cache-bin" >> $GITHUB_PATH
-          echo "/home/runner/cache-bin/arm_gcc/bin" >> $GITHUB_PATH
+          echo "$HOME/cache-bin" >> $GITHUB_PATH
+          echo "$HOME/cache-bin/arm_gcc/bin" >> $GITHUB_PATH
 
       - name: Test
         run: bash ci/script.sh
