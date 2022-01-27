@@ -216,7 +216,7 @@ This is the disassembly of the `.text` section. We see that the reset handler, n
 located at address `0x8`.
 
 ``` console
-$ cargo objdump --bin app -- -s -section .vector_table
+$ cargo objdump --bin app -- -s --section .vector_table
 ```
 
 ``` text
