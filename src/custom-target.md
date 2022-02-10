@@ -64,7 +64,7 @@ You can pretty much copy that output into your file. Start with a few modificati
     may set `"max-atomic-width": 32` in that case.
   - I have no native atomic operations, but I can emulate them myself: set `max-atomic-width` to the
     highest number of bits that you can emulate up to 128, then implement all of the
-    [atomic][libcalls-atomic] and [sync][libcalls-atomic] functions expected by LLVM as
+    [atomic][libcalls-atomic] and [sync][libcalls-sync] functions expected by LLVM as
     `#[no_mangle] unsafe extern "C"`. These functions have been standardized by gcc, so the [gcc
     documentation][gcc-sync] may have more notes. Missing functions will cause a linker error, while
     incorrectly implemented functions will possibly cause UB. For example, if you have a
