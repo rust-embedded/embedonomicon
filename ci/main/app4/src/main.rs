@@ -1,8 +1,7 @@
-#![feature(asm)]
 #![no_main]
 #![no_std]
 
-use core::ptr;
+use core::{ptr, arch::asm};
 
 use rt::entry;
 
