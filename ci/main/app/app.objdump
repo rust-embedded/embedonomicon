@@ -1,18 +1,17 @@
 
 app:	file format elf32-littlearm
 
-
 Disassembly of section .text:
 
 <main>:
                	sub	sp, #4
                	movs	r0, #42
                	str	r0, [sp]
-               	b	#-2 <main+0x8>
-               	b	#-4 <main+0x8>
+               	b	0x10 <main+0x8>         @ imm = #-2
+               	b	0x10 <main+0x8>         @ imm = #-4
 
 <Reset>:
                	push	{r7, lr}
                	mov	r7, sp
-               	bl	#-18
+               	bl	0x8 <main>              @ imm = #-18
                	trap

@@ -17,7 +17,7 @@ jobs:
           - stable
           - beta
           - nightly
-          - 1.51.0  # Minimum supported rust version (MSRV)
+          - 1.58.1  # Minimum supported rust version (MSRV)
         include:
           - rust: nightly
             experimental: true

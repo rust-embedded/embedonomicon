@@ -3,5 +3,5 @@ delete_merged_branches = true
 required_approvals = 1
 status = [
     "build (stable)",
-    "build (1.51.0)",
+    "build (1.58.1)",
 ]

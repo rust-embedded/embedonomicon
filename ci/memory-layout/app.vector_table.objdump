@@ -1,5 +1,4 @@
 
 app:	file format elf32-littlearm
-
 Contents of section .vector_table:
  0000 00000120 09000000                    ... ....
