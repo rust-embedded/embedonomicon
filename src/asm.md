@@ -1,5 +1,11 @@
 # Assembly on stable
 
+> Note: Since Rust 1.59, both *inline* assembly (`asm!`) and *free form* assembly
+> (`global_asm!`) become stable. But since it will take some time for the 
+> existing crates to catchup the change, and since it's good for us to know the
+> other ways in history we used to deal with assembly, we will keep this chapter
+> here.
+
 So far we have managed to boot the device and handle interrupts without a single
 line of assembly. That's quite a feat! But depending on the architecture you are
 targeting you may need some assembly to get to this point. There are also some
