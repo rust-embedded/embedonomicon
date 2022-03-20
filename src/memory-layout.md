@@ -205,7 +205,7 @@ Now let's inspect the output binary to confirm the memory layout looks the way w
 (this requires [`cargo-binutils`](https://github.com/rust-embedded/cargo-binutils#readme)):
 
 ``` console
-$ cargo objdump --bin app -- -d -no-show-raw-insn
+$ cargo objdump --bin app -- -d --no-show-raw-insn
 ```
 
 ``` text
