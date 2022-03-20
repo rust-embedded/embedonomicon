@@ -79,7 +79,7 @@ $ cargo size --target thumbv7m-none-eabi --bin app
 {{#include ../ci/smallest-no-std/app.size}}
 ```
 
-Before linking the crate does contain the panicking symbol.
+Before linking, the crate contains the panicking symbol.
 
 ``` console
 $ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
