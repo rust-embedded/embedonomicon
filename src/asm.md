@@ -89,7 +89,7 @@ by writing a very simple program.
 Here's the disassembly. Look at the address of `HardFaultTrampoline`.
 
 ``` console
-$ cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex
+$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
 ```
 
 ``` text
@@ -178,7 +178,7 @@ Now we can test this new version against the simple program from before and
 we'll get the same output.
 
 ``` console
-$ cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex
+$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
 ```
 
 ``` text
