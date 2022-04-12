@@ -69,15 +69,24 @@ book:
 
 Instructions common to all OSes
 
-``` console
-# Rust toolchain (add +nightly for nightly rust version)
+```
+console
+# Rust toolchain
 # If you start from scratch, get rustup from https://rustup.rs/
-$ rustup default stable
-$ rustup +nightly default stable
 
-# toolchain should be newer than this one
+# Change rustc to default stable version.
+$ rustup default stable
+$ rustc -V
+$ rustc +nightly -V
+
+# Change rustc to default nightly version.
+$ rustup default nightly
+$ rustc -V
+
+# toolchain should be newer than this one.
 $ rustc -V
 rustc 1.59.0 (9d1b2106e 2022-02-23)
+
 $ rustc +nightly -V
 rustc 1.61.0-nightly (9c06e1ba4 2022-03-29)
 
