@@ -89,7 +89,7 @@ by writing a very simple program.
 Here's the disassembly. Look at the address of `HardFaultTrampoline`.
 
 ``` console
-$ cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex
+$ cargo objdump --bin app --release -- -d --no-show-raw-insn -print-imm-hex
 ```
 
 ``` text
@@ -114,7 +114,8 @@ $ cargo objdump --bin app --release -- -s -j .vector_table
 
 The downside of using the `cc` crate is that it requires some assembler program
 on the build machine. For example when targeting ARM Cortex-M the `cc` crate
-uses `arm-none-eabi-gcc` as the assembler.
+uses `arm
+ne-eabi-gcc` as the assembler.
 
 Instead of assembling the file on the build machine we can ship a pre-assembled
 file with the `rt` crate. That way no assembler program is required on the build
@@ -178,7 +179,7 @@ Now we can test this new version against the simple program from before and
 we'll get the same output.
 
 ``` console
-$ cargo objdump --bin app --release -- -d -no-show-raw-insn -print-imm-hex
+$ cargo objdump --bin app --release -- -d --no-show-raw-insn -print-imm-hex
 ```
 
 ``` text
