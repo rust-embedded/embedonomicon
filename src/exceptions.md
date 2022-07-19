@@ -145,7 +145,7 @@ Breakpoint 1, DefaultExceptionHandler ()
 And for completeness, here's the disassembly of the optimized version of the program:
 
 ``` console
-$ cargo objdump --bin app --release -- -d --no-show-raw-insn -print-imm-hex
+$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
 ```
 
 ``` text
