@@ -89,7 +89,7 @@ $ cat src/main.rs
 The disassembly will be similar but will now include the user `main` function.
 
 ``` console
-$ cargo objdump --bin app -- -d -no-show-raw-insn
+$ cargo objdump --bin app -- -d --no-show-raw-insn
 ```
 
 ``` text
