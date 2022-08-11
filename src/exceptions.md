@@ -174,10 +174,10 @@ The vector table now resembles the results of all the code snippets in this book
         - The first bit being set to 1 does not alter the address due to
           alignment requirements. Instead, it causes the function to be executed
           in _thumb mode_.
-- Afterwards, a pattern of addresses alternating between `0x7f` and `0x00` is
+- Afterwards, a pattern of addresses alternating between `0x83` and `0x00` is
   visible.
-    - Looking at the disassembly above, it is clear that `0x7f` refers to the
-      `DefaultExceptionHandler` (`0x7e` executed in thumb mode).
+    - Looking at the disassembly above, it is clear that `0x83` refers to the
+      `DefaultExceptionHandler` (`0x84` executed in thumb mode).
     - Cross referencing the pattern to the vector table that was set up earlier
       in this chapter (see the definition of `pub static EXCEPTIONS`) with [the
       vector table layout for the Cortex-M], it is clear that the address of the
