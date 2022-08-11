@@ -92,7 +92,7 @@ $ rustup component add llvm-tools-preview
 ``` console
 $ # arm-none-eabi-gdb
 $ # you may need to run `brew tap Caskroom/tap` first
-$ brew cask install gcc-arm-embedded
+$ brew install --cask gcc-arm-embedded
 
 $ # QEMU
 $ brew install qemu
