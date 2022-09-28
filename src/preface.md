@@ -41,6 +41,9 @@ translation listed here, please open a PR to add it.
 * [Japanese](https://tomoyuki-nakabayashi.github.io/embedonomicon/)
   ([repository](https://github.com/tomoyuki-nakabayashi/embedonomicon))
 
+* [Chinese](https://xxchang.github.io/embedonomicon/)
+  ([repository](https://github.com/xxchang/embedonomicon))
+  
 ## Requirements
 
 This book is self contained. The reader doesn't need to be familiar with the
