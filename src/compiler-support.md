@@ -20,7 +20,7 @@ following command:
 
 ``` console
 $ # you need to have `cargo-binutils` installed to run this command
-$ cargo objdump -- -version
+$ cargo objdump -- --version
 LLVM (http://llvm.org/):
   LLVM version 7.0.0svn
   Optimized build.
