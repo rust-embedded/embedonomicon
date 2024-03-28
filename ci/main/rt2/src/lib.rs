@@ -8,11 +8,11 @@ pub unsafe extern "C" fn Reset() -> ! {
     // NEW!
     // Initialize RAM
     extern "C" {
-        static mut _sbss: u8;
-        static mut _ebss: u8;
+        static _sbss: u8;
+        static _ebss: u8;
 
-        static mut _sdata: u8;
-        static mut _edata: u8;
+        static _sdata: u8;
+        static _edata: u8;
         static _sidata: u8;
     }
 
