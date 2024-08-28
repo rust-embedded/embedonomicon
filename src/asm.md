@@ -9,7 +9,7 @@
 So far we have managed to boot the device and handle interrupts without a single
 line of assembly. That's quite a feat! But depending on the architecture you are
 targeting you may need some assembly to get to this point. There are also some
-operations like context switching, etc., that require assembly.
+operations, for example context switching, that require assembly.
 
 The problem is that both *inline* assembly (`asm!`) and *free form* assembly
 (`global_asm!`) are unstable, and there's no estimate for when they'll be
