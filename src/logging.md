@@ -200,8 +200,7 @@ We also specified the start address of this output section: the `0` in `.log 0
 (INFO)`.
 
 The other improvement we can do is switch from formatted I/O (`fmt::Write`) to
-binary I/O; that is, send the addresses to the host as bytes rather than as
-strings.
+binary I/O, sending the addresses to the host as bytes rather than as strings.
 
 Binary serialization can be hard but we'll keep things super simple by
 serializing each address as a single byte. With this approach we don't have to
