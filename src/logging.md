@@ -132,7 +132,7 @@ It's important to note that the addresses of the symbols will likely change when
 optimizing the program. Let's check that.
 
 > **PROTIP** You can set `target.thumbv7m-none-eabi.runner` to the long QEMU
-> command from before (`qemu-system-arm -cpu ... -kernel ...`) in the Cargo
+> command from before (`qemu-system-arm -cpu … -kernel …`) in the Cargo
 > configuration file (`.cargo/config`) to have `cargo run` use that *runner* to
 > execute the output binary.
 
