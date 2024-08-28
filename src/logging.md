@@ -52,7 +52,7 @@ the `static` variables but their addresses.
 As long as the `static` variables are not zero sized each one will have a
 different address. What we're doing here is effectively encoding each message
 into a unique identifier, which happens to be the variable address. Some part of
-the log system will have to decode this id back into the message.
+the log system will have to decode this ID back into the message.
 
 Let's write some code to illustrate the idea.
 
@@ -104,8 +104,8 @@ $ qemu-system-arm \
 {{#include ../ci/logging/app/dev.out}}
 ```
 
-> **NOTE**: These addresses may not be the ones you get locally because
-> addresses of `static` variable are not guaranteed to remain the same when the
+> **NOTE**: These addresses may not be the ones you get locally because the
+> addresses of `static` variables are not guaranteed to remain the same when the
 > toolchain is changed (e.g. optimizations may have improved).
 
 Now we have two addresses printed to the console.
@@ -128,12 +128,12 @@ $ # first column is the symbol address; last column is the symbol name
 we are only looking for the ones in the `.rodata` section and whose size is one
 byte (our variables have type `u8`).
 
-It's important to note that the address of the symbols will likely change when
+It's important to note that the addresses of the symbols will likely change when
 optimizing the program. Let's check that.
 
 > **PROTIP** You can set `target.thumbv7m-none-eabi.runner` to the long QEMU
-> command from before (`qemu-system-arm -cpu (..) -kernel`) in the Cargo
-> configuration file (`.cargo/conifg`) to have `cargo run` use that *runner* to
+> command from before (`qemu-system-arm -cpu ... -kernel ...`) in the Cargo
+> configuration file (`.cargo/config`) to have `cargo run` use that *runner* to
 > execute the output binary.
 
 ``` console
@@ -173,8 +173,9 @@ an exercise for the reader.
 Can we do better? Yes, we can!
 
 The current implementation places the `static` variables in `.rodata`, which
-means they occupy size in Flash even though we never use their contents. Using a
-little bit of linker script magic we can make them occupy *zero* space in Flash.
+means they occupy space in flash even though we never use their contents. Using
+a little bit of linker script magic we can make them occupy *zero* space in
+flash.
 
 ``` console
 $ cat log.x
@@ -199,7 +200,7 @@ We also specified the start address of this output section: the `0` in `.log 0
 (INFO)`.
 
 The other improvement we can do is switch from formatted I/O (`fmt::Write`) to
-binary I/O, that is send the addresses to the host as bytes rather than as
+binary I/O; that is, send the addresses to the host as bytes rather than as
 strings.
 
 Binary serialization can be hard but we'll keep things super simple by

@@ -4,7 +4,7 @@ In this section we'll cover how to implement a global, shared singleton. The
 embedded Rust book covered local, owned singletons which are pretty much unique
 to Rust. Global singletons are essentially the singleton pattern you see in C
 and C++; they are not specific to embedded development but since they involve
-symbols they seemed a good fit for the embedonomicon.
+symbols they seemed a good fit for the Embedonomicon.
 
 > **TODO**(resources team) link "the embedded Rust book" to the singletons
 > section when it's up
@@ -16,7 +16,7 @@ section to support global logging. The result will be very similar to the
 > **TODO**(resources team) link `#[global_allocator]` to the collections chapter
 > of the book when it's in a more stable location.
 
-Here's the summary of what we want to:
+Here's the summary of what we want to do:
 
 In the last section we created a `log!` macro to log messages through a specific
 logger, a value that implements the `Log` trait. The syntax of the `log!` macro
@@ -26,9 +26,9 @@ message through a global logger; this is how `std::println!` works. We'll also
 need a mechanism to declare what the global logger is; this is the part that's
 similar to `#[global_allocator]`.
 
-It could be that the global logger is declared in the top crate and it could
+It could be that the global logger is declared in the top crate, and it could
 also be that the type of the global logger is defined in the top crate. In this
-scenario the dependencies can *not* know the exact type of the global logger. To
+scenario the dependencies *cannot* know the exact type of the global logger. To
 support this scenario we'll need some indirection.
 
 Instead of hardcoding the type of the global logger in the `log` crate we'll
