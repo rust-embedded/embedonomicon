@@ -166,7 +166,7 @@ result in a data race: both the processor and the DMA would end up modifying
 `buf` at the same time. Similarly the compiler can move the zeroing operation to
 after `read_exact`, which would also result in a data race.
 
-To prevent these problematic reorderings we can use a [`compiler_fence`]:
+To prevent these problematic reorderings we can use a [`compiler_fence`].
 
 [`compiler_fence`]: https://doc.rust-lang.org/core/sync/atomic/fn.compiler_fence.html
 
