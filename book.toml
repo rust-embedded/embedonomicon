@@ -3,3 +3,6 @@ authors = ["Jorge Aparicio"]
 multilingual = false
 src = "src"
 title = "The Embedonomicon"
+
+[output.html]
+git-repository-url = "https://github.com/rust-embedded/embedonomicon"
