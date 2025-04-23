@@ -18,7 +18,7 @@ jobs:
           #(I think due to compilation differences between when this was made to the new nightly).
           #Since Rust 1.63.0 came out Aug 11 2022, we use nightly from the day after.
         include:
-          - rust: nightly
+          - rust: nightly-2022-08-12
             experimental: true
 
     steps:
