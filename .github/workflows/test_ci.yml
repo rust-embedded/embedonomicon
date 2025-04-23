@@ -1,0 +1,112 @@
+name: test CI
+
+on:
+  workflow_dispatch: #Enables manual run of this workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest #Version 20.04 is no longer supported (see https://github.com/actions/runner-images/issues/11101)
+
+    continue-on-error: ${{ matrix.experimental || false }}
+
+    strategy:
+      matrix:
+        rust:
+          - 1.62.0
+          - nightly
+        include:
+          - rust: nightly
+            experimental: true
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt, clippy, llvm-tools-preview
+          target: thumbv7m-none-eabi
+
+      - name: Install Python dependencies
+        run: |
+          pip3 install --user python-dateutil linkchecker
+
+      - name: Cache installed binaries
+        uses: actions/cache@v1
+        id: cache-bin
+        with:
+          path: ~/cache-bin
+          key: cache-bin
+
+      - name: Install mdbook
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: mdbook
+          version: latest
+
+      - name: Install cargo-binutils
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-binutils
+          version: latest
+
+      - name: Install arm-none-eabi-gcc and qemu
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/cache-bin/arm_gcc
+          curl -L https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 \
+            | tar --strip-components=1 -C ~/cache-bin/arm_gcc -xj
+
+          curl -L https://github.com/japaric/qemu-bin/raw/master/14.04/qemu-system-arm-2.12.0 \
+            > ~/cache-bin/qemu-system-arm
+          chmod a+x ~/cache-bin/qemu-system-arm
+
+      - name: Copy installed binaries to cache directory
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        run: |
+          cp ~/.cargo/bin/* ~/cache-bin
+
+      - name: Put new bin directory into path
+        run: |
+          echo "$HOME/cache-bin" >> $GITHUB_PATH
+          echo "$HOME/cache-bin/arm_gcc/bin" >> $GITHUB_PATH
+
+      - name: Test
+        run: bash ci/script.sh
+        env:
+          RUST_VERSION: ${{ matrix.rust }}
+
+  deploy:
+    runs-on: ubuntu-latest #Version 20.04 is no longer supported (see https://github.com/actions/runner-images/issues/11101)
+
+    needs: [build]
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache installed binaries
+        uses: actions/cache@v1
+        id: cache-bin
+        with:
+          path: ~/cache-bin
+          key: cache-bin
+
+      - name: Put new bin directory into path
+        run: echo "$HOME/cache-bin" >> $GITHUB_PATH
+
+      - name: Build the book
+        run: mdbook build
+
+      - name: Deploy book
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: book
+          force_orphan: true
