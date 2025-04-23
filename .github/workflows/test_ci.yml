@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         rust:
-          - 1.62.0
+          - 1.63.0 #bump needed as otherwise the test script fails as package `cc v1.2.19` cannot be built because it requires rustc 1.63 or newer, while the currently active rustc version is 1.62.0
           - nightly
         include:
           - rust: nightly
