@@ -13,7 +13,10 @@ jobs:
       matrix:
         rust:
           - 1.63.0 #bump needed as otherwise the test script fails as package `cc v1.2.19` cannot be built because it requires rustc 1.63 or newer, while the currently active rustc version is 1.62.0
-          - nightly
+          - nightly-2022-08-12 #Need to fix nightly to be an old version. 
+          #Needed because in ci/script.sh (the test script) some checks like "check presence of the `rust_begin_unwind` symbol" fail 
+          #(I think due to compilation differences between when this was made to the new nightly).
+          #Since Rust 1.63.0 came out Aug 11 2022, we use nightly from the day after.
         include:
           - rust: nightly
             experimental: true
