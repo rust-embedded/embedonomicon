@@ -7,37 +7,29 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     continue-on-error: ${{ matrix.experimental || false }}
 
     strategy:
       matrix:
         rust:
-          - 1.62.0
-          - nightly
+          - 1.63.0 
+          - nightly-2022-08-12 #Since Rust 1.63.0 came out Aug 11 2022, we use nightly from the day after.
         include:
-          - rust: nightly
+          - rust: nightly-2022-08-12
             experimental: true
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          override: true
-          components: rustfmt, clippy, llvm-tools-preview
-          target: thumbv7m-none-eabi
 
       - name: Install Python dependencies
         run: |
           pip3 install --user python-dateutil linkchecker
 
       - name: Cache installed binaries
-        uses: actions/cache@v1
+        uses: actions/cache@v4 
         id: cache-bin
         with:
           path: ~/cache-bin
@@ -50,12 +42,24 @@ jobs:
           crate: mdbook
           version: latest
 
+
       - name: Install cargo-binutils
         if: steps.cache-bin.outputs.cache-hit != 'true'
         uses: actions-rs/install@v0.1
         with:
           crate: cargo-binutils
           version: latest
+
+        #Moved until after installing mdbook and cargo-binutils because otherwise installing them fails
+        #(note all GitHub runners come with the latest stable version of Rust pre-installed, and it is that version we want to install these).
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt, clippy, llvm-tools-preview
+          target: thumbv7m-none-eabi
 
       - name: Install arm-none-eabi-gcc and qemu
         if: steps.cache-bin.outputs.cache-hit != 'true'
@@ -84,7 +88,7 @@ jobs:
           RUST_VERSION: ${{ matrix.rust }}
 
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     needs: [build]
 
@@ -94,7 +98,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Cache installed binaries
-        uses: actions/cache@v1
+        uses:  actions/cache@v4
         id: cache-bin
         with:
           path: ~/cache-bin
