@@ -97,9 +97,11 @@ main() {
 
     popd
 
+
+    #FIXME: This fails on nightly-2022-08-12, but we need at least rust 1.63.0 or other things fail. This needs to be fixed manually.
     # # exception handling
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
+    if [ $RUST_VERSION = FIXME ]; then
         pushd exceptions
 
         # check that the disassembly matches
