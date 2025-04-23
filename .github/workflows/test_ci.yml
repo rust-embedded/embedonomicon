@@ -40,8 +40,16 @@ jobs:
           crate: mdbook
           version: latest
 
-        #Moved untill after installing mdbook because otherwise installing mdbook fails
-        #(note all GitHub runners come with the latest stable version of Rust pre-installed and it is that version we want to install mdbook).
+
+      - name: Install cargo-binutils
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-binutils
+          version: latest
+
+        #Moved untill after installing mdbook and cargo-binutils because otherwise installing them fails
+        #(note all GitHub runners come with the latest stable version of Rust pre-installed and it is that version we want to install these).
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -50,14 +58,6 @@ jobs:
           override: true
           components: rustfmt, clippy, llvm-tools-preview
           target: thumbv7m-none-eabi
-
-
-      - name: Install cargo-binutils
-        if: steps.cache-bin.outputs.cache-hit != 'true'
-        uses: actions-rs/install@v0.1
-        with:
-          crate: cargo-binutils
-          version: latest
 
       - name: Install arm-none-eabi-gcc and qemu
         if: steps.cache-bin.outputs.cache-hit != 'true'
