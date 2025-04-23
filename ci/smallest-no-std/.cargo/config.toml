@@ -1,5 +1,2 @@
-[target.thumbv7m-none-eabi]
-rustflags = ["-C"]
-
 [build]
 target = "thumbv7m-none-eabi"
