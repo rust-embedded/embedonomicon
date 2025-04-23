@@ -21,6 +21,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+
+      - name: Install Python dependencies
+        run: |
+          pip3 install --user python-dateutil linkchecker
+
+      - name: Cache installed binaries
+        uses: actions/cache@v4 #v1 no longer supported: see https://github.blog/changelog/2024-12-05-notice-of-upcoming-releases-and-breaking-changes-for-github-actions/#actions-cache-v1-v2-and-actions-toolkit-cache-package-closing-down
+        id: cache-bin
+        with:
+          path: ~/cache-bin
+          key: cache-bin
+
+      - name: Install mdbook
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        uses: actions-rs/install@v0.1
+        with:
+          crate: mdbook
+          version: latest
+
+        #Moved untill after installing mdbook because otherwise installing mdbook fails
+        #(note all GitHub runners come with the latest stable version of Rust pre-installed and it is that version we want to install mdbook).
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -30,25 +51,6 @@ jobs:
           components: rustfmt, clippy, llvm-tools-preview
           target: thumbv7m-none-eabi
 
-      - name: Install Python dependencies
-        run: |
-          pip3 install --user python-dateutil linkchecker
-
-      - name: Cache Cargo installed binaries
-        uses: actions/cache@v4
-        id: cache-cargo
-        with:
-          path: ~/cargo-bin
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-
-      - name: Install mdbook
-        if: steps.cache-bin.outputs.cache-hit != 'true'
-        uses: actions-rs/install@v0.1
-        with:
-          crate: mdbook
-          version: latest
 
       - name: Install cargo-binutils
         if: steps.cache-bin.outputs.cache-hit != 'true'
