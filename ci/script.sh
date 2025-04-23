@@ -38,12 +38,10 @@ main() {
     diff -b app.size \
          <(cargo size --bin app)
 
-    #Note: Maybe fix this
-    if [ $RUST_VERSION != nightly ]; then
-        # check presence of the `rust_begin_unwind` symbol -- For some reason this fails on nightly, so for now just skip this check
-        diff app.o.nm \
-            <(cargo nm -- $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
-    fi
+    # check presence of the `rust_begin_unwind` symbol
+    diff app.o.nm \
+        <(cargo nm -- $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
+
 
     edition_check
 
