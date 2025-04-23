@@ -35,7 +35,7 @@ jobs:
           pip3 install --user python-dateutil linkchecker
 
       - name: Cache installed binaries
-        uses: actions/cache@v1
+        uses: actions/cache@v4 #v1 no longer supported: see https://github.blog/changelog/2024-12-05-notice-of-upcoming-releases-and-breaking-changes-for-github-actions/#actions-cache-v1-v2-and-actions-toolkit-cache-package-closing-down
         id: cache-bin
         with:
           path: ~/cache-bin
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Cache installed binaries
-        uses: actions/cache@v1
+        uses:  actions/cache@v4 #v1 no longer supported: see https://github.blog/changelog/2024-12-05-notice-of-upcoming-releases-and-breaking-changes-for-github-actions/#actions-cache-v1-v2-and-actions-toolkit-cache-package-closing-down
         id: cache-bin
         with:
           path: ~/cache-bin
