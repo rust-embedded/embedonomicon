@@ -87,7 +87,7 @@ main() {
     popd
 
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
         pushd app4
         cargo build
         qemu_check target/thumbv7m-none-eabi/debug/app
@@ -99,7 +99,7 @@ main() {
 
     # # exception handling
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
         pushd exceptions
 
         # check that the disassembly matches
@@ -232,7 +232,7 @@ main() {
 
     # # DMA
     # NOTE(nightly) this will require nightly until core::pin is stabilized (1.33)
-    if [ $RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
         pushd dma
         cargo build --examples
         popd
