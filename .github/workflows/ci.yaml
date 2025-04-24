@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch: #Enables manual run of this workflow
   push:
     branches: [master, staging, trying]
   pull_request:
