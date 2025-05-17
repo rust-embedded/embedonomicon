@@ -264,7 +264,7 @@ So how does this work when not talking to another thread, but to
 some hardware like the DMA engine? The answer is that in the current
 implementation, volatiles happen to work just like relaxed atomic
 operations. There's work going on to actually guarantee this behavior
-for future versions of rust.
+for future versions of Rust.
 
 ## Generic buffer
 
