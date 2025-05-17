@@ -245,6 +245,27 @@ of `compiler_fence`. That should generate a DMB instruction on Cortex-M devices.
 
 [`atomic::fence`]: https://doc.rust-lang.org/core/sync/atomic/fn.fence.html
 
+## Don't we need atomics?
+
+The documentation on fences states that they only work in combination with atomics:
+
+> A fence ‘A’ which has (at least) Release ordering semantics, synchronizes with
+> a fence ‘B’ with (at least) Acquire semantics, if and only if there exist
+> operations X and Y, both operating on some atomic object ‘m’ such that A is
+> sequenced before X, Y is sequenced before B and Y observes the change to m.
+
+The same is true for `compiler_fence`:
+
+> Note that just like fence, synchronization still requires atomic operations
+> to be used in both threads – it is not possible to perform synchronization
+> entirely with fences and non-atomic operations.
+
+So how does this work when not talking to another thread, but to
+some hardware like the DMA engine? The answer is that in the current
+implementation, volatiles happen to work just like relaxed atomic
+operations. There's work going on to actually guarantee this behavior
+for future versions of rust.
+
 ## Generic buffer
 
 Our API is more restrictive that it needs to be. For example, the following
