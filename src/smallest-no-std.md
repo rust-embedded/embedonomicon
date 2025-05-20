@@ -98,12 +98,12 @@ Cargo invocation.
 ``` console
 $ mkdir .cargo
 
-$ # modify .cargo/config so it has these contents
-$ cat .cargo/config
+$ # modify .cargo/config.toml so it has these contents
+$ cat .cargo/config.toml
 ```
 
 ``` toml
-{{#include ../ci/smallest-no-std/.cargo/config}}
+{{#include ../ci/smallest-no-std/.cargo/config.toml}}
 ```
 
 ## eh_personality

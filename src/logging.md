@@ -133,15 +133,15 @@ optimizing the program. Let's check that.
 
 > **PROTIP** You can set `target.thumbv7m-none-eabi.runner` to the long QEMU
 > command from before (`qemu-system-arm -cpu (..) -kernel`) in the Cargo
-> configuration file (`.cargo/conifg`) to have `cargo run` use that *runner* to
+> configuration file (`.cargo/config.toml`) to have `cargo run` use that *runner* to
 > execute the output binary.
 
 ``` console
-$ head -n2 .cargo/config
+$ head -n2 .cargo/config.toml
 ```
 
 ``` toml
-{{#include ../ci/logging/app/.cargo/config:1:2}}
+{{#include ../ci/logging/app/.cargo/config.toml:1:2}}
 ```
 
 ``` console
@@ -217,11 +217,11 @@ Before you run this you'll have to append `-Tlog.x` to the arguments passed to
 the linker. That can be done in the Cargo configuration file.
 
 ``` console
-$ cat .cargo/config
+$ cat .cargo/config.toml
 ```
 
 ``` toml
-{{#include ../ci/logging/app2/.cargo/config}}
+{{#include ../ci/logging/app2/.cargo/config.toml}}
 ```
 
 Now you can run it! Since the output now has a binary format we'll pipe it

@@ -174,7 +174,7 @@ We have to tweak the linker process to make it use our linker script. This is do
 passing the `-C link-arg` flag to `rustc`. This can be done with `cargo-rustc` or
 `cargo-build`.
 
-**IMPORTANT**: Make sure you have the `.cargo/config` file that was added at the
+**IMPORTANT**: Make sure you have the `.cargo/config.toml` file that was added at the
 end of the last section before running this command.
 
 Using the `cargo-rustc` subcommand:
@@ -183,17 +183,17 @@ Using the `cargo-rustc` subcommand:
 $ cargo rustc -- -C link-arg=-Tlink.x
 ```
 
-Or you can set the rustflags in `.cargo/config` and continue using the
+Or you can set the rustflags in `.cargo/config.toml` and continue using the
 `cargo-build` subcommand. We'll do the latter because it better integrates with
 `cargo-binutils`.
 
 ``` console
-# modify .cargo/config so it has these contents
-$ cat .cargo/config
+# modify .cargo/config.toml so it has these contents
+$ cat .cargo/config.toml
 ```
 
 ``` toml
-{{#include ../ci/memory-layout/.cargo/config}}
+{{#include ../ci/memory-layout/.cargo/config.toml}}
 ```
 
 The `[target.thumbv7m-none-eabi]` part says that these flags will only be used
