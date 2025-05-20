@@ -20,7 +20,7 @@ following command:
 
 ``` console
 $ # you need to have `cargo-binutils` installed to run this command
-$ cargo objdump -- -version
+$ cargo objdump -- --version
 LLVM (http://llvm.org/):
   LLVM version 7.0.0svn
   Optimized build.
@@ -68,7 +68,7 @@ to replace the original version of LLVM with the fork before building `rustc`. T
 allows this and in principle it should just require changing the `llvm` submodule to point to the
 fork.
 
-If your target architecture is only supported by some vendor provided GCC, you have the option of
+If your target architecture is only supported by some vendor-provided GCC, you have the option of
 using [`mrustc`], an unofficial Rust compiler, to translate your Rust program into C code and then
 compile that using GCC.
 

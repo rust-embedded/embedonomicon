@@ -9,7 +9,7 @@
 So far we have managed to boot the device and handle interrupts without a single
 line of assembly. That's quite a feat! But depending on the architecture you are
 targeting you may need some assembly to get to this point. There are also some
-operations like context switching that require assembly, etc.
+operations, for example context switching, that require assembly.
 
 The problem is that both *inline* assembly (`asm!`) and *free form* assembly
 (`global_asm!`) are unstable, and there's no estimate for when they'll be
@@ -97,7 +97,7 @@ $ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
 ```
 
 > **NOTE:** To make this disassembly smaller I commented out the initialization
-> of RAM
+> of RAM.
 
 Now look at the vector table. The 4th entry should be the address of
 `HardFaultTrampoline` plus one.

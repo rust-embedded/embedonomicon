@@ -200,7 +200,7 @@ matches the name we used in `EXCEPTIONS`.
 {{#include ../ci/exceptions/app2/src/main.rs}}
 ```
 
-You can test it in QEMU
+You can test it in QEMU:
 
 ``` console
 (gdb) target remote :3333

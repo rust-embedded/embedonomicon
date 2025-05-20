@@ -1,10 +1,10 @@
 # Creating a custom target
 
 If a custom target triple is not available for your platform, you must create a custom target file
-that describes your target to rustc.
+that describes your target to `rustc`.
 
 Keep in mind that it is required to use a nightly compiler to build the core library, which must be
-done for a target unknown to rustc.
+done for a target unknown to `rustc`.
 
 ## Deciding on a target triple
 
@@ -65,7 +65,7 @@ You can pretty much copy that output into your file. Start with a few modificati
   - I have no native atomic operations, but I can emulate them myself: set `max-atomic-width` to the
     highest number of bits that you can emulate up to 128, then implement all of the
     [atomic][libcalls-atomic] and [sync][libcalls-sync] functions expected by LLVM as
-    `#[no_mangle] unsafe extern "C"`. These functions have been standardized by gcc, so the [gcc
+    `#[no_mangle] unsafe extern "C"`. These functions have been standardized by GCC, so the [GCC
     documentation][gcc-sync] may have more notes. Missing functions will cause a linker error, while
     incorrectly implemented functions will possibly cause UB. For example, if you have a
     single-core, single-thread processor with interrupts, you can implement these functions to
@@ -73,7 +73,7 @@ You can pretty much copy that output into your file. Start with a few modificati
   - I have no native atomic operations: you'll have to do some unsafe work to manually ensure
     synchronization in your code. You must set `"max-atomic-width": 0`.
 - Change the linker if integrating with an existing toolchain. For example, if you're using a
-  toolchain that uses a custom build of gcc, set `"linker-flavor": "gcc"` and `linker` to the
+  toolchain that uses a custom build of GCC, set `"linker-flavor": "gcc"` and `linker` to the
   command name of your linker. If you require additional linker arguments, use `pre-link-args` and
   `post-link-args` as so:
   ``` json
@@ -96,8 +96,8 @@ You can pretty much copy that output into your file. Start with a few modificati
   (not including the version in the case of ARM) to list the available features and their
   descriptions. **If your target requires strict memory alignment access (e.g. `armv5te`), make sure
   that you enable `strict-align`**. To enable a feature, place a plus before it. Likewise, to
-  disable a feature, place a minus before it. Features should be comma separated like so:
-  `"features": "+soft-float,+neon`. Note that this may not be necessary if LLVM knows enough about
+  disable a feature, place a minus before it. Features should be comma-separated like so:
+  `"features": "+soft-float,+neon"`. Note that this may not be necessary if LLVM knows enough about
   your target based on the provided triple and CPU.
 - Configure the CPU that LLVM uses if you know it. This will enable CPU-specific optimizations and
   features. At the top of the output of the command in the last step, there is a list of known CPUs.
@@ -121,7 +121,7 @@ You can pretty much copy that output into your file. Start with a few modificati
 Once you have a target specification file, you may refer to it by its path or by its name (i.e.
 excluding `.json`) if it is in the current directory or in `$RUST_TARGET_PATH`.
 
-Verify that it is readable by rustc:
+Verify that it is readable by `rustc`:
 
 ``` sh
 ❱ rustc --print cfg --target foo.json # or just foo if in the current directory

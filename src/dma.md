@@ -6,7 +6,7 @@ DMA transfers.
 The DMA peripheral is used to perform memory transfers in parallel to the work
 of the processor (the execution of the main program). A DMA transfer is more or
 less equivalent to spawning a thread (see [`thread::spawn`]) to do a `memcpy`.
-We'll use the fork-join model to illustrate the requirements of a memory safe
+We'll use the fork-join model to illustrate the requirements of a memory-safe
 API.
 
 [`thread::spawn`]: https://doc.rust-lang.org/std/thread/fn.spawn.html
@@ -28,11 +28,11 @@ Assume that the `Dma1Channel1` is statically configured to work with serial port
 {{#include ../ci/dma/src/lib.rs:82:83}}
 ```
 
-Let's say we want to extend `Serial1` API to (a) asynchronously send out a
+Let's say we want to extend the `Serial1` API to (a) asynchronously send out a
 buffer and (b) asynchronously fill a buffer.
 
-We'll start with a memory unsafe API and we'll iterate on it until it's
-completely memory safe. On each step we'll show you how the API can be broken to
+We'll start with a memory-unsafe API and we'll iterate on it until it's
+completely memory-safe. At each step we'll show you how the API can be broken to
 make you aware of the issues that need to be addressed when dealing with
 asynchronous memory operations.
 
@@ -47,7 +47,7 @@ keep things simple let's ignore all error handling.
 {{#include ../ci/dma/examples/one.rs:7:47}}
 ```
 
-> **NOTE:** `Transfer` could expose a futures or generator based API instead of
+> **NOTE:** `Transfer` could expose a futures- or generator-based API instead of
 > the API shown above. That's an API design question that has little bearing on
 > the memory safety of the overall API so we won't delve into it in this text.
 
@@ -95,11 +95,13 @@ variables `x` and `y` changing their value at random times. The DMA transfer
 could also overwrite the state (e.g. link register) pushed onto the stack by the
 prologue of function `bar`.
 
-Note that if we had not use `mem::forget`, but `mem::drop`, it would have been
-possible to make `Transfer`'s destructor stop the DMA transfer and then the
-program would have been safe. But one can *not* rely on destructors running to
-enforce memory safety because `mem::forget` and memory leaks (see RC cycles) are
-safe in Rust.
+Note that if we had used `mem::drop` instead of `mem::forget`, it would have
+been possible to make `Transfer`'s destructor stop the DMA transfer and then the
+program would have been safe. But one *cannot* rely on destructors running to
+enforce memory safety because `mem::forget` and memory leaks (see `Rc` cycles)
+are safe in Rust. (Refer to [`mem::forget` safety].)
+
+[`mem::forget` safety]: https://doc.rust-lang.org/std/mem/fn.forget.html#safety
 
 We can fix this particular problem by changing the lifetime of the buffer from
 `'a` to `'static` in both APIs.
@@ -164,7 +166,7 @@ result in a data race: both the processor and the DMA would end up modifying
 `buf` at the same time. Similarly the compiler can move the zeroing operation to
 after `read_exact`, which would also result in a data race.
 
-To prevent these problematic reorderings we can use a [`compiler_fence`]
+To prevent these problematic reorderings we can use a [`compiler_fence`].
 
 [`compiler_fence`]: https://doc.rust-lang.org/core/sync/atomic/fn.compiler_fence.html
 
@@ -188,8 +190,8 @@ orderings in the comments.
 {{#include ../ci/dma/examples/four.rs:68:87}}
 ```
 
-The zeroing operation can *not* be moved *after* `read_exact` due to the
-`Release` fence. Similarly, the `reverse` operation can *not* be moved *before*
+The zeroing operation *cannot* be moved *after* `read_exact` due to the
+`Release` fence. Similarly, the `reverse` operation *cannot* be moved *before*
 `wait` due to the `Acquire` fence. The memory operations *between* both fences
 *can* be freely reordered across the fences but none of those operations
 involves `buf` so such reorderings do *not* result in undefined behavior.
@@ -197,20 +199,20 @@ involves `buf` so such reorderings do *not* result in undefined behavior.
 Note that `compiler_fence` is a bit stronger than what's required. For example,
 the fences will prevent the operations on `x` from being merged even though we
 know that `buf` doesn't overlap with `x` (due to Rust aliasing rules). However,
-there exist no intrinsic that's more fine grained than `compiler_fence`.
+there exists no intrinsic that's more fine grained than `compiler_fence`.
 
 ### Don't we need a memory barrier?
 
 That depends on the target architecture. In the case of Cortex M0 to M4F cores,
 [AN321] says:
 
-[AN321]: https://static.docs.arm.com/dai0321/a/DAI0321A_programming_guide_memory_barriers_for_m_profile.pdf
+[AN321]: https://documentation-service.arm.com/static/5efefb97dbdee951c1cd5aaf
 
 > 3.2 Typical usages
 >
 > (..)
 >
-> The use of DMB is rarely needed in Cortex-M processors because they do not
+> The use of `DMB` is rarely needed in Cortex-M processors because they do not
 > reorder memory transactions. However, it is needed if the software is to be
 > reused on other ARM processors, especially multi-master systems. For example:
 >
@@ -223,25 +225,26 @@ That depends on the target architecture. In the case of Cortex M0 to M4F cores,
 >
 > (..)
 >
-> Omitting the DMB or DSB instruction in the examples in Figure 41 on page 47
-> and Figure 42 would not cause any error because the Cortex-M processors:
+> Omitting the `DMB` or `DSB` instruction in the examples in Figure 41 on page
+> 47 and Figure 42 would not cause any error because the Cortex-M processors:
 >
 > - do not re-order memory transfers
 > - do not permit two write transfers to be overlapped.
 
-Where Figure 41 shows a DMB (memory barrier) instruction being used before
+Where Figure 41 shows a `DMB` (memory barrier) instruction being used before
 starting a DMA transaction.
 
-In the case of Cortex-M7 cores you'll need memory barriers (DMB/DSB) if you are
-using the data cache (DCache), unless you manually invalidate the buffer used by
-the DMA. Even with the data cache disabled, memory barriers might still be
-required to avoid reordering in the store buffer.
+In the case of Cortex-M7 cores you'll need memory barriers (`DMB`/`DSB`) if you
+are using the data cache (DCache), unless you manually invalidate the buffer
+used by the DMA. Even with the data cache disabled, memory barriers might still
+be required to avoid reordering in the store buffer.
 
 If your target is a multi-core system then it's very likely that you'll need
 memory barriers.
 
 If you do need the memory barrier then you need to use [`atomic::fence`] instead
-of `compiler_fence`. That should generate a DMB instruction on Cortex-M devices.
+of `compiler_fence`. That should generate a `DMB` instruction on Cortex-M
+devices.
 
 [`atomic::fence`]: https://doc.rust-lang.org/core/sync/atomic/fn.fence.html
 
@@ -282,7 +285,7 @@ pointer used in `read_exact` will become invalidated. You'll end up with a
 situation similar to the [`unsound`](#dealing-with-memforget) example.
 
 To avoid this problem we require that the buffer used with our API retains its
-memory location even when it's moved. The [`Pin`] newtype provides such
+memory location even when it's moved. The [`Pin`] newtype provides such a
 guarantee. We can update our API to required that all buffers are "pinned"
 first.
 
@@ -347,7 +350,7 @@ over. For example, dropping a `Transfer<Box<[u8]>>` value will cause the buffer
 to be deallocated. This can result in undefined behavior if the transfer is
 still in progress as the DMA would end up writing to deallocated memory.
 
-In such scenario one option is to make `Transfer.drop` stop the DMA transfer.
+In such a scenario one option is to make `Transfer.drop` stop the DMA transfer.
 The other option is to make `Transfer.drop` wait for the transfer to finish.
 We'll pick the former option as it's cheaper.
 
@@ -365,8 +368,8 @@ Now the DMA transfer will be stopped before the buffer is deallocated.
 
 ## Summary
 
-To sum it up, we need to consider all the following points to achieve  memory
-safe DMA transfers:
+To sum it up, we need to consider all the following points to achieve
+memory-safe DMA transfers:
 
 - Use immovable buffers plus indirection: `Pin<B>`. Alternatively, you can use
   the `StableDeref` trait.
@@ -381,8 +384,8 @@ safe DMA transfers:
 
 ---
 
-This text leaves out up several details required to build a production grade
-DMA abstraction, like configuring the DMA channels (e.g. streams, circular vs
+This text leaves out several details required to build a production-grade DMA
+abstraction, like configuring the DMA channels (e.g. streams, circular vs
 one-shot mode, etc.), alignment of buffers, error handling, how to make the
 abstraction device-agnostic, etc. All those aspects are left as an exercise for
 the reader / community (`:P`).

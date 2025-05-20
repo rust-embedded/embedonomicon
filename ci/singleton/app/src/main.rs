@@ -29,7 +29,7 @@ fn main() -> ! {
 impl GlobalLog for Logger {
     fn log(&self, address: u8) {
         // we use a critical section (`interrupt::free`) to make the access to the
-        // `static mut` variable interrupt safe which is required for memory safety
+        // `static mut` variable interrupt-safe which is required for memory safety
         interrupt::free(|_| unsafe {
             static mut HSTDOUT: Option<HStdout> = None;
 
@@ -41,6 +41,7 @@ impl GlobalLog for Logger {
             let hstdout = HSTDOUT.as_mut().unwrap();
 
             hstdout.write_all(&[address])
-        }).ok(); // `.ok()` = ignore errors
+        })
+        .ok(); // `.ok()` = ignore errors
     }
 }

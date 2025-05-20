@@ -13,7 +13,8 @@ pub struct Dma1Channel1 {
 impl Dma1Channel1 {
     /// Data will be written to this `address`
     ///
-    /// `inc` indicates whether the address will be incremented after every byte transfer
+    /// `inc` indicates whether the address will be incremented after every byte
+    /// transfer
     ///
     /// NOTE this performs a volatile write
     pub fn set_destination_address(&mut self, address: usize, inc: bool) {
@@ -22,7 +23,8 @@ impl Dma1Channel1 {
 
     /// Data will be read from this `address`
     ///
-    /// `inc` indicates whether the address will be incremented after every byte transfer
+    /// `inc` indicates whether the address will be incremented after every byte
+    /// transfer
     ///
     /// NOTE this performs a volatile write
     pub fn set_source_address(&mut self, address: usize, inc: bool) {
