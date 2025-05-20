@@ -42,6 +42,7 @@ main() {
     diff app.o.nm \
         <(cargo nm -- $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
 
+
     edition_check
 
     popd
@@ -86,7 +87,7 @@ main() {
     popd
 
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
         pushd app4
         cargo build
         qemu_check target/thumbv7m-none-eabi/debug/app
@@ -96,9 +97,11 @@ main() {
 
     popd
 
+
+    #FIXME: This fails on nightly-2022-08-12, but we need at least rust 1.63.0 or other things fail. This needs to be fixed manually.
     # # exception handling
     # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = FIXME ]; then
         pushd exceptions
 
         # check that the disassembly matches
@@ -231,7 +234,7 @@ main() {
 
     # # DMA
     # NOTE(nightly) this will require nightly until core::pin is stabilized (1.33)
-    if [ $RUST_VERSION = nightly ]; then
+    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
         pushd dma
         cargo build --examples
         popd

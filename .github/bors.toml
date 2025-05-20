@@ -1,6 +1,0 @@
-block_labels = ["needs-decision"]
-delete_merged_branches = true
-required_approvals = 1
-status = [
-    "build (1.62.0)",
-]
