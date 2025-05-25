@@ -72,21 +72,36 @@ book:
 
 Instructions common to all OSes
 
-``` console
-$ # Rust toolchain
-$ # If you start from scratch, get rustup from https://rustup.rs/
-$ rustup default stable
+```
+console
+# Rust toolchain
+# If you start from scratch, get rustup from https://rustup.rs/
 
-$ # toolchain should be newer than this one
+# Change rustc to default stable version.
+$ rustup default stable
 $ rustc -V
-rustc 1.31.0 (abe02cefd 2018-12-04)
+$ rustc +nightly -V
+
+# Change rustc to default nightly version.
+$ rustup default nightly
+$ rustc -V
+
+# toolchain should be newer than this one.
+$ rustc -V
+rustc 1.59.0 (9d1b2106e 2022-02-23)
+
+$ rustc +nightly -V
+rustc 1.61.0-nightly (9c06e1ba4 2022-03-29)
 
 $ rustup target add thumbv7m-none-eabi
+$ rustup +nightly target add thumbv7m-none-eabi
 
-$ # cargo-binutils
+# cargo-binutils
 $ cargo install cargo-binutils
+$ cargo +nightly install cargo-binutils
 
 $ rustup component add llvm-tools-preview
+$ rustup +nightly component add llvm-tools-preview
 
 ```
 
