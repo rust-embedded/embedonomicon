@@ -12,3 +12,4 @@
 ---
 [A note on compiler support](./compiler-support.md)
 [Creating a custom target](./custom-target.md)
+[Supporting a new SoC](./soc-support.md)
