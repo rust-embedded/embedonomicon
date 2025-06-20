@@ -13,7 +13,7 @@ essential resources, tasks, and priorities required to foster a robust Rust
 ecosystem around their System-on-Chip (SoC).
 
 **Note:** For assistance with strategy in engaging with the community, we
-recommend reaching out to the Embedded Rust Working Group (REWG) leads. They
+recommend reaching out to the Rust Embedded Working Group (REWG) leads. They
 can provide valuable insights and support to help you navigate the process
 effectively.
 
@@ -43,10 +43,10 @@ resolve issues and improve the quality of the PACs.
 ### Flash Algorithms
 
 [Flash Algorithms](https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/flashAlgorithm.html)
-are integrated with debugging tools like `probe-rs`. They facilitate and speed
-up firmware programming and debugging, streamlining development workflows.
-Providing well-supported FlashAlgos will enhance the integration with these
-tools and improve the overall developer experience.
+are integrated with debugging tools like [probe-rs](https://probe.rs). They
+facilitate and speed up firmware programming and debugging, streamlining
+development workflows. Providing well-supported FlashAlgos will enhance the
+integration with these tools and improve the overall developer experience.
 
 ### Vendor Tooling
 
@@ -72,20 +72,23 @@ at the core of enabling Rust support.
 
 ### Generate and Maintain PACs
 
-Multiple tools such as `svd2rust`, `chiptool`, `raltool`, and `svd2pac`
-automate the generation of PACs from register description files. Each tool has
-its strengths, and selecting the right one depends on the requirements and the
-complexity of the hardware.
+Multiple tools such as [svd2rust](https://crates.io/crates/svd2rust),
+[chiptool](https://github.com/embassy-rs/chiptool),
+[raltool](https://github.com/imxrt-rs/imxrt-ral/tree/master/raltool), and
+[svd2pac](https://github.com/Infineon/svd2pac) automate the generation of PACs
+from register description files. Each tool has its strengths, and selecting the
+right one depends on the requirements and the complexity of the hardware.
 
 ### Develop and Maintain HAL Crates
 
-Implement `embedded-hal` and `embedded-hal-async` traits in your HAL crates.
-Adhering to these traits ensures compatibility across the Embedded Rust
-ecosystem, enhancing interoperability. It is an essential goal that HALs use
-Rust code rather than wrapping existing C code. An incremental porting
-strategy, where Rust is used for all core functionality, but C with Rust
-bindings is used for complex drivers, is acceptable, allowing for gradual
-adoption and community contributions.
+Implement [embedded-hal](https://crates.io/crates/embedded-hal) and
+[embedded-hal-async](https://crates.io/crates/embedded-hal-async) traits in
+your HAL crates. Adhering to these traits ensures compatibility across the
+Embedded Rust ecosystem, enhancing interoperability. It is an essential goal
+that HALs use Rust code rather than wrapping existing C code. An incremental
+porting strategy, where all core functionality is implemented in Rust, but C
+with Rust bindings is used for complex drivers, is acceptable, allowing for
+gradual adoption and community contributions.
 
 Start with essential peripherals (clock, timer, GPIO) and expand progressively
 (I2C, SPI, UART, etc.) based on community feedback. Release early and often to
@@ -95,11 +98,12 @@ engage the community and gather valuable insights for further development.
 
 - Ensure that crates are compatible with `no_std` environments, which are
   common in embedded systems without an operating system. Functionality that
-  needs `alloc` or `std` can be included when gated with Cargo "features."
-- Make your crates available on [crates.io](https://crates.io/) to maximize
+  needs `alloc` or `std` can be included when gated with Cargo
+  [features](https://doc.rust-lang.org/cargo/reference/features.html).
+- Make your crates available on [crates.io](https://crates.io) to maximize
   visibility and ease of use for developers.
-- Use semantic versioning to maintain consistency and predictability in your
-  releases.
+- Use [semantic versioning](https://semver.org) to maintain consistency and
+  predictability in your releases.
 - Prefer licenses like Apache 2.0 and MIT for their permissive nature, which
   encourages broader adoption and collaboration.
 
@@ -116,11 +120,14 @@ resolution. Implement transparent processes for:
 
 ### Facilitate Debugging and Testing
 
-The use of `probe-rs` is prevalent in the Embedded Rust ecosystem for debugging
-and testing. Combined with debug-based facilities like `defmt-rtt`, which
-offers logging capabilities for embedded systems, the Embedded Rust ecosystem
-has developed numerous tools. `probe-rs` supports a wide range of target
-architectures, debug interfaces, and debug probe protocols.
+The Embedded Rust ecosystem offers various tools used for debugging
+and testing, with [probe-rs](https://probe.rs) being one of the most widely
+used. [probe-rs](https://probe.rs) supports a wide range
+of target architectures, debug interfaces, and debug probe protocols.
+Combined with debug-based facilities like
+[defmt-rtt](https://crates.io/crates/defmt-rtt), which provide logging
+capabilities for embedded systems, these tools form a robust foundation for
+development.
 
 Thorough testing ensures hardware-software reliability, and leveraging these
 tools can significantly enhance development workflows.
@@ -138,8 +145,8 @@ practical starting points and learning aids.
 
 BSP crates are relevant when you need to provide board-specific configurations
 and initializations. Unlike HALs, which focus on hardware abstraction, BSPs
-handle the integration of multiple components for a specific board. Having both
-BSP and HAL crates offers a layered approach, making it easier for developers
+handle the integration of multiple components for a specific board. Separation
+in BSP and HAL crates offers a layered approach, making it easier for developers
 to build applications targeting a particular hardware board.
 
 ### Project Templates
@@ -155,10 +162,12 @@ Embassy, RTIC, and others.
 Offer guides on setting up development environments for Embedded Rust projects
 with popular tools such as:
 
-- `rust-analyzer`: for Rust syntax highlighting and error checking.
-- `probe-rs`: for flashing and debugging firmware.
-- `defmt`: a logging framework optimized for embedded systems.
-- `defmt-test`: testing utilities for `defmt`.
+- [rust-analyzer](https://rust-analyzer.github.io): for Rust syntax
+  highlighting and error checking.
+- [probe-rs](https://probe.rs): for flashing and debugging firmware.
+- [defmt](https://crates.io/crates/defmt): a logging framework optimized for
+  embedded systems, including a test harness called
+  [defmt-test](https://crates.io/crates/defmt-test).
 
 Providing setup instructions for these tools will help developers integrate
 them into their workflows, enhancing productivity and collaboration.
