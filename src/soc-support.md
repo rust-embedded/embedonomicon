@@ -177,7 +177,8 @@ them into their workflows, enhancing productivity and collaboration.
 
 - A preliminary requirement of this flow is that the Rust toolchain includes
   a [target](https://doc.rust-lang.org/rustc/platform-support.html) that
-  matches System-on-Chip (SoC). If this not the case the solution can be as simple as adding a
+  matches the System-on-Chip (SoC). If this not the case the solution can be as
+  simple as adding a
   [custom target](https://doc.rust-lang.org/rustc/targets/custom.html) or as
   difficult as adding support for the underlying architecture to
   [LLVM](https://llvm.org).
@@ -190,10 +191,10 @@ them into their workflows, enhancing productivity and collaboration.
 - Ensure that your target is supported by [probe-rs](https://probe.rs). The
   ability to debug using SWD or JTAG is highly beneficial. Support for flashing
   programming can be added with a Flash Algorithm (e.g. from a CMSIS-Pack).
-- Generate Peripheral Access Crates (PACs) from register description files with
-  SVD (System View Description) being the most common and preferred format.
-  Alternatives include extracting the register descriptions from PDF datasheets
-  or C header files, but this much more labor-intensive.
+- Generate Peripheral Access Crates (PACs) from register description files,
+  with SVD (System View Description) being the most common and preferred
+  format. Alternatives include extracting the register descriptions from PDF
+  datasheets or C header files, but this can be much more labor-intensive.
 - Create a minimal project containing the PAC and/or an empty Hardware
   Abstraction Layer (HAL). The goal is to get a minimal working binary that
   either blinks an LED or sends messages through
@@ -211,6 +212,8 @@ them into their workflows, enhancing productivity and collaboration.
   ([embedded-hal](https://crates.io/crates/embedded-hal),
   [embedded-hal-async](https://crates.io/crates/embedded-hal-async),
   [embedded-io](https://crates.io/crates/embedded-io)).
+- Release early and often in the beginning, engage with the community to get
+  feedback.
 
 ## Conclusion
 
