@@ -47,6 +47,9 @@ are integrated with debugging tools like [probe-rs](https://probe.rs). They
 facilitate and speed up firmware programming and debugging, streamlining
 development workflows. Providing well-supported FlashAlgos will enhance the
 integration with these tools and improve the overall developer experience.
+Flash Algorithms can be authored in Rust (see
+[flash-algorithm-template](https://github.com/probe-rs/flash-algorithm-template)
+for an template to write one).
 
 ### Vendor tooling
 
@@ -190,7 +193,8 @@ them into their workflows, enhancing productivity and collaboration.
   This could save significant development time.
 - Ensure that your target is supported by [probe-rs](https://probe.rs). The
   ability to debug using SWD or JTAG is highly beneficial. Support for flashing
-  programming can be added with a Flash Algorithm (e.g. from a CMSIS-Pack).
+  programming can be added with a Flash Algorithm (e.g. from a CMSIS-Pack or
+  [writing one in Rust](https://github.com/probe-rs/flash-algorithm-template)).
 - Generate Peripheral Access Crates (PACs) from register description files,
   with SVD (System View Description) being the most common and preferred
   format. Alternatives include extracting the register descriptions from PDF
