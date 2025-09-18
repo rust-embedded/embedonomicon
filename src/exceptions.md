@@ -109,8 +109,9 @@ application:
 > hardware a read to an invalid memory address (i.e. outside of the Flash and
 > RAM regions) would be enough but QEMU happily accepts the operation and
 > returns zero. A trap instruction works on both QEMU and hardware but
-> unfortunately it's not available on stable so you'll have to temporarily
-> switch to nightly to run this and the next example.
+> unfortunately it's not available as pure Rust code. We will use inline assembly 
+> to generate the trap instruction. Later chapters describe the use of assembly 
+> in more detail.
 
 ``` rust
 {{#include ../ci/exceptions/app/src/main.rs}}
@@ -149,7 +150,7 @@ $ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
 ```
 
 ``` text
-{{#include ../ci/exceptions/app/app.objdump:1:30}}
+{{#include ../ci/exceptions/app/app.objdump:1:34}}
 ```
 
 ``` console
@@ -168,21 +169,25 @@ The vector table now resembles the results of all the code snippets in this book
       stack pointer.
     - Objdump prints in `little endian` format, so the stack starts at
       `0x2001_0000`.
-    - The second entry points to address `0x0000_0045`, the Reset handler.
+    - The second entry points to address `0x0000_0049`, the Reset handler.
         - The address of the Reset handler can be seen in the disassembly above,
-          being `0x44`.
+          being `0x48`.
         - The first bit being set to 1 does not alter the address due to
           alignment requirements. Instead, it causes the function to be executed
           in _thumb mode_.
-- Afterwards, a pattern of addresses alternating between `0x83` and `0x00` is
+- Afterwards, a pattern of addresses alternating between `0x85` and `0x00` is
   visible.
-    - Looking at the disassembly above, it is clear that `0x83` refers to the
-      `DefaultExceptionHandler` (`0x84` executed in thumb mode).
+    - Looking at the disassembly above, it is clear that `0x85` refers to the
+      `UsageFault` (`0x84` executed in thumb mode).
     - Cross referencing the pattern to the vector table that was set up earlier
       in this chapter (see the definition of `pub static EXCEPTIONS`) with [the
       vector table layout for the Cortex-M], it is clear that the address of the
-      `DefaultExceptionHandler` is present each time a respective handler entry
+      `UsageFault` is present each time a respective handler entry
       is present in the table.
+    - But we did not explicitly insert `UsageFault` in each entry. Instead, we
+      aliased each handler to `DefaultExceptionHandler`. Our disassembler found
+      multiple symbols at the same location, and chose one of them for the 
+      function name.
     - In turn, it is also visible that the layout of the vector table data
       structure in the Rust code is aligned with all the reserved slots in the
       Cortex-M vector table. Hence, all reserved slots are correctly set to a

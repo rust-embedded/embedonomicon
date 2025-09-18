@@ -14,8 +14,7 @@ API.
 Consider the following DMA primitives:
 
 ``` rust
-{{#include ../ci/dma/src/lib.rs:6:57}}
-{{#include ../ci/dma/src/lib.rs:59:60}}
+{{#include ../ci/dma/src/lib.rs:6:62}}
 ```
 
 Assume that the `Dma1Channel1` is statically configured to work with serial port
@@ -23,9 +22,7 @@ Assume that the `Dma1Channel1` is statically configured to work with serial port
 `Serial1` provides the following *blocking* API:
 
 ``` rust
-{{#include ../ci/dma/src/lib.rs:62:72}}
-{{#include ../ci/dma/src/lib.rs:74:80}}
-{{#include ../ci/dma/src/lib.rs:82:83}}
+{{#include ../ci/dma/src/lib.rs:64:85}}
 ```
 
 Let's say we want to extend the `Serial1` API to (a) asynchronously send out a
@@ -311,10 +308,6 @@ guarantee. We can update our API to required that all buffers are "pinned"
 first.
 
 [`Pin`]: https://doc.rust-lang.org/nightly/std/pin/index.html
-
-> **NOTE:** To compile all the programs below this point you'll need Rust
-> `>=1.33.0`. As of time of writing (2019-01-04) that means using the nightly
-> channel.
 
 ``` rust
 {{#include ../ci/dma/examples/six.rs:16:33}}

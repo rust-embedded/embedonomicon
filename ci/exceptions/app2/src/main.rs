@@ -1,18 +1,17 @@
-#![feature(core_intrinsics)]
 #![no_main]
 #![no_std]
 
-use core::intrinsics;
+use core::arch::asm;
 
 use rt::entry;
 
 entry!(main);
 
 fn main() -> ! {
-    intrinsics::abort()
+    unsafe { asm!("udf #0", options(noreturn)) };
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn HardFault() -> ! {
     // do something interesting here
     loop {}

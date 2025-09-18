@@ -11,10 +11,10 @@ line of assembly. That's quite a feat! But depending on the architecture you are
 targeting you may need some assembly to get to this point. There are also some
 operations, for example context switching, that require assembly.
 
-The problem is that both *inline* assembly (`asm!`) and *free form* assembly
-(`global_asm!`) are unstable, and there's no estimate for when they'll be
-stabilized, so you can't use them on stable . This is not a showstopper because
-there are some workarounds which we'll document here.
+Both *inline* assembly (`asm!`) and *free form* assembly (`global_asm!`) were
+unstable before Rust 1.59. Normally, you will want to use `global_asm!` and
+`asm!` in your crates. However, this chapter describes an alternative approach
+you may also use.
 
 To motivate this section we'll tweak the `HardFault` handler to provide
 information about the stack frame that generated the exception.

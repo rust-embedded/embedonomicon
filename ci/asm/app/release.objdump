@@ -3,21 +3,26 @@ app:	file format elf32-littlearm
 
 Disassembly of section .text:
 
-<HardFault>:
-               	b	0x40 <HardFault>        @ imm = #-0x4
+00000040 <HardFault>:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	b	0x44 <HardFault+0x4>    @ imm = #-0x4
 
-<main>:
-               	b	0x42 <main>             @ imm = #-0x4
+00000046 <main>:
+      46:      	push	{r7, lr}
+      48:      	mov	r7, sp
+      4a:      	b	0x4a <main+0x4>         @ imm = #-0x4
 
-<Reset>:
-               	push	{r7, lr}
-               	mov	r7, sp
-               	bl	0x42 <main>             @ imm = #-0xa
-               	trap
+0000004c <Reset>:
+      4c:      	push	{r7, lr}
+      4e:      	mov	r7, sp
+      50:      	bl	0x46 <main>             @ imm = #-0xe
 
-<UsageFault>:
-               	b	0x4e <UsageFault>       @ imm = #-0x4
+00000054 <UsageFault>:
+      54:      	push	{r7, lr}
+      56:      	mov	r7, sp
+      58:      	b	0x58 <UsageFault+0x4>   @ imm = #-0x4
 
-<HardFaultTrampoline>:
-               	mrs	r0, msp
-               	b	0x40 <HardFault>        @ imm = #-0x18
+0000005a <HardFaultTrampoline>:
+      5a:      	mrs	r0, msp
+      5e:      	b	0x40 <HardFault>        @ imm = #-0x22

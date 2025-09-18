@@ -3,231 +3,400 @@ app:	file format elf32-littlearm
 
 Disassembly of section .text:
 
-<main>:
-               	trap
-               	trap
+00000040 <main>:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	udf	#0x0
+      46:      	trap
 
-<Reset>:
-               	push	{r7, lr}
-               	mov	r7, sp
-               	movw	r1, #0x0
-               	movw	r0, #0x0
-               	movt	r1, #0x2000
-               	movt	r0, #0x2000
-               	subs	r1, r1, r0
-               	bl	0x9c <__aeabi_memclr>   @ imm = #0x3e
-               	movw	r1, #0x0
-               	movw	r0, #0x0
-               	movt	r1, #0x2000
-               	movt	r0, #0x2000
-               	subs	r2, r1, r0
-               	movw	r1, #0x282
-               	movt	r1, #0x0
-               	bl	0x84 <__aeabi_memcpy>   @ imm = #0x8
-               	bl	0x40 <main>             @ imm = #-0x40
-               	trap
+00000048 <Reset>:
+      48:      	push	{r7, lr}
+      4a:      	mov	r7, sp
+      4c:      	movw	r1, #0x0
+      50:      	movw	r0, #0x0
+      54:      	movt	r1, #0x2000
+      58:      	movt	r0, #0x2000
+      5c:      	subs	r1, r1, r0
+      5e:      	bl	0x8a <__aeabi_memclr>   @ imm = #0x28
+      62:      	movw	r1, #0x0
+      66:      	movw	r0, #0x0
+      6a:      	movt	r1, #0x2000
+      6e:      	movt	r0, #0x2000
+      72:      	subs	r2, r1, r0
+      74:      	movw	r1, #0x44e
+      78:      	movt	r1, #0x0
+      7c:      	bl	0x15a <__aeabi_memcpy>  @ imm = #0xda
+      80:      	bl	0x40 <main>             @ imm = #-0x44
 
-<UsageFault>:
-               	b	0x82 <UsageFault>       @ imm = #-0x4
+00000084 <UsageFault>:
+      84:      	push	{r7, lr}
+      86:      	mov	r7, sp
+      88:      	b	0x88 <UsageFault+0x4>   @ imm = #-0x4
 
-<__aeabi_memcpy>:
-               	b.w	0x88 <compiler_builtins::arm::__aeabi_memcpy::h04b06478d4bfd3c5> @ imm = #0x0
+0000008a <__aeabi_memclr>:
+      8a:      	push	{r4, r5, r7, lr}
+      8c:      	add	r7, sp, #0x8
+      8e:      	cmp	r1, #0x10
+      90:      	blo	0x112 <__aeabi_memclr+0x88> @ imm = #0x7e
+      92:      	rsbs	r2, r0, #0
+      94:      	and	r5, r2, #0x3
+      98:      	adds	r2, r0, r5
+      9a:      	cmp	r0, r2
+      9c:      	bhs	0xe0 <__aeabi_memclr+0x56> @ imm = #0x40
+      9e:      	sub.w	r12, r5, #0x1
+      a2:      	cbz	r5, 0xc8 <__aeabi_memclr+0x3e> @ imm = #0x22
+      a4:      	movs	r3, #0x0
+      a6:      	mov	lr, r0
+      a8:      	strb	r3, [lr], #1
+      ac:      	cmp	r5, #0x1
+      ae:      	beq	0xc0 <__aeabi_memclr+0x36> @ imm = #0xe
+      b0:      	strb	r3, [r0, #0x1]
+      b2:      	cmp	r5, #0x2
+      b4:      	itte	ne
+      b6:      	strbne	r3, [r0, #0x2]
+      b8:      	addne.w	lr, r0, #0x3
+      bc:      	addeq.w	lr, r0, #0x2
+      c0:      	cmp.w	r12, #0x3
+      c4:      	bhs	0xd0 <__aeabi_memclr+0x46> @ imm = #0x8
+      c6:      	b	0xe0 <__aeabi_memclr+0x56> @ imm = #0x16
+      c8:      	mov	lr, r0
+      ca:      	cmp.w	r12, #0x3
+      ce:      	blo	0xe0 <__aeabi_memclr+0x56> @ imm = #0xe
+      d0:      	sub.w	r0, lr, #0x4
+      d4:      	movs	r3, #0x0
+      d6:      	str	r3, [r0, #4]!
+      da:      	adds	r4, r0, #0x4
+      dc:      	cmp	r4, r2
+      de:      	bne	0xd6 <__aeabi_memclr+0x4c> @ imm = #-0xc
+      e0:      	subs	r1, r1, r5
+      e2:      	bic	r0, r1, #0x3
+      e6:      	add	r0, r2
+      e8:      	cmp	r2, r0
+      ea:      	bhs	0x10e <__aeabi_memclr+0x84> @ imm = #0x20
+      ec:      	movs	r3, #0x0
+      ee:      	str	r3, [r2], #4
+      f2:      	cmp	r2, r0
+      f4:      	bhs	0x10e <__aeabi_memclr+0x84> @ imm = #0x16
+      f6:      	str	r3, [r2], #4
+      fa:      	cmp	r2, r0
+      fc:      	itt	lo
+      fe:      	strlo	r3, [r2], #4
+     102:      	cmplo	r2, r0
+     104:      	bhs	0x10e <__aeabi_memclr+0x84> @ imm = #0x6
+     106:      	str	r3, [r2], #4
+     10a:      	cmp	r2, r0
+     10c:      	blo	0xee <__aeabi_memclr+0x64> @ imm = #-0x22
+     10e:      	and	r1, r1, #0x3
+     112:      	adds	r2, r0, r1
+     114:      	cmp	r0, r2
+     116:      	bhs	0x158 <__aeabi_memclr+0xce> @ imm = #0x3e
+     118:      	subs	r3, r1, #0x1
+     11a:      	ands	r4, r1, #0x3
+     11e:      	beq	0x13a <__aeabi_memclr+0xb0> @ imm = #0x18
+     120:      	mov.w	r12, #0x0
+     124:      	mov	r1, r0
+     126:      	strb	r12, [r1], #1
+     12a:      	cmp	r4, #0x1
+     12c:      	beq	0x144 <__aeabi_memclr+0xba> @ imm = #0x14
+     12e:      	cmp	r4, #0x2
+     130:      	strb.w	r12, [r0, #0x1]
+     134:      	bne	0x13e <__aeabi_memclr+0xb4> @ imm = #0x6
+     136:      	adds	r1, r0, #0x2
+     138:      	b	0x144 <__aeabi_memclr+0xba> @ imm = #0x8
+     13a:      	mov	r1, r0
+     13c:      	b	0x144 <__aeabi_memclr+0xba> @ imm = #0x4
+     13e:      	movs	r1, #0x0
+     140:      	strb	r1, [r0, #0x2]
+     142:      	adds	r1, r0, #0x3
+     144:      	cmp	r3, #0x3
+     146:      	it	lo
+     148:      	poplo	{r4, r5, r7, pc}
+     14a:      	subs	r0, r1, #0x4
+     14c:      	movs	r1, #0x0
+     14e:      	str	r1, [r0, #4]!
+     152:      	adds	r3, r0, #0x4
+     154:      	cmp	r3, r2
+     156:      	bne	0x14e <__aeabi_memclr+0xc4> @ imm = #-0xc
+     158:      	pop	{r4, r5, r7, pc}
 
-<compiler_builtins::arm::__aeabi_memcpy::h04b06478d4bfd3c5>:
-               	b.w	0xa0 <compiler_builtins::mem::memcpy::h73c205043eea1dfd> @ imm = #0x14
+0000015a <__aeabi_memcpy>:
+     15a:      	push	{r7, lr}
+     15c:      	mov	r7, sp
+     15e:      	pop.w	{r7, lr}
+     162:      	b.w	0x166 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56> @ imm = #0x0
 
-<compiler_builtins::arm::__aeabi_memset::h1c44b05e4b08d1f1>:
-               	mov	r3, r1
-               	mov	r1, r2
-               	mov	r2, r3
-               	b.w	0x1e4 <compiler_builtins::mem::memset::h27a3b72b184bd97c> @ imm = #0x14e
-
-<compiler_builtins::arm::__aeabi_memclr::hbb9242fcc53efe0b>:
-               	movs	r2, #0x0
-               	b.w	0x8c <compiler_builtins::arm::__aeabi_memset::h1c44b05e4b08d1f1> @ imm = #-0x10
-
-<__aeabi_memclr>:
-               	b.w	0x96 <compiler_builtins::arm::__aeabi_memclr::hbb9242fcc53efe0b> @ imm = #-0xa
-
-<compiler_builtins::mem::memcpy::h73c205043eea1dfd>:
-               	push	{r4, r5, r6, r7, lr}
-               	add	r7, sp, #0xc
-               	push.w	{r8, r9, r10}
-               	cmp	r2, #0xf
-               	bls	0x170 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0xd0> @ imm = #0xc2
-               	rsbs	r3, r0, #0
-               	ands	r4, r3, #0x3
-               	add.w	r12, r0, r4
-               	beq	0xe6 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x46> @ imm = #0x2c
-               	mov	r3, r0
-               	mov	r6, r1
-               	ldrb	r5, [r6]
-               	strb	r5, [r3], #1
-               	cmp	r3, r12
-               	bhs	0xe6 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x46> @ imm = #0x1e
-               	ldrb	r5, [r6, #0x1]
-               	strb	r5, [r3], #1
-               	cmp	r3, r12
-               	ittt	lo
-               	ldrblo	r5, [r6, #0x2]
-               	strblo	r5, [r3], #1
-               	cmplo	r3, r12
-               	bhs	0xe6 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x46> @ imm = #0xa
-               	ldrb	r5, [r6, #0x3]
-               	adds	r6, #0x4
-               	strb	r5, [r3], #1
-               	cmp	r3, r12
-               	blo	0xbc <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x1c> @ imm = #-0x2c
-               	sub.w	lr, r2, r4
-               	add.w	r8, r1, r4
-               	bic	r9, lr, #0x3
-               	ands	r1, r8, #0x3
-               	add.w	r3, r12, r9
-               	beq	0x176 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0xd6> @ imm = #0x78
-               	cmp.w	r9, #0x1
-               	blt	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0xa4
-               	bic	r6, r8, #0x3
-               	lsl.w	r10, r1, #0x3
-               	add.w	r5, r6, #0x8
-               	ldr	r1, [r6]
-               	rsb.w	r6, r10, #0x0
-               	and	r6, r6, #0x18
-               	lsr.w	r2, r1, r10
-               	ldr	r1, [r5, #-4]
-               	lsl.w	r4, r1, r6
-               	orrs	r2, r4
-               	str	r2, [r12], #4
-               	cmp	r12, r3
-               	bhs	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0x78
-               	lsr.w	r2, r1, r10
-               	ldr	r1, [r5]
-               	lsl.w	r4, r1, r6
-               	orrs	r2, r4
-               	str	r2, [r12], #4
-               	cmp	r12, r3
-               	itttt	lo
-               	lsrlo.w	r2, r1, r10
-               	ldrlo	r1, [r5, #0x4]
-               	lsllo.w	r4, r1, r6
-               	orrlo	r2, r4
-               	itt	lo
-               	strlo	r2, [r12], #4
-               	cmplo	r12, r3
-               	bhs	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0x4e
-               	lsr.w	r2, r1, r10
-               	ldr	r1, [r5, #0x8]
-               	adds	r5, #0x10
-               	lsl.w	r4, r1, r6
-               	orrs	r2, r4
-               	str	r2, [r12], #4
-               	cmp	r12, r3
-               	blo	0x118 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x78> @ imm = #-0x58
-               	b	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0x36
-               	mov	r3, r0
-               	cbnz	r2, 0x1b2 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x112> @ imm = #0x3c
-               	b	0x1de <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x13e> @ imm = #0x66
-               	cmp.w	r9, #0x1
-               	blt	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0x2a
-               	mov	r4, r8
-               	ldr	r1, [r4]
-               	str	r1, [r12], #4
-               	cmp	r12, r3
-               	bhs	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0x1e
-               	ldr	r1, [r4, #0x4]
-               	str	r1, [r12], #4
-               	cmp	r12, r3
-               	ittt	lo
-               	ldrlo	r1, [r4, #0x8]
-               	strlo	r1, [r12], #4
-               	cmplo	r12, r3
-               	bhs	0x1a8 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x108> @ imm = #0xa
-               	ldr	r1, [r4, #0xc]
-               	adds	r4, #0x10
-               	str	r1, [r12], #4
-               	cmp	r12, r3
-               	blo	0x17e <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0xde> @ imm = #-0x2c
-               	add.w	r1, r8, r9
-               	and	r2, lr, #0x3
-               	cbz	r2, 0x1de <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x13e> @ imm = #0x2a
-               	add	r2, r3
-               	ldrb	r6, [r1]
-               	strb	r6, [r3], #1
-               	cmp	r3, r2
-               	bhs	0x1de <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x13e> @ imm = #0x1e
-               	ldrb	r6, [r1, #0x1]
-               	strb	r6, [r3], #1
-               	cmp	r3, r2
-               	ittt	lo
-               	ldrblo	r6, [r1, #0x2]
-               	strblo	r6, [r3], #1
-               	cmplo	r3, r2
-               	bhs	0x1de <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x13e> @ imm = #0xa
-               	ldrb	r6, [r1, #0x3]
-               	adds	r1, #0x4
-               	strb	r6, [r3], #1
-               	cmp	r3, r2
-               	blo	0x1b4 <compiler_builtins::mem::memcpy::h73c205043eea1dfd+0x114> @ imm = #-0x2c
-               	pop.w	{r8, r9, r10}
-               	pop	{r4, r5, r6, r7, pc}
-
-<compiler_builtins::mem::memset::h27a3b72b184bd97c>:
-               	push	{r4, r6, r7, lr}
-               	add	r7, sp, #0x8
-               	cmp	r2, #0xf
-               	bls	0x25a <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x76> @ imm = #0x6c
-               	rsbs	r3, r0, #0
-               	ands	lr, r3, #0x3
-               	add.w	r12, r0, lr
-               	beq	0x21a <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x36> @ imm = #0x20
-               	mov	r3, r0
-               	strb	r1, [r3], #1
-               	cmp	r3, r12
-               	bhs	0x21a <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x36> @ imm = #0x16
-               	strb	r1, [r3], #1
-               	cmp	r3, r12
-               	itt	lo
-               	strblo	r1, [r3], #1
-               	cmplo	r3, r12
-               	bhs	0x21a <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x36> @ imm = #0x6
-               	strb	r1, [r3], #1
-               	cmp	r3, r12
-               	blo	0x1fa <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x16> @ imm = #-0x22
-               	sub.w	lr, r2, lr
-               	bic	r2, lr, #0x3
-               	add.w	r3, r12, r2
-               	cmp	r2, #0x0
-               	ble	0x252 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x6e> @ imm = #0x26
-               	uxtb	r2, r1
-               	mov.w	r4, #0x1010101
-               	muls	r2, r4, r2
-               	str	r2, [r12], #4
-               	cmp	r12, r3
-               	bhs	0x252 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x6e> @ imm = #0x16
-               	str	r2, [r12], #4
-               	cmp	r12, r3
-               	itt	lo
-               	strlo	r2, [r12], #4
-               	cmplo	r12, r3
-               	bhs	0x252 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x6e> @ imm = #0x6
-               	str	r2, [r12], #4
-               	cmp	r12, r3
-               	blo	0x232 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x4e> @ imm = #-0x22
-               	and	r2, lr, #0x3
-               	cbnz	r2, 0x25e <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x7a> @ imm = #0x4
-               	b	0x280 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x9c> @ imm = #0x24
-               	mov	r3, r0
-               	cbz	r2, 0x280 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x9c> @ imm = #0x20
-               	add	r2, r3
-               	strb	r1, [r3], #1
-               	cmp	r3, r2
-               	bhs	0x280 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x9c> @ imm = #0x16
-               	strb	r1, [r3], #1
-               	cmp	r3, r2
-               	itt	lo
-               	strblo	r1, [r3], #1
-               	cmplo	r3, r2
-               	bhs	0x280 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x9c> @ imm = #0x6
-               	strb	r1, [r3], #1
-               	cmp	r3, r2
-               	blo	0x260 <compiler_builtins::mem::memset::h27a3b72b184bd97c+0x7c> @ imm = #-0x22
-               	pop	{r4, r6, r7, pc}
+00000166 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56>:
+     166:      	push	{r4, r5, r6, r7, lr}
+     168:      	add	r7, sp, #0xc
+     16a:      	push.w	{r8, r9, r10, r11}
+     16e:      	sub	sp, #0x2c
+     170:      	cmp	r2, #0x10
+     172:      	blo	0x1b2 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x4c> @ imm = #0x3c
+     174:      	rsbs	r3, r0, #0
+     176:      	and	r8, r3, #0x3
+     17a:      	add.w	r3, r0, r8
+     17e:      	cmp	r0, r3
+     180:      	bhs	0x1ea <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x84> @ imm = #0x66
+     182:      	sub.w	r12, r8, #0x1
+     186:      	cmp.w	r8, #0x0
+     18a:      	mov	r6, r0
+     18c:      	mov	r4, r1
+     18e:      	beq	0x1c6 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x60> @ imm = #0x34
+     190:      	mov	r4, r1
+     192:      	mov	r6, r0
+     194:      	ldrb	lr, [r4], #1
+     198:      	cmp.w	r8, #0x1
+     19c:      	strb	lr, [r6], #1
+     1a0:      	beq	0x1c6 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x60> @ imm = #0x22
+     1a2:      	ldrb	r6, [r1, #0x1]
+     1a4:      	cmp.w	r8, #0x2
+     1a8:      	strb	r6, [r0, #0x1]
+     1aa:      	bne	0x1be <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x58> @ imm = #0x10
+     1ac:      	adds	r4, r1, #0x2
+     1ae:      	adds	r6, r0, #0x2
+     1b0:      	b	0x1c6 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x60> @ imm = #0x12
+     1b2:      	mov	r12, r0
+     1b4:      	add.w	r3, r12, r2
+     1b8:      	cmp	r12, r3
+     1ba:      	blo	0x23e <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0xd8> @ imm = #0x80
+     1bc:      	b	0x298 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x132> @ imm = #0xd8
+     1be:      	ldrb	r6, [r1, #0x2]
+     1c0:      	adds	r4, r1, #0x3
+     1c2:      	strb	r6, [r0, #0x2]
+     1c4:      	adds	r6, r0, #0x3
+     1c6:      	cmp.w	r12, #0x3
+     1ca:      	blo	0x1ea <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x84> @ imm = #0x1c
+     1cc:      	subs	r4, #0x4
+     1ce:      	subs	r6, #0x4
+     1d0:      	ldrb	r5, [r4, #4]!
+     1d4:      	strb	r5, [r6, #4]!
+     1d8:      	ldrb	r5, [r4, #0x1]
+     1da:      	strb	r5, [r6, #0x1]
+     1dc:      	ldrb	r5, [r4, #0x2]
+     1de:      	strb	r5, [r6, #0x2]
+     1e0:      	ldrb	r5, [r4, #0x3]
+     1e2:      	strb	r5, [r6, #0x3]
+     1e4:      	adds	r5, r6, #0x4
+     1e6:      	cmp	r5, r3
+     1e8:      	bne	0x1d0 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x6a> @ imm = #-0x1c
+     1ea:      	sub.w	lr, r2, r8
+     1ee:      	add.w	r4, r1, r8
+     1f2:      	bic	r2, lr, #0x3
+     1f6:      	ands	r6, r4, #0x3
+     1fa:      	add.w	r12, r3, r2
+     1fe:      	bne	0x2b4 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x14e> @ imm = #0xb2
+     200:      	cmp	r3, r12
+     202:      	bhs	0x230 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0xca> @ imm = #0x2a
+     204:      	mov	r1, r4
+     206:      	ldr	r5, [r1]
+     208:      	str	r5, [r3], #4
+     20c:      	cmp	r3, r12
+     20e:      	bhs	0x230 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0xca> @ imm = #0x1e
+     210:      	ldr	r5, [r1, #0x4]
+     212:      	str	r5, [r3], #4
+     216:      	cmp	r3, r12
+     218:      	ittt	lo
+     21a:      	ldrlo	r5, [r1, #0x8]
+     21c:      	strlo	r5, [r3], #4
+     220:      	cmplo	r3, r12
+     222:      	bhs	0x230 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0xca> @ imm = #0xa
+     224:      	ldr	r5, [r1, #0xc]
+     226:      	adds	r1, #0x10
+     228:      	str	r5, [r3], #4
+     22c:      	cmp	r3, r12
+     22e:      	blo	0x206 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0xa0> @ imm = #-0x2c
+     230:      	adds	r1, r4, r2
+     232:      	and	r2, lr, #0x3
+     236:      	add.w	r3, r12, r2
+     23a:      	cmp	r12, r3
+     23c:      	bhs	0x298 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x132> @ imm = #0x58
+     23e:      	sub.w	lr, r2, #0x1
+     242:      	ands	r4, r2, #0x3
+     246:      	beq	0x270 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x10a> @ imm = #0x26
+     248:      	mov	r2, r1
+     24a:      	mov	r5, r12
+     24c:      	ldrb	r6, [r2], #1
+     250:      	cmp	r4, #0x1
+     252:      	strb	r6, [r5], #1
+     256:      	beq	0x274 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x10e> @ imm = #0x1a
+     258:      	ldrb	r2, [r1, #0x1]
+     25a:      	cmp	r4, #0x2
+     25c:      	strb.w	r2, [r12, #0x1]
+     260:      	bne	0x2a0 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x13a> @ imm = #0x3c
+     262:      	adds	r2, r1, #0x2
+     264:      	add.w	r5, r12, #0x2
+     268:      	cmp.w	lr, #0x3
+     26c:      	bhs	0x27a <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x114> @ imm = #0xa
+     26e:      	b	0x298 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x132> @ imm = #0x26
+     270:      	mov	r5, r12
+     272:      	mov	r2, r1
+     274:      	cmp.w	lr, #0x3
+     278:      	blo	0x298 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x132> @ imm = #0x1c
+     27a:      	subs	r1, r2, #0x4
+     27c:      	subs	r2, r5, #0x4
+     27e:      	ldrb	r6, [r1, #4]!
+     282:      	strb	r6, [r2, #4]!
+     286:      	ldrb	r6, [r1, #0x1]
+     288:      	strb	r6, [r2, #0x1]
+     28a:      	ldrb	r6, [r1, #0x2]
+     28c:      	strb	r6, [r2, #0x2]
+     28e:      	ldrb	r6, [r1, #0x3]
+     290:      	strb	r6, [r2, #0x3]
+     292:      	adds	r6, r2, #0x4
+     294:      	cmp	r6, r3
+     296:      	bne	0x27e <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x118> @ imm = #-0x1c
+     298:      	add	sp, #0x2c
+     29a:      	pop.w	{r8, r9, r10, r11}
+     29e:      	pop	{r4, r5, r6, r7, pc}
+     2a0:      	ldrb	r2, [r1, #0x2]
+     2a2:      	add.w	r5, r12, #0x3
+     2a6:      	strb.w	r2, [r12, #0x2]
+     2aa:      	adds	r2, r1, #0x3
+     2ac:      	cmp.w	lr, #0x3
+     2b0:      	bhs	0x27a <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x114> @ imm = #-0x3a
+     2b2:      	b	0x298 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x132> @ imm = #-0x1e
+     2b4:      	mov.w	r10, #0x0
+     2b8:      	rsb.w	r11, r6, #0x4
+     2bc:      	add	r5, sp, #0x28
+     2be:      	str.w	r10, [sp, #0x28]
+     2c2:      	add.w	r9, r5, r6
+     2c6:      	lsls.w	r5, r11, #0x1f
+     2ca:      	ittt	ne
+     2cc:      	ldrbne	r5, [r4]
+     2ce:      	strbne.w	r5, [r9]
+     2d2:      	movne.w	r10, #0x1
+     2d6:      	subs	r5, r4, r6
+     2d8:      	str	r5, [sp, #0x1c]
+     2da:      	lsls	r5, r6, #0x3
+     2dc:      	str	r5, [sp, #0x14]
+     2de:      	lsls.w	r5, r11, #0x1e
+     2e2:      	itt	mi
+     2e4:      	ldrhmi.w	r5, [r4, r10]
+     2e8:      	strhmi.w	r5, [r9, r10]
+     2ec:      	adds	r5, r3, #0x4
+     2ee:      	ldr.w	r10, [sp, #0x28]
+     2f2:      	cmp	r5, r12
+     2f4:      	ldr	r5, [sp, #0x14]
+     2f6:      	rsb.w	r11, r5, #0x0
+     2fa:      	bhs	0x3ec <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x286> @ imm = #0xee
+     2fc:      	rsbs	r3, r6, #0
+     2fe:      	mov	r9, r10
+     300:      	add	r1, r3
+     302:      	and	r3, r11, #0x18
+     306:      	str.w	r11, [sp]
+     30a:      	mov	r10, r0
+     30c:      	mov	r11, r1
+     30e:      	str	r3, [sp, #0x1c]
+     310:      	add.w	r3, r11, r8
+     314:      	str	r3, [sp, #0x18]
+     316:      	lsr.w	r9, r9, r5
+     31a:      	str.w	r11, [sp, #0xc]
+     31e:      	ldr	r1, [r3, #0x4]
+     320:      	ldr	r3, [sp, #0x1c]
+     322:      	str.w	r10, [sp, #0x8]
+     326:      	lsl.w	r3, r1, r3
+     32a:      	orr.w	r3, r3, r9
+     32e:      	add.w	r9, r10, r8
+     332:      	mov	r11, r9
+     334:      	str	r3, [r11], #8
+     338:      	cmp	r11, r12
+     33a:      	bhs	0x3c4 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x25e> @ imm = #0x86
+     33c:      	lsr.w	r3, r1, r5
+     340:      	str	r3, [sp, #0x10]
+     342:      	ldr	r3, [sp, #0x18]
+     344:      	ldr.w	r10, [sp, #0x10]
+     348:      	ldr	r1, [r3, #0x8]
+     34a:      	ldr	r3, [sp, #0x1c]
+     34c:      	lsl.w	r3, r1, r3
+     350:      	orr.w	r3, r3, r10
+     354:      	str.w	r3, [r9, #0x4]
+     358:      	add.w	r3, r9, #0xc
+     35c:      	cmp	r3, r12
+     35e:      	bhs	0x3d0 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x26a> @ imm = #0x6e
+     360:      	lsrs	r1, r5
+     362:      	ldr	r5, [sp, #0x1c]
+     364:      	str	r1, [sp, #0x10]
+     366:      	ldr	r1, [sp, #0x18]
+     368:      	ldr.w	r10, [sp, #0x10]
+     36c:      	ldr	r1, [r1, #0xc]
+     36e:      	str	r1, [sp, #0x4]
+     370:      	lsl.w	r5, r1, r5
+     374:      	add.w	r1, r9, #0x10
+     378:      	cmp	r1, r12
+     37a:      	orr.w	r5, r5, r10
+     37e:      	str.w	r5, [r11]
+     382:      	bhs	0x3e2 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x27c> @ imm = #0x5c
+     384:      	ldr	r1, [sp, #0x14]
+     386:      	ldr	r5, [sp, #0x4]
+     388:      	ldr.w	r10, [sp, #0x8]
+     38c:      	ldr.w	r11, [sp, #0xc]
+     390:      	lsr.w	r1, r5, r1
+     394:      	ldr	r5, [sp, #0x18]
+     396:      	add.w	r10, r10, #0x10
+     39a:      	add.w	r11, r11, #0x10
+     39e:      	ldr.w	r9, [r5, #0x10]
+     3a2:      	ldr	r5, [sp, #0x1c]
+     3a4:      	lsl.w	r5, r9, r5
+     3a8:      	orrs	r1, r5
+     3aa:      	str	r1, [r3]
+     3ac:      	add.w	r3, r10, r8
+     3b0:      	ldr	r5, [sp, #0x14]
+     3b2:      	adds	r1, r3, #0x4
+     3b4:      	cmp	r1, r12
+     3b6:      	blo	0x310 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x1aa> @ imm = #-0xaa
+     3b8:      	add.w	r1, r11, r8
+     3bc:      	ldr.w	r11, [sp]
+     3c0:      	mov	r10, r9
+     3c2:      	b	0x3ea <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x284> @ imm = #0x24
+     3c4:      	ldr	r3, [sp, #0x18]
+     3c6:      	adds	r3, #0x4
+     3c8:      	str	r3, [sp, #0x1c]
+     3ca:      	add.w	r3, r9, #0x4
+     3ce:      	b	0x3da <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x274> @ imm = #0x8
+     3d0:      	ldr	r3, [sp, #0x18]
+     3d2:      	adds	r3, #0x8
+     3d4:      	str	r3, [sp, #0x1c]
+     3d6:      	add.w	r3, r9, #0x8
+     3da:      	ldr.w	r11, [sp]
+     3de:      	mov	r10, r1
+     3e0:      	b	0x3ec <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x286> @ imm = #0x8
+     3e2:      	ldr	r1, [sp, #0x18]
+     3e4:      	ldrd	r11, r10, [sp]
+     3e8:      	adds	r1, #0xc
+     3ea:      	str	r1, [sp, #0x1c]
+     3ec:      	movs	r1, #0x0
+     3ee:      	cmp	r6, #0x1
+     3f0:      	strb.w	r1, [sp, #0x24]
+     3f4:      	strb	r1, [r7, #-38]
+     3f8:      	bne	0x406 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x2a0> @ imm = #0xa
+     3fa:      	add.w	r8, sp, #0x24
+     3fe:      	mov.w	r9, #0x0
+     402:      	movs	r5, #0x0
+     404:      	b	0x41a <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x2b4> @ imm = #0x12
+     406:      	ldr	r5, [sp, #0x1c]
+     408:      	sub.w	r8, r7, #0x26
+     40c:      	ldrb	r1, [r5, #0x4]
+     40e:      	ldrb	r5, [r5, #0x5]
+     410:      	strb.w	r1, [sp, #0x24]
+     414:      	lsl.w	r9, r5, #0x8
+     418:      	movs	r5, #0x2
+     41a:      	lsls	r6, r4, #0x1f
+     41c:      	bne	0x422 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x2bc> @ imm = #0x2
+     41e:      	movs	r5, #0x0
+     420:      	b	0x436 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0x2d0> @ imm = #0x12
+     422:      	ldr	r1, [sp, #0x1c]
+     424:      	adds	r1, #0x4
+     426:      	ldrb	r1, [r1, r5]
+     428:      	strb.w	r1, [r8]
+     42c:      	ldrb	r1, [r7, #-38]
+     430:      	lsls	r5, r1, #0x10
+     432:      	ldrb.w	r1, [sp, #0x24]
+     436:      	orr.w	r5, r5, r9
+     43a:      	ldr	r6, [sp, #0x14]
+     43c:      	orrs	r1, r5
+     43e:      	and	r5, r11, #0x18
+     442:      	lsls	r1, r5
+     444:      	lsr.w	r6, r10, r6
+     448:      	orrs	r1, r6
+     44a:      	str	r1, [r3]
+     44c:      	b	0x230 <compiler_builtins::mem::memcpy::hfb4edb85ac1d6d56+0xca> @ imm = #-0x220

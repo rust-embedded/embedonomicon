@@ -3,11 +3,11 @@
 use core::panic::PanicInfo;
 // use core::ptr;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Reset() -> ! {
     // Omitted to simplify the `objdump` output
     // Initialize RAM
-    extern "C" {
+    unsafe extern "C" {
         // static mut _sbss: u8;
         // static mut _ebss: u8;
 
@@ -23,16 +23,16 @@ pub unsafe extern "C" fn Reset() -> ! {
     // ptr::copy_nonoverlapping(&_sidata as *const u8, &mut _sdata as *mut u8, count);
 
     // Call user entry point
-    extern "Rust" {
-        fn main() -> !;
+    unsafe extern "Rust" {
+        safe fn main() -> !;
     }
 
     main()
 }
 
 // The reset vector, a pointer into the reset handler
-#[link_section = ".vector_table.reset_vector"]
-#[no_mangle]
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
 
 #[panic_handler]
@@ -43,14 +43,14 @@ fn panic(_panic: &PanicInfo<'_>) -> ! {
 #[macro_export]
 macro_rules! entry {
     ($path:path) => {
-        #[export_name = "main"]
+        #[unsafe(export_name = "main")]
         pub unsafe fn __main() -> ! {
             // type check the given path
             let f: fn() -> ! = $path;
 
             f()
         }
-    }
+    };
 }
 
 pub union Vector {
@@ -58,7 +58,7 @@ pub union Vector {
     handler: unsafe extern "C" fn(),
 }
 
-extern "C" {
+unsafe extern "C" {
     fn NMI();
     fn HardFaultTrampoline(); // <- CHANGED!
     fn MemManage();
@@ -69,16 +69,14 @@ extern "C" {
     fn SysTick();
 }
 
-#[link_section = ".vector_table.exceptions"]
-#[no_mangle]
+#[unsafe(link_section = ".vector_table.exceptions")]
+#[unsafe(no_mangle)]
 pub static EXCEPTIONS: [Vector; 14] = [
     Vector { handler: NMI },
     Vector { handler: HardFaultTrampoline }, // <- CHANGED!
     Vector { handler: MemManage },
     Vector { handler: BusFault },
-    Vector {
-        handler: UsageFault,
-    },
+    Vector { handler: UsageFault },
     Vector { reserved: 0 },
     Vector { reserved: 0 },
     Vector { reserved: 0 },
@@ -90,7 +88,7 @@ pub static EXCEPTIONS: [Vector; 14] = [
     Vector { handler: SysTick },
 ];
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn DefaultExceptionHandler() {
     loop {}
 }

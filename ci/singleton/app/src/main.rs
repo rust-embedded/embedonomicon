@@ -1,13 +1,15 @@
 #![no_main]
 #![no_std]
 
+use core::cell::RefCell;
 use cortex_m::interrupt;
+use cortex_m::interrupt::Mutex;
 use cortex_m_semihosting::{
     debug,
-    hio::{self, HStdout},
+    hio::{self, HostStream},
 };
 
-use log::{global_logger, log, GlobalLog};
+use log::{GlobalLog, global_logger, log};
 use rt::entry;
 
 struct Logger;
@@ -29,16 +31,17 @@ fn main() -> ! {
 impl GlobalLog for Logger {
     fn log(&self, address: u8) {
         // we use a critical section (`interrupt::free`) to make the access to the
-        // `static mut` variable interrupt-safe which is required for memory safety
-        interrupt::free(|_| unsafe {
-            static mut HSTDOUT: Option<HStdout> = None;
+        // `HSTDOUT` variable interrupt-safe which is required for memory safety
+        interrupt::free(|cs| {
+            static HSTDOUT: Mutex<RefCell<Option<HostStream>>> = Mutex::new(RefCell::new(None));
+            let mut hstdout = HSTDOUT.borrow(cs).borrow_mut();
 
             // lazy initialization
-            if HSTDOUT.is_none() {
-                HSTDOUT = Some(hio::hstdout()?);
+            if hstdout.is_none() {
+                hstdout.replace(hio::hstdout()?);
             }
 
-            let hstdout = HSTDOUT.as_mut().unwrap();
+            let hstdout = hstdout.as_mut().unwrap();
 
             hstdout.write_all(&[address])
         })
