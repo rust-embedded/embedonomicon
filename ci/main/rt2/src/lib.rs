@@ -3,11 +3,12 @@
 use core::panic::PanicInfo;
 use core::ptr;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
+#[allow(static_mut_refs)]
 pub unsafe extern "C" fn Reset() -> ! {
     // NEW!
     // Initialize RAM
-    extern "C" {
+    unsafe extern "C" {
         static mut _sbss: u8;
         static mut _ebss: u8;
 
@@ -16,23 +17,23 @@ pub unsafe extern "C" fn Reset() -> ! {
         static _sidata: u8;
     }
 
-    let count = &_ebss as *const u8 as usize - &_sbss as *const u8 as usize;
-    ptr::write_bytes(&mut _sbss as *mut u8, 0, count);
+    let count = unsafe { &_ebss as *const u8 as usize - &_sbss as *const u8 as usize };
+    unsafe { ptr::write_bytes(&mut _sbss as *mut u8, 0, count) };
 
-    let count = &_edata as *const u8 as usize - &_sdata as *const u8 as usize;
-    ptr::copy_nonoverlapping(&_sidata as *const u8, &mut _sdata as *mut u8, count);
+    let count = unsafe { &_edata as *const u8 as usize - &_sdata as *const u8 as usize };
+    unsafe { ptr::copy_nonoverlapping(&_sidata as *const u8, &mut _sdata as *mut u8, count) };
 
     // Call user entry point
-    extern "Rust" {
-        fn main() -> !;
+    unsafe extern "Rust" {
+        safe fn main() -> !;
     }
 
     main()
 }
 
 // The reset vector, a pointer into the reset handler
-#[link_section = ".vector_table.reset_vector"]
-#[no_mangle]
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
 
 #[panic_handler]
@@ -43,12 +44,12 @@ fn panic(_panic: &PanicInfo<'_>) -> ! {
 #[macro_export]
 macro_rules! entry {
     ($path:path) => {
-        #[export_name = "main"]
+        #[unsafe(export_name = "main")]
         pub unsafe fn __main() -> ! {
             // type check the given path
             let f: fn() -> ! = $path;
 
             f()
         }
-    }
+    };
 }

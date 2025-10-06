@@ -16,12 +16,12 @@ macro_rules! log {
     // NEW!
     ($string:expr) => {
         unsafe {
-            extern "Rust" {
+            unsafe extern "Rust" {
                 static LOGGER: &'static dyn $crate::GlobalLog;
             }
 
-            #[export_name = $string]
-            #[link_section = ".log"]
+            #[unsafe(export_name = $string)]
+            #[unsafe(link_section = ".log")]
             static SYMBOL: u8 = 0;
 
             $crate::GlobalLog::log(LOGGER, &SYMBOL as *const u8 as usize as u8)
@@ -29,8 +29,8 @@ macro_rules! log {
     };
 
     ($logger:expr, $string:expr) => {{
-        #[export_name = $string]
-        #[link_section = ".log"]
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log")]
         static SYMBOL: u8 = 0;
 
         $crate::Log::log(&mut $logger, &SYMBOL as *const u8 as usize as u8)
@@ -41,7 +41,7 @@ macro_rules! log {
 #[macro_export]
 macro_rules! global_logger {
     ($logger:expr) => {
-        #[no_mangle]
+        #[unsafe(no_mangle)]
         pub static LOGGER: &dyn $crate::GlobalLog = &$logger;
     };
 }

@@ -4,7 +4,7 @@
 use core::panic::PanicInfo;
 
 // The reset handler
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Reset() -> ! {
     let _x = 42;
 
@@ -13,8 +13,8 @@ pub unsafe extern "C" fn Reset() -> ! {
 }
 
 // The reset vector, a pointer into the reset handler
-#[link_section = ".vector_table.reset_vector"]
-#[no_mangle]
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
 pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
 
 #[panic_handler]

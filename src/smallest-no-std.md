@@ -41,7 +41,7 @@ runs on a system. It can be many things that a standard Rust application can nev
 With that out of the way, we can move on to the smallest `#![no_std]` program that compiles:
 
 ``` console
-$ cargo new --edition 2018 --bin app
+$ cargo new --edition 2024 --bin app
 
 $ cd app
 ```
@@ -84,7 +84,7 @@ Before linking, the crate contains the panicking symbol.
 ``` console
 $ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
 
-$ cargo nm -- target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] '
+$ cargo nm -- -C $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] '
 ```
 
 ``` text

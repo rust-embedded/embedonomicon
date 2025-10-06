@@ -10,8 +10,8 @@ pub trait Log {
 #[macro_export]
 macro_rules! error {
     ($logger:expr, $string:expr) => {{
-        #[export_name = $string]
-        #[link_section = ".log.error"] // <- CHANGED!
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log.error")] // <- CHANGED!
         static SYMBOL: u8 = 0;
 
         $crate::Log::log(&mut $logger, &SYMBOL as *const u8 as usize as u8)
@@ -22,8 +22,8 @@ macro_rules! error {
 #[macro_export]
 macro_rules! warn {
     ($logger:expr, $string:expr) => {{
-        #[export_name = $string]
-        #[link_section = ".log.warning"] // <- CHANGED!
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log.warning")] // <- CHANGED!
         static SYMBOL: u8 = 0;
 
         $crate::Log::log(&mut $logger, &SYMBOL as *const u8 as usize as u8)

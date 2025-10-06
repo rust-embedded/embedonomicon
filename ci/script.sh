@@ -40,7 +40,7 @@ main() {
 
     # check presence of the `rust_begin_unwind` symbol
     diff app.o.nm \
-        <(cargo nm -- $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
+        <(cargo nm -- -C $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] ')
 
 
     edition_check
@@ -86,41 +86,33 @@ main() {
     edition_check
     popd
 
-    # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
-        pushd app4
-        cargo build
-        qemu_check target/thumbv7m-none-eabi/debug/app
-        edition_check
-        popd
-    fi
+    pushd app4
+    cargo build
+    qemu_check target/thumbv7m-none-eabi/debug/app
+    edition_check
+    popd
 
     popd
 
 
-    #FIXME: This fails on nightly-2022-08-12, but we need at least rust 1.63.0 or other things fail. This needs to be fixed manually.
-    # # exception handling
-    # NOTE(nightly) this will require nightly until core::arch::arm::udf is stabilized
-    if [ $RUST_VERSION = FIXME ]; then
-        pushd exceptions
+    pushd exceptions
 
-        # check that the disassembly matches
-        pushd app
-        diff -b app.objdump \
-             <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
-        diff -b app.vector_table.objdump \
-             <(cargo objdump --bin app --release -- -s -j .vector_table)
-        edition_check
-        popd
+    # check that the disassembly matches
+    pushd app
+    diff -b app.objdump \
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex)
+    diff -b app.vector_table.objdump \
+         <(cargo objdump --bin app --release -- -s -j .vector_table)
+    edition_check
+    popd
 
-        # check that it builds
-        pushd app2
-        cargo build
-        edition_check
-        popd
+    # check that it builds
+    pushd app2
+    cargo build
+    edition_check
+    popd
 
-        popd
-    fi
+    popd
 
     # # Assembly on stable
     pushd asm
@@ -128,7 +120,7 @@ main() {
     # check that the disassembly matches
     pushd app
     diff -b release.objdump \
-         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check
@@ -145,7 +137,7 @@ main() {
     # check that the disassembly matches
     pushd app2
     diff -b release.objdump \
-         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex --no-leading-addr)
+         <(cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex)
     diff release.vector_table \
          <(cargo objdump --bin app --release -- -s -j .vector_table)
     edition_check
@@ -232,18 +224,15 @@ main() {
 
     popd
 
-    # # DMA
-    # NOTE(nightly) this will require nightly until core::pin is stabilized (1.33)
-    if [ $RUST_VERSION = nightly-2022-08-12 ]; then
-        pushd dma
-        cargo build --examples
-        popd
-    fi
+    # DMA
+    pushd dma
+    cargo build --examples
+    popd
 }
 
-# checks that 2018 idioms are being used
+# checks that 2024 idioms are being used
 edition_check() {
-    RUSTFLAGS="-D rust_2018_compatibility -D rust_2018_idioms" cargo check
+    RUSTFLAGS="-D rust_2024_compatibility" cargo check
 }
 
 # checks that QEMU doesn't crash and that it produces no error messages

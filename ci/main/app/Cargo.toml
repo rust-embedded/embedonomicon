@@ -1,5 +1,5 @@
 [package]
-edition = "2018"
+edition = "2024"
 name = "app"
 version = "0.1.0"
 authors = ["Jorge Aparicio <jorge@japaric.io>"]

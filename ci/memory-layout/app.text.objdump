@@ -4,8 +4,10 @@ app:	file format elf32-littlearm
 Disassembly of section .text:
 
 <Reset>:
-               	sub	sp, #4
-               	movs	r0, #42
+               	push	{r7, lr}
+               	mov	r7, sp
+               	sub	sp, #0x4
+               	movs	r0, #0x2a
                	str	r0, [sp]
-               	b	0x10 <Reset+0x8>        @ imm = #-2
-               	b	0x10 <Reset+0x8>        @ imm = #-4
+               	b	0x14 <Reset+0xc>        @ imm = #-0x2
+               	b	0x14 <Reset+0xc>        @ imm = #-0x4

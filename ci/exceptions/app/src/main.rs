@@ -1,14 +1,12 @@
-#![feature(core_intrinsics)]
 #![no_main]
 #![no_std]
 
-use core::intrinsics;
-
+use core::arch::asm;
 use rt::entry;
 
 entry!(main);
 
 fn main() -> ! {
     // this executes the undefined instruction (UDF) and causes a HardFault exception
-    intrinsics::abort()
+    unsafe { asm!("udf #0", options(noreturn)) };
 }

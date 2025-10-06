@@ -3,7 +3,7 @@
 
 extern crate rt;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn main() -> ! {
     let _x = 42;
 

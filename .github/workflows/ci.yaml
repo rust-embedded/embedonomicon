@@ -10,17 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    continue-on-error: ${{ matrix.experimental || false }}
-
-    strategy:
-      matrix:
-        rust:
-          - 1.63.0 
-          - nightly-2022-08-12 #Since Rust 1.63.0 came out Aug 11 2022, we use nightly from the day after.
-        include:
-          - rust: nightly-2022-08-12
-            experimental: true
-
     steps:
       - uses: actions/checkout@v2
 
@@ -30,7 +19,7 @@ jobs:
           pip3 install --user python-dateutil linkchecker
 
       - name: Cache installed binaries
-        uses: actions/cache@v4 
+        uses: actions/cache@v4
         id: cache-bin
         with:
           path: ~/cache-bin
@@ -57,9 +46,9 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.rust }}
+          toolchain: 1.89.0
           override: true
-          components: rustfmt, clippy, llvm-tools-preview
+          components: rustfmt, clippy, llvm-tools
           target: thumbv7m-none-eabi
 
       - name: Install arm-none-eabi-gcc and qemu
@@ -85,8 +74,6 @@ jobs:
 
       - name: Test
         run: bash ci/script.sh
-        env:
-          RUST_VERSION: ${{ matrix.rust }}
 
   deploy:
     runs-on: ubuntu-latest

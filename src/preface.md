@@ -52,10 +52,10 @@ the examples included in this book can be tested in QEMU. You will, however,
 need to install the following tools to run and inspect the examples in this
 book:
 
-- All the code in this book uses the 2018 edition. If you are not familiar with
-  the 2018 features and idioms check the [`edition guide`].
+- All the code in this book uses the 2024 edition. If you are not familiar with
+  the 2024 features and idioms check the [`edition guide`].
 
-- Rust 1.31 or a newer toolchain PLUS ARM Cortex-M compilation support.
+- Rust 1.89 or a newer toolchain with ARM Cortex-M compilation support.
 
 - [`cargo-binutils`](https://github.com/japaric/cargo-binutils). v0.1.4 or newer.
 
@@ -66,7 +66,7 @@ book:
 
 - GDB with ARM support.
 
-[`edition guide`]: https://rust-lang-nursery.github.io/edition-guide/
+[`edition guide`]: https://doc.rust-lang.org/edition-guide/
 
 ### Example setup
 
@@ -79,14 +79,14 @@ $ rustup default stable
 
 $ # toolchain should be newer than this one
 $ rustc -V
-rustc 1.31.0 (abe02cefd 2018-12-04)
+rustc 1.89.0 (29483883e 2025-08-04)
 
 $ rustup target add thumbv7m-none-eabi
 
 $ # cargo-binutils
 $ cargo install cargo-binutils
 
-$ rustup component add llvm-tools-preview
+$ rustup component add llvm-tools
 
 ```
 
@@ -111,7 +111,7 @@ $ # QEMU
 $ sudo apt install qemu-system-arm
 ```
 
-#### Ubuntu 18.04 or Debian
+#### Ubuntu 18.04 (or newer) or Debian
 
 ``` console
 $ # gdb-multiarch -- use `gdb-multiarch` when you wish to invoke gdb

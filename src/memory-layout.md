@@ -34,12 +34,21 @@ These compiler generated symbol and section names are not guaranteed to remain c
 different releases of the Rust compiler. However, the language lets us control symbol names and
 section placement via these attributes:
 
-- `#[export_name = "foo"]` sets the symbol name to `foo`.
-- `#[no_mangle]` means: use the function or variable name (not its full path) as its symbol name.
-  `#[no_mangle] fn bar()` will produce a symbol named `bar`.
-- `#[link_section = ".bar"]` places the symbol in a section named `.bar`.
+- `#[unsafe(export_name = "foo")]` sets the symbol name to `foo`.
+- `#[unsafe(no_mangle)]` means: use the function or variable name (not its full path) as its symbol name.
+  `#[unsafe(no_mangle)] fn bar()` will produce a symbol named `bar`.
+- `#[unsafe(link_section = ".bar")]` places the symbol in a section named `.bar`.
 
 With these attributes, we can expose a stable ABI of the program and use it in the linker script.
+Each of these attributes has safety guarantees that must be upheld in your program, namely:
+- `#[unsafe(no_mangle)]` fixes the symbol name, regardless of the crate, module, variable or 
+function name and arguments. Using this attribute, it is possible to create multiple symbols with
+the same name, leading to undefined behavior. The user must guarantee that the symbol does not collide
+with others.
+- `#[unsafe(export_name = "foo")]` also fixes the symbol name. The user must guarantee that 
+the chosen symbol name (in this case `foo`) does not collide with any other symbol in the program.
+- `#[unsafe(link_section = ".bar")]` may place data and code into sections of memory not expecting them, 
+such as mutable data into read-only areas, or memory regions that do not exist on the target device.
 
 ## The Rust side
 
@@ -62,7 +71,7 @@ The hardware expects a certain format here, to which we adhere by using `extern 
 compiler to lower the function using the C ABI, instead of the Rust ABI, which is unstable.
 
 To refer to the reset handler and reset vector from the linker script, we need them to have a stable
-symbol name so we use `#[no_mangle]`. We need fine control over the location of `RESET_VECTOR`, so we
+symbol name so we use `#[unsafe(no_mangle)]`. We need fine control over the location of `RESET_VECTOR`, so we
 place it in a known section, `.vector_table.reset_vector`. The exact location of the reset handler
 itself, `Reset`, is not important. We just stick to the default compiler generated section.
 
@@ -270,7 +279,7 @@ $1 = 0x20010000
 $2 = 42
 
 (gdb) print &_x
-$3 = (i32 *) 0x2000fffc
+$3 = (i32 *) 0x2000fff4
 
 (gdb) quit
 ```

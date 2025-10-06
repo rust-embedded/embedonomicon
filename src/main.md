@@ -62,7 +62,7 @@ The `rt` will take care of giving the program the right memory layout.
 ``` console
 $ cd ..
 
-$ cargo new --edition 2018 --bin app
+$ cargo new --edition 2024 --bin app
 
 $ cd app
 
@@ -217,11 +217,11 @@ the boundaries of the `.bss` and `.data` sections.
 The updated reset handler is shown below:
 
 ``` console
-$ head -n32 ../rt/src/lib.rs
+$ head -n33 ../rt/src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/main/rt2/src/lib.rs:1:31}}
+{{#include ../ci/main/rt2/src/lib.rs:1:32}}
 ```
 
 Now end users can directly and indirectly make use of `static` variables without running into

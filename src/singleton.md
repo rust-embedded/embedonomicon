@@ -4,17 +4,13 @@ In this section we'll cover how to implement a global, shared singleton. The
 embedded Rust book covered local, owned singletons which are pretty much unique
 to Rust. Global singletons are essentially the singleton pattern you see in C
 and C++; they are not specific to embedded development but since they involve
-symbols they seemed a good fit for the Embedonomicon.
-
-> **TODO**(resources team) link "the embedded Rust book" to the singletons
-> section when it's up
+symbols they seemed a good fit for the Embedonomicon. The embedded Rust book
+also has a chapter on [singletons].
 
 To illustrate this section we'll extend the logger we developed in the last
 section to support global logging. The result will be very similar to the
-`#[global_allocator]` feature covered in the embedded Rust book.
-
-> **TODO**(resources team) link `#[global_allocator]` to the collections chapter
-> of the book when it's in a more stable location.
+`#[global_allocator]` feature covered in the [collections] chapter of the
+embedded Rust book.
 
 Here's the summary of what we want to do:
 
@@ -126,9 +122,6 @@ $ cat src/main.rs
 {{#include ../ci/singleton/app/src/main.rs}}
 ```
 
-> **TODO**(resources team) use `cortex_m::Mutex` instead of a `static mut`
-> variable when `const fn` is stabilized.
-
 We had to add `cortex-m` to the dependencies.
 
 ``` console
@@ -178,3 +171,6 @@ $ cargo objdump --bin app --release -- -t | grep LOGGER
 
 If the `static` is missing that means that there is no vtable and that LLVM was
 capable of transforming all the `LOGGER.log` calls into `Logger.log` calls.
+
+[singletons]: https://docs.rust-embedded.org/book/peripherals/singletons.html
+[collections]: https://docs.rust-embedded.org/book/collections/index.html#using-alloc

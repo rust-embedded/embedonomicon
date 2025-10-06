@@ -8,11 +8,14 @@ super cheap logging.
 Whenever we needed a stable symbol interface between crates we have mainly used
 the `no_mangle` attribute and sometimes the `export_name` attribute. The
 `export_name` attribute takes a string which becomes the name of the symbol
-whereas `#[no_mangle]` is basically sugar for `#[export_name = <item-name>]`.
+whereas `#[unsafe(no_mangle)]` is basically sugar for `#[unsafe(export_name = <item-name>)]`.
 
 Turns out we are not limited to single word names; we can use arbitrary strings,
 e.g. sentences, as the argument of the `export_name` attribute. As least when
-the output format is ELF anything that doesn't contain a null byte is fine.
+the output format is ELF anything that doesn't contain a null byte is fine. 
+This is generally true when using the gnu linker. However, there are some [known
+limitations](https://github.com/knurling-rs/defmt/issues/979#issuecomment-3133721969) 
+with the macOS and Windows linkers.
 
 Let's check that out:
 
@@ -23,11 +26,11 @@ $ cat foo/src/lib.rs
 ```
 
 ``` rust
-#[export_name = "Hello, world!"]
+#[unsafe(export_name = "Hello, world!")]
 #[used]
 static A: u8 = 0;
 
-#[export_name = "こんにちは"]
+#[unsafe(export_name = "こんにちは")]
 #[used]
 static B: u8 = 0;
 ```
