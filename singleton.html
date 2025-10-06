@@ -1,0 +1,472 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Global singletons - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="global-singletons"><a class="header" href="#global-singletons">Global singletons</a></h1>
+<p>In this section we'll cover how to implement a global, shared singleton. The
+embedded Rust book covered local, owned singletons which are pretty much unique
+to Rust. Global singletons are essentially the singleton pattern you see in C
+and C++; they are not specific to embedded development but since they involve
+symbols they seemed a good fit for the Embedonomicon. The embedded Rust book
+also has a chapter on <a href="https://docs.rust-embedded.org/book/peripherals/singletons.html">singletons</a>.</p>
+<p>To illustrate this section we'll extend the logger we developed in the last
+section to support global logging. The result will be very similar to the
+<code>#[global_allocator]</code> feature covered in the <a href="https://docs.rust-embedded.org/book/collections/index.html#using-alloc">collections</a> chapter of the
+embedded Rust book.</p>
+<p>Here's the summary of what we want to do:</p>
+<p>In the last section we created a <code>log!</code> macro to log messages through a specific
+logger, a value that implements the <code>Log</code> trait. The syntax of the <code>log!</code> macro
+is <code>log!(logger, "String")</code>. We want to extend the macro such that
+<code>log!("String")</code> also works. Using the <code>logger</code>-less version should log the
+message through a global logger; this is how <code>std::println!</code> works. We'll also
+need a mechanism to declare what the global logger is; this is the part that's
+similar to <code>#[global_allocator]</code>.</p>
+<p>It could be that the global logger is declared in the top crate, and it could
+also be that the type of the global logger is defined in the top crate. In this
+scenario the dependencies <em>cannot</em> know the exact type of the global logger. To
+support this scenario we'll need some indirection.</p>
+<p>Instead of hardcoding the type of the global logger in the <code>log</code> crate we'll
+declare only the <em>interface</em> of the global logger in that crate. That is we'll
+add a new trait, <code>GlobalLog</code>, to the <code>log</code> crate. The <code>log!</code> macro will also
+have to make use of that trait.</p>
+<pre><code class="language-console">$ cat ../log/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>// NEW!
+pub trait GlobalLog: Sync {
+    fn log(&amp;self, address: u8);
+}
+
+pub trait Log {
+    type Error;
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), Self::Error&gt;;
+}
+
+#[macro_export]
+macro_rules! log {
+    // NEW!
+    ($string:expr) =&gt; {
+        unsafe {
+            unsafe extern "Rust" {
+                static LOGGER: &amp;'static dyn $crate::GlobalLog;
+            }
+
+            #[unsafe(export_name = $string)]
+            #[unsafe(link_section = ".log")]
+            static SYMBOL: u8 = 0;
+
+            $crate::GlobalLog::log(LOGGER, &amp;SYMBOL as *const u8 as usize as u8)
+        }
+    };
+
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log")]
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+
+// NEW!
+#[macro_export]
+macro_rules! global_logger {
+    ($logger:expr) =&gt; {
+        #[unsafe(no_mangle)]
+        pub static LOGGER: &amp;dyn $crate::GlobalLog = &amp;$logger;
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There's quite a bit to unpack here.</p>
+<p>Let's start with the trait.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait GlobalLog: Sync {
+    fn log(&amp;self, address: u8);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Both <code>GlobalLog</code> and <code>Log</code> have a <code>log</code> method. The difference is that
+<code>GlobalLog.log</code> takes a shared reference to the receiver (<code>&amp;self</code>). This is
+necessary because the global logger will be a <code>static</code> variable. More on that
+later.</p>
+<p>The other difference is that <code>GlobalLog.log</code> doesn't return a <code>Result</code>. This
+means that it can <em>not</em> report errors to the caller. This is not a strict
+requirement for traits used to implement global singletons. Error handling in
+global singletons is fine but then all users of the global version of the <code>log!</code>
+macro have to agree on the error type. Here we are simplifying the interface a
+bit by having the <code>GlobalLog</code> implementer deal with the errors.</p>
+<p>Yet another difference is that <code>GlobalLog</code> requires that the implementer is
+<code>Sync</code>, that is that it can be shared between threads. This is a requirement for
+values placed in <code>static</code> variables; their types must implement the <code>Sync</code>
+trait.</p>
+<p>At this point it may not be entirely clear why the interface has to look this
+way. The other parts of the crate will make this clearer so keep reading.</p>
+<p>Next up is the <code>log!</code> macro:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    ($string:expr) =&gt; {
+        unsafe {
+            unsafe extern "Rust" {
+                static LOGGER: &amp;'static dyn $crate::GlobalLog;
+            }
+
+            #[unsafe(export_name = $string)]
+            #[unsafe(link_section = ".log")]
+            static SYMBOL: u8 = 0;
+
+            $crate::GlobalLog::log(LOGGER, &amp;SYMBOL as *const u8 as usize as u8)
+        }
+    };
+<span class="boring">}</span></code></pre></pre>
+<p>When called without a specific <code>$logger</code> the macros uses an <code>extern</code> <code>static</code>
+variable called <code>LOGGER</code> to log the message. This variable <em>is</em> the global
+logger that's defined somewhere else; that's why we use the <code>extern</code> block. We
+saw this pattern in the <a href="main.html">main interface</a> chapter.</p>
+<p>We need to declare a type for <code>LOGGER</code> or the code won't type check. We don't
+know the concrete type of <code>LOGGER</code> at this point but we know, or rather require,
+that it implements the <code>GlobalLog</code> trait so we can use a trait object here.</p>
+<p>The rest of the macro expansion looks very similar to the expansion of the local
+version of the <code>log!</code> macro so I won't explain it here as it's explained in the
+<a href="logging.html">previous</a> chapter.</p>
+<p>Now that we know that <code>LOGGER</code> has to be a trait object it's clearer why we
+omitted the associated <code>Error</code> type in <code>GlobalLog</code>. If we had not omitted then
+we would have need to pick a type for <code>Error</code> in the type signature of <code>LOGGER</code>.
+This is what I earlier meant by "all users of <code>log!</code> would need to agree on the
+error type".</p>
+<p>Now the final piece: the <code>global_logger!</code> macro. It could have been a proc macro
+attribute but it's easier to write a <code>macro_rules!</code> macro.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[macro_export]
+macro_rules! global_logger {
+    ($logger:expr) =&gt; {
+        #[unsafe(no_mangle)]
+        pub static LOGGER: &amp;dyn $crate::GlobalLog = &amp;$logger;
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This macro creates the <code>LOGGER</code> variable that <code>log!</code> uses. Because we need a
+stable ABI interface we use the <code>no_mangle</code> attribute. This way the symbol name
+of <code>LOGGER</code> will be "LOGGER" which is what the <code>log!</code> macro expects.</p>
+<p>The other important bit is that the type of this static variable must exactly
+match the type used in the expansion of the <code>log!</code> macro. If they don't match
+Bad Stuff will happen due to ABI mismatch.</p>
+<p>Let's write an example that uses this new global logger functionality.</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::cell::RefCell;
+use cortex_m::interrupt;
+use cortex_m::interrupt::Mutex;
+use cortex_m_semihosting::{
+    debug,
+    hio::{self, HostStream},
+};
+
+use log::{GlobalLog, global_logger, log};
+use rt::entry;
+
+struct Logger;
+
+global_logger!(Logger);
+
+entry!(main);
+
+fn main() -&gt; ! {
+    log!("Hello, world!");
+
+    log!("Goodbye");
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}
+
+impl GlobalLog for Logger {
+    fn log(&amp;self, address: u8) {
+        // we use a critical section (`interrupt::free`) to make the access to the
+        // `HSTDOUT` variable interrupt-safe which is required for memory safety
+        interrupt::free(|cs| {
+            static HSTDOUT: Mutex&lt;RefCell&lt;Option&lt;HostStream&gt;&gt;&gt; = Mutex::new(RefCell::new(None));
+            let mut hstdout = HSTDOUT.borrow(cs).borrow_mut();
+
+            // lazy initialization
+            if hstdout.is_none() {
+                hstdout.replace(hio::hstdout()?);
+            }
+
+            let hstdout = hstdout.as_mut().unwrap();
+
+            hstdout.write_all(&amp;[address])
+        })
+        .ok(); // `.ok()` = ignore errors
+    }
+}</code></pre></pre>
+<p>We had to add <code>cortex-m</code> to the dependencies.</p>
+<pre><code class="language-console">$ tail -n5 Cargo.toml
+</code></pre>
+<pre><code class="language-text">[dependencies]
+cortex-m = "0.7.7"
+cortex-m-semihosting = "0.5.0"
+log = { path = "../log" }
+rt = { path = "../rt" }
+</code></pre>
+<p>This is a port of one of the examples written in the <a href="logging.html">previous</a> section. The
+output is the same as what we got back there.</p>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0001
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000001 g     O .log	00000001 Goodbye
+00000000 g     O .log	00000001 Hello, world!
+</code></pre>
+<hr />
+<p>Some readers may be concerned about this implementation of global singletons not
+being zero cost because it uses trait objects which involve dynamic dispatch,
+that is method calls are performed through a vtable lookup.</p>
+<p>However, it appears that LLVM is smart enough to eliminate the dynamic dispatch
+when compiling with optimizations / LTO. This can be confirmed by searching for
+<code>LOGGER</code> in the symbol table.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -t | grep LOGGER
+</code></pre>
+<pre><code class="language-text">
+</code></pre>
+<p>If the <code>static</code> is missing that means that there is no vtable and that LLVM was
+capable of transforming all the <code>LOGGER.log</code> calls into <code>Logger.log</code> calls.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="logging.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="dma.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="logging.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="dma.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Memory layout - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="memory-layout"><a class="header" href="#memory-layout">Memory layout</a></h1>
+<p>The next step is to ensure the program has the right memory layout so that the target system will be
+able to execute it. In our example, we'll be working with a virtual Cortex-M3 microcontroller: the
+<a href="http://www.ti.com/product/LM3S6965">LM3S6965</a>. Our program will be the only process running on the device so it must also take care of
+initializing the device.</p>
+<h2 id="background-information"><a class="header" href="#background-information">Background information</a></h2>
+<p>Cortex-M devices require a <a href="https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table">vector table</a> to be present at the start of their <a href="https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/memory-model">code memory region</a>.
+The vector table is an array of pointers; the first two pointers are required to boot the device,
+the rest of the pointers are related to exceptions. We'll ignore them for now.</p>
+<p>Linkers decide the final memory layout of programs, but we can use <a href="https://sourceware.org/binutils/docs/ld/Scripts.html">linker scripts</a> to have some
+control over it. The control granularity that linker scripts give us over the layout
+is at the level of <em>sections</em>. A section is a collection of <em>symbols</em> laid out in contiguous memory.
+Symbols, in turn, can be data (a static variable), or instructions (a Rust function).</p>
+<p>Every symbol has a name assigned by the compiler. As of Rust 1.28 , the names that the Rust compiler
+assigns to symbols are of the form: <code>_ZN5krate6module8function17he1dfc17c86fe16daE</code>, which demangles to
+<code>krate::module::function::he1dfc17c86fe16da</code> where <code>krate::module::function</code> is the path of the
+function or variable and <code>he1dfc17c86fe16da</code> is some sort of hash. The Rust compiler will place each
+symbol into its own unique section; for example the symbol mentioned before will be placed in a
+section named <code>.text._ZN5krate6module8function17he1dfc17c86fe16daE</code>.</p>
+<p>These compiler generated symbol and section names are not guaranteed to remain constant across
+different releases of the Rust compiler. However, the language lets us control symbol names and
+section placement via these attributes:</p>
+<ul>
+<li><code>#[unsafe(export_name = "foo")]</code> sets the symbol name to <code>foo</code>.</li>
+<li><code>#[unsafe(no_mangle)]</code> means: use the function or variable name (not its full path) as its symbol name.
+<code>#[unsafe(no_mangle)] fn bar()</code> will produce a symbol named <code>bar</code>.</li>
+<li><code>#[unsafe(link_section = ".bar")]</code> places the symbol in a section named <code>.bar</code>.</li>
+</ul>
+<p>With these attributes, we can expose a stable ABI of the program and use it in the linker script.
+Each of these attributes has safety guarantees that must be upheld in your program, namely:</p>
+<ul>
+<li><code>#[unsafe(no_mangle)]</code> fixes the symbol name, regardless of the crate, module, variable or
+function name and arguments. Using this attribute, it is possible to create multiple symbols with
+the same name, leading to undefined behavior. The user must guarantee that the symbol does not collide
+with others.</li>
+<li><code>#[unsafe(export_name = "foo")]</code> also fixes the symbol name. The user must guarantee that
+the chosen symbol name (in this case <code>foo</code>) does not collide with any other symbol in the program.</li>
+<li><code>#[unsafe(link_section = ".bar")]</code> may place data and code into sections of memory not expecting them,
+such as mutable data into read-only areas, or memory regions that do not exist on the target device.</li>
+</ul>
+<h2 id="the-rust-side"><a class="header" href="#the-rust-side">The Rust side</a></h2>
+<p>As mentioned above, for Cortex-M devices, we need to populate the first two entries of the
+vector table. The first one, the initial value for the stack pointer, can be populated using
+only the linker script. The second one, the reset vector, needs to be created in Rust code
+and placed correctly using the linker script.</p>
+<p>The reset vector is a pointer into the reset handler. The reset handler is the function that the
+device will execute after a system reset, or after it powers up for the first time. The reset
+handler is always the first stack frame in the hardware call stack; returning from it is undefined
+behavior as there's no other stack frame to return to. We can enforce that the reset handler never
+returns by making it a divergent function, which is a function with signature <code>fn(/* .. */) -&gt; !</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[unsafe(no_mangle)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    let _x = 42;
+
+    // can't return so we go into an infinite loop here
+    loop {}
+}
+
+// The reset vector, a pointer into the reset handler
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
+pub static RESET_VECTOR: unsafe extern "C" fn() -&gt; ! = Reset;
+
+<span class="boring">}</span></code></pre></pre>
+<p>The hardware expects a certain format here, to which we adhere by using <code>extern "C"</code> to tell the
+compiler to lower the function using the C ABI, instead of the Rust ABI, which is unstable.</p>
+<p>To refer to the reset handler and reset vector from the linker script, we need them to have a stable
+symbol name so we use <code>#[unsafe(no_mangle)]</code>. We need fine control over the location of <code>RESET_VECTOR</code>, so we
+place it in a known section, <code>.vector_table.reset_vector</code>. The exact location of the reset handler
+itself, <code>Reset</code>, is not important. We just stick to the default compiler generated section.</p>
+<p>The linker will ignore symbols with internal linkage (also known as internal symbols) while traversing
+the list of input object files, so we need our two symbols to have external linkage. The only way to
+make a symbol external in Rust is to make its corresponding item public (<code>pub</code>) and <em>reachable</em> (no
+private module between the item and the root of the crate).</p>
+<h2 id="the-linker-script-side"><a class="header" href="#the-linker-script-side">The linker script side</a></h2>
+<p>A minimal linker script that places the vector table in the correct location is shown below. Let's
+walk through it.</p>
+<pre><code class="language-console">$ cat link.x
+</code></pre>
+<pre><code class="language-text">/* Memory layout of the LM3S6965 microcontroller */
+/* 1K = 1 KiBi = 1024 bytes */
+MEMORY
+{
+  FLASH : ORIGIN = 0x00000000, LENGTH = 256K
+  RAM : ORIGIN = 0x20000000, LENGTH = 64K
+}
+
+/* The entry point is the reset handler */
+ENTRY(Reset);
+
+EXTERN(RESET_VECTOR);
+
+SECTIONS
+{
+  .vector_table ORIGIN(FLASH) :
+  {
+    /* First entry: initial Stack Pointer value */
+    LONG(ORIGIN(RAM) + LENGTH(RAM));
+
+    /* Second entry: reset vector */
+    KEEP(*(.vector_table.reset_vector));
+  } &gt; FLASH
+
+  .text :
+  {
+    *(.text .text.*);
+  } &gt; FLASH
+
+  /DISCARD/ :
+  {
+    *(.ARM.exidx .ARM.exidx.*);
+  }
+}
+</code></pre>
+<h3 id="memory"><a class="header" href="#memory"><code>MEMORY</code></a></h3>
+<p>This section of the linker script describes the location and size of blocks of memory in the target.
+Two memory blocks are defined: <code>FLASH</code> and <code>RAM</code>; they correspond to the physical memory available
+in the target. The values used here correspond to the LM3S6965 microcontroller.</p>
+<h3 id="entry"><a class="header" href="#entry"><code>ENTRY</code></a></h3>
+<p>Here we indicate to the linker that the reset handler, whose symbol name is <code>Reset</code>, is the
+<em>entry point</em> of the program. Linkers aggressively discard unused sections. Linkers consider the
+entry point and functions called from it as <em>used</em> so they won't discard them. Without this line,
+the linker would discard the <code>Reset</code> function and all subsequent functions called from it.</p>
+<h3 id="extern"><a class="header" href="#extern"><code>EXTERN</code></a></h3>
+<p>Linkers are lazy; they will stop looking into the input object files once they have found all the
+symbols that are recursively referenced from the entry point. <code>EXTERN</code> forces the linker to look
+for <code>EXTERN</code>'s argument even after all other referenced symbols have been found. As a rule of thumb,
+if you need a symbol that's not called from the entry point to always be present in the output binary,
+you should use <code>EXTERN</code> in conjunction with <code>KEEP</code>.</p>
+<h3 id="sections"><a class="header" href="#sections"><code>SECTIONS</code></a></h3>
+<p>This part describes how sections in the input object files (also known as <em>input sections</em>) are to be arranged
+in the sections of the output object file (also known as output sections) or if they should be discarded. Here
+we define two output sections:</p>
+<pre><code class="language-text">  .vector_table ORIGIN(FLASH) : { /* .. */ } &gt; FLASH
+</code></pre>
+<p><code>.vector_table</code> contains the vector table and is located at the start of <code>FLASH</code> memory.</p>
+<pre><code class="language-text">  .text : { /* .. */ } &gt; FLASH
+</code></pre>
+<p><code>.text</code> contains the program subroutines and is located somewhere in <code>FLASH</code>. Its start
+address is not specified, but the linker will place it after the previous output section,
+<code>.vector_table</code>.</p>
+<p>The output <code>.vector_table</code> section contains:</p>
+<pre><code class="language-text">    /* First entry: initial Stack Pointer value */
+    LONG(ORIGIN(RAM) + LENGTH(RAM));
+</code></pre>
+<p>We'll place the (call) stack at the end of RAM (the stack is <em>full descending</em>; it grows towards
+smaller addresses) so the end address of RAM will be used as the initial Stack Pointer (SP) value.
+That address is computed in the linker script itself using the information we entered for the <code>RAM</code>
+memory block.</p>
+<pre><code>    /* Second entry: reset vector */
+    KEEP(*(.vector_table.reset_vector));
+</code></pre>
+<p>Next, we use <code>KEEP</code> to force the linker to insert all input sections named
+<code>.vector_table.reset_vector</code> right after the initial SP value. The only symbol located in that
+section is <code>RESET_VECTOR</code>, so this will effectively place <code>RESET_VECTOR</code> second in the vector table.</p>
+<p>The output <code>.text</code> section contains:</p>
+<pre><code class="language-text">    *(.text .text.*);
+</code></pre>
+<p>This includes all the input sections named <code>.text</code> and <code>.text.*</code>. Note that we don't use <code>KEEP</code>
+here to let the linker discard unused sections.</p>
+<p>Finally, we use the special <code>/DISCARD/</code> section to discard</p>
+<pre><code class="language-text">    *(.ARM.exidx .ARM.exidx.*);
+</code></pre>
+<p>input sections named <code>.ARM.exidx.*</code>. These sections are related to exception handling but we are not
+doing stack unwinding on panics and they take up space in Flash memory, so we just discard them.</p>
+<h2 id="putting-it-all-together"><a class="header" href="#putting-it-all-together">Putting it all together</a></h2>
+<p>Now we can link the application. For reference, here's the complete Rust program:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_main]
+#![no_std]
+
+<span class="boring">fn main() {
+</span>use core::panic::PanicInfo;
+
+// The reset handler
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    let _x = 42;
+
+    // can't return so we go into an infinite loop here
+    loop {}
+}
+
+// The reset vector, a pointer into the reset handler
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
+pub static RESET_VECTOR: unsafe extern "C" fn() -&gt; ! = Reset;
+
+#[panic_handler]
+fn panic(_panic: &amp;PanicInfo&lt;'_&gt;) -&gt; ! {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We have to tweak the linker process to make it use our linker script. This is done
+passing the <code>-C link-arg</code> flag to <code>rustc</code>. This can be done with <code>cargo-rustc</code> or
+<code>cargo-build</code>.</p>
+<p><strong>IMPORTANT</strong>: Make sure you have the <code>.cargo/config.toml</code> file that was added at the
+end of the last section before running this command.</p>
+<p>Using the <code>cargo-rustc</code> subcommand:</p>
+<pre><code class="language-console">$ cargo rustc -- -C link-arg=-Tlink.x
+</code></pre>
+<p>Or you can set the rustflags in <code>.cargo/config.toml</code> and continue using the
+<code>cargo-build</code> subcommand. We'll do the latter because it better integrates with
+<code>cargo-binutils</code>.</p>
+<pre><code class="language-console"># modify .cargo/config.toml so it has these contents
+$ cat .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[target.thumbv7m-none-eabi]
+rustflags = ["-C", "link-arg=-Tlink.x"]
+
+[build]
+target = "thumbv7m-none-eabi"
+</code></pre>
+<p>The <code>[target.thumbv7m-none-eabi]</code> part says that these flags will only be used
+when cross compiling to that target.</p>
+<h2 id="inspecting-it"><a class="header" href="#inspecting-it">Inspecting it</a></h2>
+<p>Now let's inspect the output binary to confirm the memory layout looks the way we want
+(this requires <a href="https://github.com/rust-embedded/cargo-binutils#readme"><code>cargo-binutils</code></a>):</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -d --no-show-raw-insn
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+&lt;Reset&gt;:
+               	push	{r7, lr}
+               	mov	r7, sp
+               	sub	sp, #0x4
+               	movs	r0, #0x2a
+               	str	r0, [sp]
+               	b	0x14 &lt;Reset+0xc&gt;        @ imm = #-0x2
+               	b	0x14 &lt;Reset+0xc&gt;        @ imm = #-0x4
+</code></pre>
+<p>This is the disassembly of the <code>.text</code> section. We see that the reset handler, named <code>Reset</code>, is
+located at address <code>0x8</code>.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -s --section .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 09000000                    ... ....
+</code></pre>
+<p>This shows the contents of the <code>.vector_table</code> section. We can see that the section starts at
+address <code>0x0</code> and that the first word of the section is <code>0x2001_0000</code> (the <code>objdump</code> output is in
+little endian format). This is the initial SP value and matches the end address of RAM. The second
+word is <code>0x9</code>; this is the <em>thumb mode</em> address of the reset handler. When a function is to be
+executed in thumb mode the first bit of its address is set to 1.</p>
+<h2 id="testing-it"><a class="header" href="#testing-it">Testing it</a></h2>
+<p>This program is a valid LM3S6965 program; we can execute it in a virtual microcontroller (QEMU) to
+test it out.</p>
+<pre><code class="language-console">$ # this program will block
+$ qemu-system-arm \
+      -cpu cortex-m3 \
+      -machine lm3s6965evb \
+      -gdb tcp::3333 \
+      -S \
+      -nographic \
+      -kernel target/thumbv7m-none-eabi/debug/app
+</code></pre>
+<pre><code class="language-console">$ # on a different terminal
+$ arm-none-eabi-gdb -q target/thumbv7m-none-eabi/debug/app
+Reading symbols from target/thumbv7m-none-eabi/debug/app...done.
+
+(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at src/main.rs:8
+8       pub unsafe extern "C" fn Reset() -&gt; ! {
+
+(gdb) # the SP has the initial value we programmed in the vector table
+(gdb) print/x $sp
+$1 = 0x20010000
+
+(gdb) step
+9           let _x = 42;
+
+(gdb) step
+12          loop {}
+
+(gdb) # next we inspect the stack variable `_x`
+(gdb) print _x
+$2 = 42
+
+(gdb) print &amp;_x
+$3 = (i32 *) 0x2000fff4
+
+(gdb) quit
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="smallest-no-std.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="main.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="smallest-no-std.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="main.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

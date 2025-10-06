@@ -1,0 +1,1189 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>DMA - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="direct-memory-access-dma"><a class="header" href="#direct-memory-access-dma">Direct Memory Access (DMA)</a></h1>
+<p>This section covers the core requirements for building a memory safe API around
+DMA transfers.</p>
+<p>The DMA peripheral is used to perform memory transfers in parallel to the work
+of the processor (the execution of the main program). A DMA transfer is more or
+less equivalent to spawning a thread (see <a href="https://doc.rust-lang.org/std/thread/fn.spawn.html"><code>thread::spawn</code></a>) to do a <code>memcpy</code>.
+We'll use the fork-join model to illustrate the requirements of a memory-safe
+API.</p>
+<p>Consider the following DMA primitives:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A singleton that represents a single DMA channel (channel 1 in this case)
+///
+/// This singleton has exclusive access to the registers of the DMA channel 1
+pub struct Dma1Channel1 {
+    // ..
+}
+
+impl Dma1Channel1 {
+    /// Data will be written to this `address`
+    ///
+    /// `inc` indicates whether the address will be incremented after every byte
+    /// transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn set_destination_address(&amp;mut self, address: usize, inc: bool) {
+        // ..
+    }
+
+    /// Data will be read from this `address`
+    ///
+    /// `inc` indicates whether the address will be incremented after every byte
+    /// transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn set_source_address(&amp;mut self, address: usize, inc: bool) {
+        // ..
+    }
+
+    /// Number of bytes to transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn set_transfer_length(&amp;mut self, len: usize) {
+        // ..
+    }
+
+    /// Starts the DMA transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn start(&amp;mut self) {
+        // ..
+    }
+
+    /// Stops the DMA transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn stop(&amp;mut self) {
+        // ..
+    }
+
+    /// Returns `true` if there's a transfer in progress
+    ///
+    /// NOTE this performs a volatile read
+    pub fn in_progress() -&gt; bool {
+        // ..
+        false
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Assume that the <code>Dma1Channel1</code> is statically configured to work with serial port
+(AKA UART or USART) #1, <code>Serial1</code>, in one-shot mode (i.e. not circular mode).
+<code>Serial1</code> provides the following <em>blocking</em> API:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A singleton that represents serial port #1
+pub struct Serial1 {
+    // ..
+}
+
+impl Serial1 {
+    /// Reads out a single byte
+    ///
+    /// NOTE: blocks if no byte is available to be read
+    pub fn read(&amp;mut self) -&gt; Result&lt;u8, Error&gt; {
+        // ..
+        Ok(0)
+    }
+
+    /// Sends out a single byte
+    ///
+    /// NOTE: blocks if the output FIFO buffer is full
+    pub fn write(&amp;mut self, byte: u8) -&gt; Result&lt;(), Error&gt; {
+        // ..
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Let's say we want to extend the <code>Serial1</code> API to (a) asynchronously send out a
+buffer and (b) asynchronously fill a buffer.</p>
+<p>We'll start with a memory-unsafe API and we'll iterate on it until it's
+completely memory-safe. At each step we'll show you how the API can be broken to
+make you aware of the issues that need to be addressed when dealing with
+asynchronous memory operations.</p>
+<h2 id="a-first-stab"><a class="header" href="#a-first-stab">A first stab</a></h2>
+<p>For starters, let's try to use the <a href="https://doc.rust-lang.org/std/io/trait.Write.html#method.write_all"><code>Write::write_all</code></a> API as a reference. To
+keep things simple let's ignore all error handling.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A singleton that represents serial port #1
+pub struct Serial1 {
+    // NOTE: we extend this struct by adding the DMA channel singleton
+    dma: Dma1Channel1,
+    // ..
+}
+
+impl Serial1 {
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;'a&gt;(mut self, buffer: &amp;'a [u8]) -&gt; Transfer&lt;&amp;'a [u8]&gt; {
+        self.dma.set_destination_address(USART1_TX, false);
+        self.dma.set_source_address(buffer.as_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        self.dma.start();
+
+        Transfer { buffer }
+    }
+}
+
+/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    buffer: B,
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Returns `true` if the DMA transfer has finished
+    pub fn is_done(&amp;self) -&gt; bool {
+        !Dma1Channel1::in_progress()
+    }
+
+    /// Blocks until the transfer is done and returns the buffer
+    pub fn wait(self) -&gt; B {
+        // Busy wait until the transfer is done
+        while !self.is_done() {}
+
+        self.buffer
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p><strong>NOTE:</strong> <code>Transfer</code> could expose a futures- or generator-based API instead of
+the API shown above. That's an API design question that has little bearing on
+the memory safety of the overall API so we won't delve into it in this text.</p>
+</blockquote>
+<p>We can also implement an asynchronous version of <a href="https://doc.rust-lang.org/std/io/trait.Read.html#method.read_exact"><code>Read::read_exact</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;'a&gt;(&amp;mut self, buffer: &amp;'a mut [u8]) -&gt; Transfer&lt;&amp;'a mut [u8]&gt; {
+        self.dma.set_source_address(USART1_RX, false);
+        self.dma
+            .set_destination_address(buffer.as_mut_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        self.dma.start();
+
+        Transfer { buffer }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here's how to use the <code>write_all</code> API:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn write(serial: Serial1) {
+    // fire and forget
+    serial.write_all(b"Hello, world!\n");
+
+    // do other stuff
+}
+<span class="boring">}</span></code></pre></pre>
+<p>And here's an example of using the <code>read_exact</code> API:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn read(mut serial: Serial1) {
+    let mut buf = [0; 16];
+    let t = serial.read_exact(&amp;mut buf);
+
+    // do other stuff
+
+    t.wait();
+
+    match buf.split(|b| *b == b'\n').next() {
+        Some(b"some-command") =&gt; { /* do something */ }
+        _ =&gt; { /* do something else */ }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="memforget"><a class="header" href="#memforget"><code>mem::forget</code></a></h2>
+<p><a href="https://doc.rust-lang.org/std/mem/fn.forget.html"><code>mem::forget</code></a> is a safe API. If our API is truly safe then we should be able
+to use both together without running into undefined behavior. However, that's
+not the case; consider the following example:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn unsound(mut serial: Serial1) {
+    start(&amp;mut serial);
+    bar();
+}
+
+#[inline(never)]
+fn start(serial: &amp;mut Serial1) {
+    let mut buf = [0; 16];
+
+    // start a DMA transfer and forget the returned `Transfer` value
+    mem::forget(serial.read_exact(&amp;mut buf));
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here we start a DMA transfer, in <code>start</code>, to fill an array allocated on the
+stack and then <code>mem::forget</code> the returned <code>Transfer</code> value. Then we proceed to
+return from <code>start</code> and execute the function <code>bar</code>.</p>
+<p>This series of operations results in undefined behavior. The DMA transfer writes
+to stack memory but that memory is released when <code>start</code> returns and then reused
+by <code>bar</code> to allocate variables like <code>x</code> and <code>y</code>. At runtime this could result in
+variables <code>x</code> and <code>y</code> changing their value at random times. The DMA transfer
+could also overwrite the state (e.g. link register) pushed onto the stack by the
+prologue of function <code>bar</code>.</p>
+<p>Note that if we had used <code>mem::drop</code> instead of <code>mem::forget</code>, it would have
+been possible to make <code>Transfer</code>'s destructor stop the DMA transfer and then the
+program would have been safe. But one <em>cannot</em> rely on destructors running to
+enforce memory safety because <code>mem::forget</code> and memory leaks (see <code>Rc</code> cycles)
+are safe in Rust. (Refer to <a href="https://doc.rust-lang.org/std/mem/fn.forget.html#safety"><code>mem::forget</code> safety</a>.)</p>
+<p>We can fix this particular problem by changing the lifetime of the buffer from
+<code>'a</code> to <code>'static</code> in both APIs.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact(&amp;mut self, buffer: &amp;'static mut [u8]) -&gt; Transfer&lt;&amp;'static mut [u8]&gt; {
+        // .. same as before ..
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all(mut self, buffer: &amp;'static [u8]) -&gt; Transfer&lt;&amp;'static [u8]&gt; {
+        // .. same as before ..
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If we try to replicate the previous problem we note that <code>mem::forget</code> no longer
+causes problems.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[allow(dead_code)]
+fn sound(mut serial: Serial1, buf: &amp;'static mut [u8; 16]) {
+    // NOTE `buf` is moved into `foo`
+    foo(&amp;mut serial, buf);
+    bar();
+}
+
+#[inline(never)]
+fn foo(serial: &amp;mut Serial1, buf: &amp;'static mut [u8]) {
+    // start a DMA transfer and forget the returned `Transfer` value
+    mem::forget(serial.read_exact(buf));
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As before, the DMA transfer continues after <code>mem::forget</code>-ing the <code>Transfer</code>
+value. This time that's not an issue because <code>buf</code> is statically allocated
+(e.g. <code>static mut</code> variable) and not on the stack.</p>
+<h2 id="overlapping-use"><a class="header" href="#overlapping-use">Overlapping use</a></h2>
+<p>Our API doesn't prevent the user from using the <code>Serial</code> interface while the DMA
+transfer is in progress. This could lead the transfer to fail or data to be
+lost.</p>
+<p>There are several ways to prevent overlapping use. One way is to have <code>Transfer</code>
+take ownership of <code>Serial1</code> and return it back when <code>wait</code> is called.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    buffer: B,
+    // NOTE: added
+    serial: Serial1,
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Blocks until the transfer is done and returns the buffer
+    // NOTE: the return value has changed
+    pub fn wait(self) -&gt; (B, Serial1) {
+        // Busy wait until the transfer is done
+        while !self.is_done() {}
+
+        (self.buffer, self.serial)
+    }
+
+    // ..
+}
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    // NOTE we now take `self` by value
+    pub fn read_exact(mut self, buffer: &amp;'static mut [u8]) -&gt; Transfer&lt;&amp;'static mut [u8]&gt; {
+        // .. same as before ..
+
+        Transfer {
+            buffer,
+            // NOTE: added
+            serial: self,
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    // NOTE we now take `self` by value
+    pub fn write_all(mut self, buffer: &amp;'static [u8]) -&gt; Transfer&lt;&amp;'static [u8]&gt; {
+        // .. same as before ..
+
+        Transfer {
+            buffer,
+            // NOTE: added
+            serial: self,
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The move semantics statically prevent access to <code>Serial1</code> while the transfer is
+in progress.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn read(serial: Serial1, buf: &amp;'static mut [u8; 16]) {
+    let t = serial.read_exact(buf);
+
+    // let byte = serial.read(); //~ ERROR: `serial` has been moved
+
+    // .. do stuff ..
+
+    let (serial, buf) = t.wait();
+
+    // .. do more stuff ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There are other ways to prevent overlapping use. For example, a (<code>Cell</code>) flag
+that indicates whether a DMA transfer is in progress could be added to
+<code>Serial1</code>. When the flag is set <code>read</code>, <code>write</code>, <code>read_exact</code> and <code>write_all</code>
+would all return an error (e.g. <code>Error::InUse</code>) at runtime. The flag would be
+set when <code>write_all</code> / <code>read_exact</code> is used and cleared in <code>Transfer.wait</code>.</p>
+<h2 id="compiler-misoptimizations"><a class="header" href="#compiler-misoptimizations">Compiler (mis)optimizations</a></h2>
+<p>The compiler is free to re-order and merge non-volatile memory operations to
+better optimize a program. With our current API, this freedom can lead to
+undefined behavior. Consider the following example:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reorder(serial: Serial1, buf: &amp;'static mut [u8]) {
+    // zero the buffer (for no particular reason)
+    buf.iter_mut().for_each(|byte| *byte = 0);
+
+    let t = serial.read_exact(buf);
+
+    // ... do other stuff ..
+
+    let (buf, serial) = t.wait();
+
+    buf.reverse();
+
+    // .. do stuff with `buf` ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here the compiler is free to move <code>buf.reverse()</code> before <code>t.wait()</code>, which would
+result in a data race: both the processor and the DMA would end up modifying
+<code>buf</code> at the same time. Similarly the compiler can move the zeroing operation to
+after <code>read_exact</code>, which would also result in a data race.</p>
+<p>To prevent these problematic reorderings we can use a <a href="https://doc.rust-lang.org/core/sync/atomic/fn.compiler_fence.html"><code>compiler_fence</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact(mut self, buffer: &amp;'static mut [u8]) -&gt; Transfer&lt;&amp;'static mut [u8]&gt; {
+        self.dma.set_source_address(USART1_RX, false);
+        self.dma
+            .set_destination_address(buffer.as_mut_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        // NOTE: added
+        atomic::compiler_fence(Ordering::Release);
+
+        // NOTE: this is a volatile *write*
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all(mut self, buffer: &amp;'static [u8]) -&gt; Transfer&lt;&amp;'static [u8]&gt; {
+        self.dma.set_destination_address(USART1_TX, false);
+        self.dma.set_source_address(buffer.as_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        // NOTE: added
+        atomic::compiler_fence(Ordering::Release);
+
+        // NOTE: this is a volatile *write*
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Blocks until the transfer is done and returns the buffer
+    pub fn wait(self) -&gt; (B, Serial1) {
+        // NOTE: this is a volatile *read*
+        while !self.is_done() {}
+
+        // NOTE: added
+        atomic::compiler_fence(Ordering::Acquire);
+
+        (self.buffer, self.serial)
+    }
+
+    // ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We use <code>Ordering::Release</code> in <code>read_exact</code> and <code>write_all</code> to prevent all
+preceding memory operations from being moved <em>after</em> <code>self.dma.start()</code>, which
+performs a volatile write.</p>
+<p>Likewise, we use <code>Ordering::Acquire</code> in <code>Transfer.wait</code> to prevent all
+subsequent memory operations from being moved <em>before</em> <code>self.is_done()</code>, which
+performs a volatile read.</p>
+<p>To better visualize the effect of the fences here's a slightly tweaked version
+of the example from the previous section. We have added the fences and their
+orderings in the comments.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reorder(serial: Serial1, buf: &amp;'static mut [u8], x: &amp;mut u32) {
+    // zero the buffer (for no particular reason)
+    buf.iter_mut().for_each(|byte| *byte = 0);
+
+    *x += 1;
+
+    let t = serial.read_exact(buf); // compiler_fence(Ordering::Release) ▲
+
+    // NOTE: the processor can't access `buf` between the fences
+    // ... do other stuff ..
+    *x += 2;
+
+    let (buf, serial) = t.wait(); // compiler_fence(Ordering::Acquire) ▼
+
+    *x += 3;
+
+    buf.reverse();
+
+    // .. do stuff with `buf` ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The zeroing operation <em>cannot</em> be moved <em>after</em> <code>read_exact</code> due to the
+<code>Release</code> fence. Similarly, the <code>reverse</code> operation <em>cannot</em> be moved <em>before</em>
+<code>wait</code> due to the <code>Acquire</code> fence. The memory operations <em>between</em> both fences
+<em>can</em> be freely reordered across the fences but none of those operations
+involves <code>buf</code> so such reorderings do <em>not</em> result in undefined behavior.</p>
+<p>Note that <code>compiler_fence</code> is a bit stronger than what's required. For example,
+the fences will prevent the operations on <code>x</code> from being merged even though we
+know that <code>buf</code> doesn't overlap with <code>x</code> (due to Rust aliasing rules). However,
+there exists no intrinsic that's more fine grained than <code>compiler_fence</code>.</p>
+<h3 id="dont-we-need-a-memory-barrier"><a class="header" href="#dont-we-need-a-memory-barrier">Don't we need a memory barrier?</a></h3>
+<p>That depends on the target architecture. In the case of Cortex M0 to M4F cores,
+<a href="https://documentation-service.arm.com/static/5efefb97dbdee951c1cd5aaf">AN321</a> says:</p>
+<blockquote>
+<p>3.2 Typical usages</p>
+<p>(..)</p>
+<p>The use of <code>DMB</code> is rarely needed in Cortex-M processors because they do not
+reorder memory transactions. However, it is needed if the software is to be
+reused on other ARM processors, especially multi-master systems. For example:</p>
+<ul>
+<li>DMA controller configuration. A barrier is required between a CPU memory
+access and a DMA operation.</li>
+</ul>
+<p>(..)</p>
+<p>4.18 Multi-master systems</p>
+<p>(..)</p>
+<p>Omitting the <code>DMB</code> or <code>DSB</code> instruction in the examples in Figure 41 on page
+47 and Figure 42 would not cause any error because the Cortex-M processors:</p>
+<ul>
+<li>do not re-order memory transfers</li>
+<li>do not permit two write transfers to be overlapped.</li>
+</ul>
+</blockquote>
+<p>Where Figure 41 shows a <code>DMB</code> (memory barrier) instruction being used before
+starting a DMA transaction.</p>
+<p>In the case of Cortex-M7 cores you'll need memory barriers (<code>DMB</code>/<code>DSB</code>) if you
+are using the data cache (DCache), unless you manually invalidate the buffer
+used by the DMA. Even with the data cache disabled, memory barriers might still
+be required to avoid reordering in the store buffer.</p>
+<p>If your target is a multi-core system then it's very likely that you'll need
+memory barriers.</p>
+<p>If you do need the memory barrier then you need to use <a href="https://doc.rust-lang.org/core/sync/atomic/fn.fence.html"><code>atomic::fence</code></a> instead
+of <code>compiler_fence</code>. That should generate a <code>DMB</code> instruction on Cortex-M
+devices.</p>
+<h2 id="dont-we-need-atomics"><a class="header" href="#dont-we-need-atomics">Don't we need atomics?</a></h2>
+<p>The documentation on fences states that they only work in combination with atomics:</p>
+<blockquote>
+<p>A fence ‘A’ which has (at least) Release ordering semantics, synchronizes with
+a fence ‘B’ with (at least) Acquire semantics, if and only if there exist
+operations X and Y, both operating on some atomic object ‘m’ such that A is
+sequenced before X, Y is sequenced before B and Y observes the change to m.</p>
+</blockquote>
+<p>The same is true for <code>compiler_fence</code>:</p>
+<blockquote>
+<p>Note that just like fence, synchronization still requires atomic operations
+to be used in both threads – it is not possible to perform synchronization
+entirely with fences and non-atomic operations.</p>
+</blockquote>
+<p>So how does this work when not talking to another thread, but to
+some hardware like the DMA engine? The answer is that in the current
+implementation, volatiles happen to work just like relaxed atomic
+operations. There's work going on to actually guarantee this behavior
+for future versions of Rust.</p>
+<h2 id="generic-buffer"><a class="header" href="#generic-buffer">Generic buffer</a></h2>
+<p>Our API is more restrictive that it needs to be. For example, the following
+program won't be accepted even though it's valid.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reuse(serial: Serial1, msg: &amp;'static mut [u8]) {
+    // send a message
+    let t1 = serial.write_all(msg);
+
+    // ..
+
+    let (msg, serial) = t1.wait(); // `msg` is now `&amp;'static [u8]`
+
+    msg.reverse();
+
+    // now send it in reverse
+    let t2 = serial.write_all(msg);
+
+    // ..
+
+    let (buf, serial) = t2.wait();
+
+    // ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>To accept such program we can make the buffer argument generic.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// as-slice = "0.1.0"
+use as_slice::{AsMutSlice, AsSlice};
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: B) -&gt; Transfer&lt;B&gt;
+    where
+        B: AsMutSlice&lt;Element = u8&gt;,
+    {
+        // NOTE: added
+        let slice = buffer.as_mut_slice();
+        let (ptr, len) = (slice.as_mut_ptr(), slice.len());
+
+        self.dma.set_source_address(USART1_RX, false);
+
+        // NOTE: tweaked
+        self.dma.set_destination_address(ptr as usize, true);
+        self.dma.set_transfer_length(len);
+
+        atomic::compiler_fence(Ordering::Release);
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    fn write_all&lt;B&gt;(mut self, buffer: B) -&gt; Transfer&lt;B&gt;
+    where
+        B: AsSlice&lt;Element = u8&gt;,
+    {
+        // NOTE: added
+        let slice = buffer.as_slice();
+        let (ptr, len) = (slice.as_ptr(), slice.len());
+
+        self.dma.set_destination_address(USART1_TX, false);
+
+        // NOTE: tweaked
+        self.dma.set_source_address(ptr as usize, true);
+        self.dma.set_transfer_length(len);
+
+        atomic::compiler_fence(Ordering::Release);
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+}
+
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p><strong>NOTE:</strong> <code>AsRef&lt;[u8]&gt;</code> (<code>AsMut&lt;[u8]&gt;</code>) could have been used instead of
+<code>AsSlice&lt;Element = u8&gt;</code> (<code>AsMutSlice&lt;Element = u8</code>).</p>
+</blockquote>
+<p>Now the <code>reuse</code> program will be accepted.</p>
+<h2 id="immovable-buffers"><a class="header" href="#immovable-buffers">Immovable buffers</a></h2>
+<p>With this modification the API will also accept arrays by value (e.g. <code>[u8; 16]</code>). However, using arrays can result in pointer invalidation. Consider the
+following program.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn invalidate(serial: Serial1) {
+    let t = start(serial);
+
+    bar();
+
+    let (buf, serial) = t.wait();
+}
+
+#[inline(never)]
+fn start(serial: Serial1) -&gt; Transfer&lt;[u8; 16]&gt; {
+    // array allocated in this frame
+    let buffer = [0; 16];
+
+    serial.read_exact(buffer)
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The <code>read_exact</code> operation will use the address of the <code>buffer</code> local to the
+<code>start</code> function. That local <code>buffer</code> will be freed when <code>start</code> returns and the
+pointer used in <code>read_exact</code> will become invalidated. You'll end up with a
+situation similar to the <a href="#dealing-with-memforget"><code>unsound</code></a> example.</p>
+<p>To avoid this problem we require that the buffer used with our API retains its
+memory location even when it's moved. The <a href="https://doc.rust-lang.org/nightly/std/pin/index.html"><code>Pin</code></a> newtype provides such a
+guarantee. We can update our API to required that all buffers are "pinned"
+first.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    // NOTE: changed
+    buffer: Pin&lt;B&gt;,
+    serial: Serial1,
+}
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: bounds changed
+        B: DerefMut,
+        B::Target: AsMutSlice&lt;Element = u8&gt; + Unpin,
+    {
+        // .. same as before ..
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;B&gt;(mut self, buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: bounds changed
+        B: Deref,
+        B::Target: AsSlice&lt;Element = u8&gt;,
+    {
+        // .. same as before ..
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p><strong>NOTE:</strong> We could have used the <a href="https://crates.io/crates/stable_deref_trait"><code>StableDeref</code></a> trait instead of the <code>Pin</code>
+newtype but opted for <code>Pin</code> since it's provided in the standard library.</p>
+</blockquote>
+<p>With this new API we can use <code>&amp;'static mut</code> references, <code>Box</code>-ed slices, <code>Rc</code>-ed
+slices, etc.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn static_mut(serial: Serial1, buf: &amp;'static mut [u8]) {
+    let buf = Pin::new(buf);
+
+    let t = serial.read_exact(buf);
+
+    // ..
+
+    let (buf, serial) = t.wait();
+
+    // ..
+}
+
+fn boxed(serial: Serial1, buf: Box&lt;[u8]&gt;) {
+    let buf = Pin::new(buf);
+
+    let t = serial.read_exact(buf);
+
+    // ..
+
+    let (buf, serial) = t.wait();
+
+    // ..
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="static-bound"><a class="header" href="#static-bound"><code>'static</code> bound</a></h2>
+<p>Does pinning let us safely use stack allocated arrays? The answer is <em>no</em>.
+Consider the following example.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn unsound(serial: Serial1) {
+    start(serial);
+
+    bar();
+}
+
+// pin-utils = "0.1.0-alpha.4"
+use pin_utils::pin_mut;
+
+#[inline(never)]
+fn start(serial: Serial1) {
+    let buffer = [0; 16];
+
+    // pin the `buffer` to this stack frame
+    // `buffer` now has type `Pin&lt;&amp;mut [u8; 16]&gt;`
+    pin_mut!(buffer);
+
+    mem::forget(serial.read_exact(buffer));
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As seen many times before, the above program runs into undefined behavior due to
+stack frame corruption.</p>
+<p>The API is unsound for buffers of type <code>Pin&lt;&amp;'a mut [u8]&gt;</code> where <code>'a</code> is <em>not</em>
+<code>'static</code>. To prevent the problem we have to add a <code>'static</code> bound in some
+places.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: added 'static bound
+        B: DerefMut + 'static,
+        B::Target: AsMutSlice&lt;Element = u8&gt; + Unpin,
+    {
+        // .. same as before ..
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;B&gt;(mut self, buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: added 'static bound
+        B: Deref + 'static,
+        B::Target: AsSlice&lt;Element = u8&gt;,
+    {
+        // .. same as before ..
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Now the problematic program will be rejected.</p>
+<h2 id="destructors"><a class="header" href="#destructors">Destructors</a></h2>
+<p>Now that the API accepts <code>Box</code>-es and other types that have destructors we need
+to decide what to do when <code>Transfer</code> is early-dropped.</p>
+<p>Normally, <code>Transfer</code> values are consumed using the <code>wait</code> method but it's also
+possible to, implicitly or explicitly, <code>drop</code> the value before the transfer is
+over. For example, dropping a <code>Transfer&lt;Box&lt;[u8]&gt;&gt;</code> value will cause the buffer
+to be deallocated. This can result in undefined behavior if the transfer is
+still in progress as the DMA would end up writing to deallocated memory.</p>
+<p>In such a scenario one option is to make <code>Transfer.drop</code> stop the DMA transfer.
+The other option is to make <code>Transfer.drop</code> wait for the transfer to finish.
+We'll pick the former option as it's cheaper.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    // NOTE: always `Some` variant
+    inner: Option&lt;Inner&lt;B&gt;&gt;,
+}
+
+// NOTE: previously named `Transfer&lt;B&gt;`
+struct Inner&lt;B&gt; {
+    buffer: Pin&lt;B&gt;,
+    serial: Serial1,
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Blocks until the transfer is done and returns the buffer
+    pub fn wait(mut self) -&gt; (Pin&lt;B&gt;, Serial1) {
+        while !self.is_done() {}
+
+        atomic::compiler_fence(Ordering::Acquire);
+
+        let inner = self
+            .inner
+            .take()
+            .unwrap_or_else(|| unsafe { hint::unreachable_unchecked() });
+        (inner.buffer, inner.serial)
+    }
+}
+
+impl&lt;B&gt; Drop for Transfer&lt;B&gt; {
+    fn drop(&amp;mut self) {
+        if let Some(inner) = self.inner.as_mut() {
+            // NOTE: this is a volatile write
+            inner.serial.dma.stop();
+
+            // we need a read here to make the Acquire fence effective
+            // we do *not* need this if `dma.stop` does a RMW operation
+            unsafe {
+                ptr::read_volatile(&amp;0);
+            }
+
+            // we need a fence here for the same reason we need one in `Transfer.wait`
+            atomic::compiler_fence(Ordering::Acquire);
+        }
+    }
+}
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        B: DerefMut + 'static,
+        B::Target: AsMutSlice&lt;Element = u8&gt; + Unpin,
+    {
+        // .. same as before ..
+
+        Transfer {
+            inner: Some(Inner {
+                buffer,
+                serial: self,
+            }),
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;B&gt;(mut self, buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        B: Deref + 'static,
+        B::Target: AsSlice&lt;Element = u8&gt;,
+    {
+        // .. same as before ..
+
+        Transfer {
+            inner: Some(Inner {
+                buffer,
+                serial: self,
+            }),
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Now the DMA transfer will be stopped before the buffer is deallocated.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reuse(serial: Serial1) {
+    let buf = Pin::new(Box::new([0; 16]));
+
+    let t = serial.read_exact(buf); // compiler_fence(Ordering::Release) ▲
+
+    // ..
+
+    // this stops the DMA transfer and frees memory
+    mem::drop(t); // compiler_fence(Ordering::Acquire) ▼
+
+    // this likely reuses the previous memory allocation
+    let mut buf = Box::new([0; 16]);
+
+    // .. do stuff with `buf` ..
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>To sum it up, we need to consider all the following points to achieve
+memory-safe DMA transfers:</p>
+<ul>
+<li>
+<p>Use immovable buffers plus indirection: <code>Pin&lt;B&gt;</code>. Alternatively, you can use
+the <code>StableDeref</code> trait.</p>
+</li>
+<li>
+<p>The ownership of the buffer must be passed to the DMA : <code>B: 'static</code>.</p>
+</li>
+<li>
+<p>Do <em>not</em> rely on destructors running for memory safety. Consider what happens
+if <code>mem::forget</code> is used with your API.</p>
+</li>
+<li>
+<p><em>Do</em> add a custom destructor that stops the DMA transfer, or waits for it to
+finish. Consider what happens if <code>mem::drop</code> is used with your API.</p>
+</li>
+</ul>
+<hr />
+<p>This text leaves out several details required to build a production-grade DMA
+abstraction, like configuring the DMA channels (e.g. streams, circular vs
+one-shot mode, etc.), alignment of buffers, error handling, how to make the
+abstraction device-agnostic, etc. All those aspects are left as an exercise for
+the reader / community (<code>:P</code>).</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="singleton.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="compiler-support.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="singleton.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="compiler-support.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
