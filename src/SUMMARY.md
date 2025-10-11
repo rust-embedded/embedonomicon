@@ -4,6 +4,7 @@
 - [The smallest `#![no_std]` program](./smallest-no-std.md)
 - [Memory layout](./memory-layout.md)
 - [A `main` interface](./main.md)
+  - [Why don't we initialize `.data` and `.bss` using Rust](./sections-in-rust.md)
 - [Exception handling](./exceptions.md)
 - [Assembly on stable](./asm.md)
 - [Logging with symbols](./logging.md)
