@@ -92,6 +92,12 @@ main() {
     edition_check
     popd
 
+    pushd app-unsound
+    cargo build
+    qemu_check target/thumbv7m-none-eabi/debug/app
+    edition_check
+    popd
+
     popd
 
 

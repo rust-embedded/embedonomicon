@@ -1,34 +1,59 @@
 #![no_std]
 
 use core::panic::PanicInfo;
-use core::ptr;
 
-#[unsafe(no_mangle)]
-#[allow(static_mut_refs)]
-pub unsafe extern "C" fn Reset() -> ! {
-    // NEW!
-    // Initialize RAM
-    unsafe extern "C" {
-        static mut _sbss: u8;
-        static mut _ebss: u8;
+use core::arch::global_asm;
 
-        static mut _sdata: u8;
-        static mut _edata: u8;
-        static _sidata: u8;
-    }
+global_asm!(
+    ".text
 
-    let count = unsafe { &_ebss as *const u8 as usize - &_sbss as *const u8 as usize };
-    unsafe { ptr::write_bytes(&mut _sbss as *mut u8, 0, count) };
+     .syntax unified
+     .global _sbss
+     .global _ebss
 
-    let count = unsafe { &_edata as *const u8 as usize - &_sdata as *const u8 as usize };
-    unsafe { ptr::copy_nonoverlapping(&_sidata as *const u8, &mut _sdata as *mut u8, count) };
+     .global _sdata
+     .global _edata
+     .global _sidata
 
-    // Call user entry point
-    unsafe extern "Rust" {
-        safe fn main() -> !;
-    }
+     .global main
+     .global Reset
 
-    main()
+     .type Reset,%function
+     .thumb_func
+     Reset:
+
+     _init_bss:
+         movs r2, #0
+         ldr r0, =_sbss
+         ldr r1, =_ebss
+
+     1:
+         cmp r1, r0
+         beq _init_data
+         strb r2, [r0]
+         add r0, #1
+         b 1b
+
+     _init_data:
+         ldr r0, =_sdata
+         ldr r1, =_edata
+         ldr r2, =_sidata
+
+     1:
+         cmp r0, r1
+         beq _main_trampoline
+         ldrb r3, [r2]
+         strb r3, [r0]
+         add r0, #1
+         add r2, #1
+         b 1b
+     _main_trampoline:
+         ldr r0, =main
+         bx r0"
+);
+
+unsafe extern "C" {
+    pub safe fn Reset() -> !;
 }
 
 // The reset vector, a pointer into the reset handler
