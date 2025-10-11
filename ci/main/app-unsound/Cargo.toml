@@ -1,0 +1,7 @@
+[package]
+edition = "2024"
+name = "app"
+version = "0.1.0"
+
+[dependencies]
+rt = { path = "../rt-unsound" }
