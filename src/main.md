@@ -192,7 +192,7 @@ Let's go into the details of these changes:
 ```
 
 We associate symbols to the start and end addresses of the `.bss` and `.data` sections, which we'll
-later use from Rust code.
+later use to initialize them.
 
 ``` text
 {{#include ../ci/main/rt2/link.x:43}}
@@ -210,18 +210,24 @@ memory (Flash); the LMA is where in Flash those initial values are stored.
 
 Finally, we associate a symbol to the LMA of `.data`.
 
-On the Rust side, we zero the `.bss` section and initialize the `.data` section. We can reference
-the symbols we created in the linker script from the Rust code. The *addresses*[^1] of these symbols are
+Using our initialization code, we zero the `.bss` section and initialize the `.data` section. We can reference
+the symbols we created in the linker script from the code. The *addresses*[^1] of these symbols are
 the boundaries of the `.bss` and `.data` sections.
 
-The updated reset handler is shown below:
+We could write the initialization `.bss` and `.data` section code in pure Rust code. In fact, earlier 
+versions of this book did so. However, several soundness questions have been raised over time,
+and it is no longer considered good practice to initialize them in Rust code. See the 
+[Why don't we initialize .data and .bss using Rust](./sections-in-rust.md) section of the book for more details.
+We will write the initialization code using the `global_asm!` macro to define our reset handler.
+
+The updated reset handler, now written in `Thumb-2` assembly, is shown below:
 
 ``` console
-$ head -n33 ../rt/src/lib.rs
+$ head -n53 ../rt/src/lib.rs
 ```
 
 ``` rust
-{{#include ../ci/main/rt2/src/lib.rs:1:32}}
+{{#include ../ci/main/rt2/src/lib.rs:1:53}}
 ```
 
 Now end users can directly and indirectly make use of `static` variables without running into
