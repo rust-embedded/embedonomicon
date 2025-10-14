@@ -1,0 +1,538 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Assembly on stable - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="assembly-on-stable"><a class="header" href="#assembly-on-stable">Assembly on stable</a></h1>
+<blockquote>
+<p>Note: Since Rust 1.59, both <em>inline</em> assembly (<code>asm!</code>) and <em>free form</em> assembly
+(<code>global_asm!</code>) become stable. But since it will take some time for the
+existing crates to catchup the change, and since it's good for us to know the
+other ways in history we used to deal with assembly, we will keep this chapter
+here.</p>
+</blockquote>
+<p>So far we have managed to boot the device and handle interrupts without a single
+line of assembly. That's quite a feat! But depending on the architecture you are
+targeting you may need some assembly to get to this point. There are also some
+operations, for example context switching, that require assembly.</p>
+<p>Both <em>inline</em> assembly (<code>asm!</code>) and <em>free form</em> assembly (<code>global_asm!</code>) were
+unstable before Rust 1.59. Normally, you will want to use <code>global_asm!</code> and
+<code>asm!</code> in your crates. However, this chapter describes an alternative approach
+you may also use.</p>
+<p>To motivate this section we'll tweak the <code>HardFault</code> handler to provide
+information about the stack frame that generated the exception.</p>
+<p>Here's what we want to do:</p>
+<p>Instead of letting the user directly put their <code>HardFault</code> handler in the vector
+table we'll make the <code>rt</code> crate put a trampoline to the user-defined <code>HardFault</code>
+handler in the vector table.</p>
+<pre><code class="language-console">$ tail -n36 ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe extern "C" {
+    fn NMI();
+    fn HardFaultTrampoline(); // &lt;- CHANGED!
+    fn MemManage();
+    fn BusFault();
+    fn UsageFault();
+    fn SVCall();
+    fn PendSV();
+    fn SysTick();
+}
+
+#[unsafe(link_section = ".vector_table.exceptions")]
+#[unsafe(no_mangle)]
+pub static EXCEPTIONS: [Vector; 14] = [
+    Vector { handler: NMI },
+    Vector { handler: HardFaultTrampoline }, // &lt;- CHANGED!
+    Vector { handler: MemManage },
+    Vector { handler: BusFault },
+    Vector { handler: UsageFault },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: SVCall },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: PendSV },
+    Vector { handler: SysTick },
+];
+
+#[unsafe(no_mangle)]
+pub extern "C" fn DefaultExceptionHandler() {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This trampoline will read the stack pointer and then call the user <code>HardFault</code>
+handler. The trampoline will have to be written in assembly:</p>
+<pre><code class="language-armasm">  mrs r0, MSP
+  b HardFault
+</code></pre>
+<p>Due to how the ARM ABI works this sets the Main Stack Pointer (MSP) as the first
+argument of the <code>HardFault</code> function / routine. This MSP value also happens to
+be a pointer to the registers pushed to the stack by the exception. With these
+changes the user <code>HardFault</code> handler must now have signature
+<code>fn(&amp;StackedRegisters) -&gt; !</code>.</p>
+<h2 id="s-files"><a class="header" href="#s-files"><code>.s</code> files</a></h2>
+<p>One approach to stable assembly is to write the assembly in an external file:</p>
+<pre><code class="language-console">$ cat ../rt/asm.s
+</code></pre>
+<pre><code class="language-armasm">  .section .text.HardFaultTrampoline
+  .global HardFaultTrampoline
+  .thumb_func
+HardFaultTrampoline:
+  mrs r0, MSP
+  b HardFault
+</code></pre>
+<p>And use the <code>cc</code> crate in the build script of the <code>rt</code> crate to assemble that
+file into an object file (<code>.o</code>) and then into an archive (<code>.a</code>).</p>
+<pre><code class="language-console">$ cat ../rt/build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{env, error::Error, fs::File, io::Write, path::PathBuf};
+
+use cc::Build;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // build directory for this crate
+    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+
+    // extend the library search path
+    println!("cargo:rustc-link-search={}", out_dir.display());
+
+    // put `link.x` in the build directory
+    File::create(out_dir.join("link.x"))?.write_all(include_bytes!("link.x"))?;
+
+    // assemble the `asm.s` file
+    Build::new().file("asm.s").compile("asm"); // &lt;- NEW!
+
+    // rebuild if `asm.s` changed
+    println!("cargo:rerun-if-changed=asm.s"); // &lt;- NEW!
+
+    Ok(())
+}</code></pre></pre>
+<pre><code class="language-console">$ tail -n2 ../rt/Cargo.toml
+</code></pre>
+<pre><code class="language-toml">[build-dependencies]
+cc = "1.0.25"
+</code></pre>
+<p>And that's it!</p>
+<p>We can confirm that the vector table contains a pointer to <code>HardFaultTrampoline</code>
+by writing a very simple program.</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    loop {}
+}
+
+#[allow(non_snake_case)]
+#[unsafe(no_mangle)]
+pub fn HardFault(_ef: *const u32) -&gt; ! {
+    loop {}
+}</code></pre></pre>
+<p>Here's the disassembly. Look at the address of <code>HardFaultTrampoline</code>.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00000040 &lt;HardFault&gt;:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	b	0x44 &lt;HardFault+0x4&gt;    @ imm = #-0x4
+
+00000046 &lt;main&gt;:
+      46:      	push	{r7, lr}
+      48:      	mov	r7, sp
+      4a:      	b	0x4a &lt;main+0x4&gt;         @ imm = #-0x4
+
+0000004c &lt;Reset&gt;:
+      4c:      	push	{r7, lr}
+      4e:      	mov	r7, sp
+      50:      	bl	0x46 &lt;main&gt;             @ imm = #-0xe
+
+00000054 &lt;UsageFault&gt;:
+      54:      	push	{r7, lr}
+      56:      	mov	r7, sp
+      58:      	b	0x58 &lt;UsageFault+0x4&gt;   @ imm = #-0x4
+
+0000005a &lt;HardFaultTrampoline&gt;:
+      5a:      	mrs	r0, msp
+      5e:      	b	0x40 &lt;HardFault&gt;        @ imm = #-0x22
+</code></pre>
+<blockquote>
+<p><strong>NOTE:</strong> To make this disassembly smaller I commented out the initialization
+of RAM.</p>
+</blockquote>
+<p>Now look at the vector table. The 4th entry should be the address of
+<code>HardFaultTrampoline</code> plus one.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -s -j .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 4d000000 55000000 5b000000  ... M...U...[...
+ 0010 55000000 55000000 55000000 00000000  U...U...U.......
+ 0020 00000000 00000000 00000000 55000000  ............U...
+ 0030 00000000 00000000 55000000 55000000  ........U...U...
+</code></pre>
+<h2 id="o--a-files"><a class="header" href="#o--a-files"><code>.o</code> / <code>.a</code> files</a></h2>
+<p>The downside of using the <code>cc</code> crate is that it requires some assembler program
+on the build machine. For example when targeting ARM Cortex-M the <code>cc</code> crate
+uses <code>arm-none-eabi-gcc</code> as the assembler.</p>
+<p>Instead of assembling the file on the build machine we can ship a pre-assembled
+file with the <code>rt</code> crate. That way no assembler program is required on the build
+machine. However, you would still need an assembler on the machine that packages
+and publishes the crate.</p>
+<p>There's not much difference between an assembly (<code>.s</code>) file and its <em>compiled</em>
+version: the object (<code>.o</code>) file. The assembler doesn't do any optimization; it
+simply chooses the right object file format for the target architecture.</p>
+<p>Cargo provides support for bundling archives (<code>.a</code>) with crates. We can package
+object files into an archive using the <code>ar</code> command and then bundle the archive
+with the crate. In fact, this what the <code>cc</code> crate does; you can see the commands
+it invoked by searching for a file named <code>output</code> in the <code>target</code> directory.</p>
+<pre><code class="language-console">$ grep running $(find target -name output)
+</code></pre>
+<pre><code class="language-text">running: "arm-none-eabi-gcc" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-g" "-fno-omit-frame-pointer" "-mthumb" "-march=armv7-m" "-Wall" "-Wextra" "-o" "/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out/asm.o" "-c" "asm.s"
+running: "ar" "crs" "/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out/libasm.a" "/home/japaric/rust-embedded/embedonomicon/ci/asm/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out/asm.o"
+</code></pre>
+<pre><code class="language-console">$ grep cargo $(find target -name output)
+</code></pre>
+<pre><code class="language-tetx">cargo:rustc-link-search=/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out
+cargo:rustc-link-lib=static=asm
+cargo:rustc-link-search=native=/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out
+</code></pre>
+<p>We'll do something similar to produce an archive.</p>
+<pre><code class="language-console">$ # most of flags `cc` uses have no effect when assembling so we drop them
+$ arm-none-eabi-as -march=armv7-m asm.s -o asm.o
+
+$ ar crs librt.a asm.o
+
+$ arm-none-eabi-objdump -Cd librt.a
+</code></pre>
+<pre><code class="language-text">In archive librt.a:
+
+asm.o:     file format elf32-littlearm
+
+
+Disassembly of section .text.HardFaultTrampoline:
+
+00000000 &lt;HardFaultTrampoline&gt;:
+   0:	f3ef 8008 	mrs	r0, MSP
+   4:	e7fe      	b.n	0 &lt;HardFault&gt;
+</code></pre>
+<p>Next we modify the build script to bundle this archive with the <code>rt</code> rlib.</p>
+<pre><code class="language-console">$ cat ../rt/build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{
+    env,
+    error::Error,
+    fs::{self, File},
+    io::Write,
+    path::PathBuf,
+};
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // build directory for this crate
+    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+
+    // extend the library search path
+    println!("cargo:rustc-link-search={}", out_dir.display());
+
+    // put `link.x` in the build directory
+    File::create(out_dir.join("link.x"))?.write_all(include_bytes!("link.x"))?;
+
+    // link to `librt.a`
+    fs::copy("librt.a", out_dir.join("librt.a"))?; // &lt;- NEW!
+    println!("cargo:rustc-link-lib=static=rt"); // &lt;- NEW!
+
+    // rebuild if `librt.a` changed
+    println!("cargo:rerun-if-changed=librt.a"); // &lt;- NEW!
+
+    Ok(())
+}</code></pre></pre>
+<p>Now we can test this new version against the simple program from before and
+we'll get the same output.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00000040 &lt;HardFault&gt;:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	b	0x44 &lt;HardFault+0x4&gt;    @ imm = #-0x4
+
+00000046 &lt;main&gt;:
+      46:      	push	{r7, lr}
+      48:      	mov	r7, sp
+      4a:      	b	0x4a &lt;main+0x4&gt;         @ imm = #-0x4
+
+0000004c &lt;Reset&gt;:
+      4c:      	push	{r7, lr}
+      4e:      	mov	r7, sp
+      50:      	bl	0x46 &lt;main&gt;             @ imm = #-0xe
+
+00000054 &lt;UsageFault&gt;:
+      54:      	push	{r7, lr}
+      56:      	mov	r7, sp
+      58:      	b	0x58 &lt;UsageFault+0x4&gt;   @ imm = #-0x4
+
+0000005a &lt;HardFaultTrampoline&gt;:
+      5a:      	mrs	r0, msp
+      5e:      	b	0x40 &lt;HardFault&gt;        @ imm = #-0x22
+</code></pre>
+<blockquote>
+<p><strong>NOTE</strong>: As before I have commented out the RAM initialization to make the
+disassembly smaller.</p>
+</blockquote>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -s -j .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 4d000000 55000000 5b000000  ... M...U...[...
+ 0010 55000000 55000000 55000000 00000000  U...U...U.......
+ 0020 00000000 00000000 00000000 55000000  ............U...
+ 0030 00000000 00000000 55000000 55000000  ........U...U...
+</code></pre>
+<p>The downside of shipping pre-assembled archives is that, in the worst case
+scenario, you'll need to ship one build artifact for each compilation target
+your library supports.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="exceptions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="logging.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="exceptions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="logging.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,550 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Exception handling - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="exception-handling"><a class="header" href="#exception-handling">Exception handling</a></h1>
+<p>During the "Memory layout" section, we decided to start out simple and leave out handling of
+exceptions. In this section, we'll add support for handling them; this serves as an example of
+how to achieve compile time overridable behavior in stable Rust (i.e. without relying on the
+unstable <code>#[linkage = "weak"]</code> attribute, which makes a symbol weak).</p>
+<h2 id="background-information"><a class="header" href="#background-information">Background information</a></h2>
+<p>In a nutshell, <em>exceptions</em> are a mechanism the Cortex-M and other architectures provide to let
+applications respond to asynchronous, usually external, events. The most prominent type of exception,
+that most people will know, is the classical (hardware) interrupt.</p>
+<p>The Cortex-M exception mechanism works like this:
+When the processor receives a signal or event associated to a type of exception, it suspends
+the execution of the current subroutine (by stashing the state in the call stack) and then proceeds
+to execute the corresponding exception handler, another subroutine, in a new stack frame. After
+finishing the execution of the exception handler (i.e. returning from it), the processor resumes the
+execution of the suspended subroutine.</p>
+<p>The processor uses the vector table to decide what handler to execute. Each entry in the table
+contains a pointer to a handler, and each entry corresponds to a different exception type. For
+example, the second entry is the reset handler, the third entry is the NMI (Non Maskable Interrupt)
+handler, and so on.</p>
+<p>As mentioned before, the processor expects the vector table to be at some specific location in memory,
+and each entry in it can potentially be used by the processor at runtime. Hence, the entries must always
+contain valid values. Furthermore, we want the <code>rt</code> crate to be flexible so the end user can customize the
+behavior of each exception handler. Finally, the vector table resides in read only memory, or rather in not
+easily modified memory, so the user has to register the handler statically, rather than at runtime.</p>
+<p>To satisfy all these constraints, we'll assign a <em>default</em> value to all the entries of the vector
+table in the <code>rt</code> crate, but make these values kind of <em>weak</em> to let the end user override them
+at compile time.</p>
+<h2 id="rust-side"><a class="header" href="#rust-side">Rust side</a></h2>
+<p>Let's see how all this can be implemented. For simplicity, we'll only work with the first 16 entries
+of the vector table; these entries are not device specific so they have the same function on any
+kind of Cortex-M microcontroller.</p>
+<p>The first thing we'll do is create an array of vectors (pointers to exception handlers) in the
+<code>rt</code> crate's code:</p>
+<pre><code class="language-console">$ sed -n 56,91p ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>
+<span class="boring">fn main() {
+</span>pub union Vector {
+    reserved: u32,
+    handler: unsafe extern "C" fn(),
+}
+
+unsafe extern "C" {
+    fn NMI();
+    fn HardFault();
+    fn MemManage();
+    fn BusFault();
+    fn UsageFault();
+    fn SVCall();
+    fn PendSV();
+    fn SysTick();
+}
+
+#[unsafe(link_section = ".vector_table.exceptions")]
+#[unsafe(no_mangle)]
+pub static EXCEPTIONS: [Vector; 14] = [
+    Vector { handler: NMI },
+    Vector { handler: HardFault },
+    Vector { handler: MemManage },
+    Vector { handler: BusFault },
+    Vector {
+        handler: UsageFault,
+    },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: SVCall },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: PendSV },
+    Vector { handler: SysTick },
+<span class="boring">}</span></code></pre></pre>
+<p>Some of the entries in the vector table are <em>reserved</em>; the ARM documentation states that they
+should be assigned the value <code>0</code> so we use a union to do exactly that. The entries that must point
+to a handler make use of <em>external</em> functions; this is important because it lets the end user
+<em>provide</em> the actual function definition.</p>
+<p>Next, we define a default exception handler in the Rust code. Exceptions that have not been assigned
+a handler by the end user will make use of this default handler.</p>
+<pre><code class="language-console">$ tail -n4 ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>
+<span class="boring">fn main() {
+</span>#[unsafe(no_mangle)]
+pub extern "C" fn DefaultExceptionHandler() {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="linker-script-side"><a class="header" href="#linker-script-side">Linker script side</a></h2>
+<p>On the linker script side, we place these new exception vectors right after the reset vector.</p>
+<pre><code class="language-console">$ sed -n 12,25p ../rt/link.x
+</code></pre>
+<pre><code class="language-text">EXTERN(RESET_VECTOR);
+EXTERN(EXCEPTIONS); /* &lt;- NEW */
+
+SECTIONS
+{
+  .vector_table ORIGIN(FLASH) :
+  {
+    /* First entry: initial Stack Pointer value */
+    LONG(ORIGIN(RAM) + LENGTH(RAM));
+
+    /* Second entry: reset vector */
+    KEEP(*(.vector_table.reset_vector));
+
+    /* The next 14 entries are exception vectors */
+    KEEP(*(.vector_table.exceptions)); /* &lt;- NEW */
+  } &gt; FLASH
+</code></pre>
+<p>And we use <code>PROVIDE</code> to give a default value to the handlers that we left undefined in <code>rt</code> (<code>NMI</code>
+and the others above):</p>
+<pre><code class="language-console">$ tail -n8 ../rt/link.x
+</code></pre>
+<pre><code class="language-text">PROVIDE(NMI = DefaultExceptionHandler);
+PROVIDE(HardFault = DefaultExceptionHandler);
+PROVIDE(MemManage = DefaultExceptionHandler);
+PROVIDE(BusFault = DefaultExceptionHandler);
+PROVIDE(UsageFault = DefaultExceptionHandler);
+PROVIDE(SVCall = DefaultExceptionHandler);
+PROVIDE(PendSV = DefaultExceptionHandler);
+PROVIDE(SysTick = DefaultExceptionHandler);
+</code></pre>
+<p><code>PROVIDE</code> only takes effect when the symbol to the left of the equal sign is still undefined after
+inspecting all the input object files. This is the scenario where the user didn't implement the
+handler for the respective exception.</p>
+<h2 id="testing-it"><a class="header" href="#testing-it">Testing it</a></h2>
+<p>That's it! The <code>rt</code> crate now has support for exception handlers. We can test it out with following
+application:</p>
+<blockquote>
+<p><strong>NOTE</strong>: Turns out it's hard to generate an exception in QEMU. On real
+hardware a read to an invalid memory address (i.e. outside of the Flash and
+RAM regions) would be enough but QEMU happily accepts the operation and
+returns zero. A trap instruction works on both QEMU and hardware but
+unfortunately it's not available as pure Rust code. We will use inline assembly
+to generate the trap instruction. Later chapters describe the use of assembly
+in more detail.</p>
+</blockquote>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::arch::asm;
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    // this executes the undefined instruction (UDF) and causes a HardFault exception
+    unsafe { asm!("udf #0", options(noreturn)) };
+}</code></pre></pre>
+<pre><code class="language-console">(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at ../rt/src/lib.rs:7
+7       pub unsafe extern "C" fn Reset() -&gt; ! {
+
+(gdb) b DefaultExceptionHandler
+Breakpoint 1 at 0xec: file ../rt/src/lib.rs, line 95.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, DefaultExceptionHandler ()
+    at ../rt/src/lib.rs:95
+95          loop {}
+
+(gdb) list
+90          Vector { handler: SysTick },
+91      ];
+92
+93      #[no_mangle]
+94      pub extern "C" fn DefaultExceptionHandler() {
+95          loop {}
+96      }
+</code></pre>
+<p>And for completeness, here's the disassembly of the optimized version of the program:</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00000040 &lt;main&gt;:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	udf	#0x0
+      46:      	trap
+
+00000048 &lt;Reset&gt;:
+      48:      	push	{r7, lr}
+      4a:      	mov	r7, sp
+      4c:      	movw	r1, #0x0
+      50:      	movw	r0, #0x0
+      54:      	movt	r1, #0x2000
+      58:      	movt	r0, #0x2000
+      5c:      	subs	r1, r1, r0
+      5e:      	bl	0x8a &lt;__aeabi_memclr&gt;   @ imm = #0x28
+      62:      	movw	r1, #0x0
+      66:      	movw	r0, #0x0
+      6a:      	movt	r1, #0x2000
+      6e:      	movt	r0, #0x2000
+      72:      	subs	r2, r1, r0
+      74:      	movw	r1, #0x44e
+      78:      	movt	r1, #0x0
+      7c:      	bl	0x15a &lt;__aeabi_memcpy&gt;  @ imm = #0xda
+      80:      	bl	0x40 &lt;main&gt;             @ imm = #-0x44
+
+00000084 &lt;UsageFault&gt;:
+      84:      	push	{r7, lr}
+      86:      	mov	r7, sp
+      88:      	b	0x88 &lt;UsageFault+0x4&gt;   @ imm = #-0x4
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -s -j .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 49000000 85000000 85000000  ... I...........
+ 0010 85000000 85000000 85000000 00000000  ................
+ 0020 00000000 00000000 00000000 85000000  ................
+ 0030 00000000 00000000 85000000 85000000  ................
+</code></pre>
+<p>The vector table now resembles the results of all the code snippets in this book
+so far. To summarize:</p>
+<ul>
+<li>In the <a href="https://docs.rust-embedded.org/embedonomicon/memory-layout.html#inspecting-it"><em>Inspecting it</em></a> section of the earlier memory chapter, we learned
+that:
+<ul>
+<li>The first entry in the vector table contains the initial value of the
+stack pointer.</li>
+<li>Objdump prints in <code>little endian</code> format, so the stack starts at
+<code>0x2001_0000</code>.</li>
+<li>The second entry points to address <code>0x0000_0049</code>, the Reset handler.
+<ul>
+<li>The address of the Reset handler can be seen in the disassembly above,
+being <code>0x48</code>.</li>
+<li>The first bit being set to 1 does not alter the address due to
+alignment requirements. Instead, it causes the function to be executed
+in <em>thumb mode</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Afterwards, a pattern of addresses alternating between <code>0x85</code> and <code>0x00</code> is
+visible.
+<ul>
+<li>Looking at the disassembly above, it is clear that <code>0x85</code> refers to the
+<code>UsageFault</code> (<code>0x84</code> executed in thumb mode).</li>
+<li>Cross referencing the pattern to the vector table that was set up earlier
+in this chapter (see the definition of <code>pub static EXCEPTIONS</code>) with <a href="https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table">the
+vector table layout for the Cortex-M</a>, it is clear that the address of the
+<code>UsageFault</code> is present each time a respective handler entry
+is present in the table.</li>
+<li>But we did not explicitly insert <code>UsageFault</code> in each entry. Instead, we
+aliased each handler to <code>DefaultExceptionHandler</code>. Our disassembler found
+multiple symbols at the same location, and chose one of them for the
+function name.</li>
+<li>In turn, it is also visible that the layout of the vector table data
+structure in the Rust code is aligned with all the reserved slots in the
+Cortex-M vector table. Hence, all reserved slots are correctly set to a
+value of zero.</li>
+</ul>
+</li>
+</ul>
+<h2 id="overriding-a-handler"><a class="header" href="#overriding-a-handler">Overriding a handler</a></h2>
+<p>To override an exception handler, the user has to provide a function whose symbol name exactly
+matches the name we used in <code>EXCEPTIONS</code>.</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::arch::asm;
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    unsafe { asm!("udf #0", options(noreturn)) };
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn HardFault() -&gt; ! {
+    // do something interesting here
+    loop {}
+}</code></pre></pre>
+<p>You can test it in QEMU:</p>
+<pre><code class="language-console">(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at /home/japaric/rust/embedonomicon/ci/exceptions/rt/src/lib.rs:7
+7       pub unsafe extern "C" fn Reset() -&gt; ! {
+
+(gdb) b HardFault
+Breakpoint 1 at 0x44: file src/main.rs, line 18.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, HardFault () at src/main.rs:18
+18          loop {}
+
+(gdb) list
+13      }
+14
+15      #[no_mangle]
+16      pub extern "C" fn HardFault() -&gt; ! {
+17          // do something interesting here
+18          loop {}
+19      }
+</code></pre>
+<p>The program now executes the user defined <code>HardFault</code> function instead of the
+<code>DefaultExceptionHandler</code> in the <code>rt</code> crate.</p>
+<p>Like our first attempt at a <code>main</code> interface, this first implementation has the problem of having no
+type safety. It's also easy to mistype the name of the exception, but that doesn't produce an error
+or warning. Instead the user defined handler is simply ignored. Those problems can be fixed using a
+macro like the <a href="https://github.com/japaric/cortex-m-rt/blob/v0.5.1/src/lib.rs#L792"><code>exception!</code></a> macro defined in <code>cortex-m-rt</code> v0.5.x or the
+<a href="https://github.com/rust-embedded/cortex-m-rt/blob/v0.6.3/macros/src/lib.rs#L254"><code>exception</code></a> attribute in <code>cortex-m-rt</code> v0.6.x.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="sections-in-rust.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="asm.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="sections-in-rust.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="asm.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

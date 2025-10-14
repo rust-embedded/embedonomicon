@@ -1,0 +1,4106 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The Embedonomicon</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-embedonomicon"><a class="header" href="#the-embedonomicon">The embedonomicon</a></h1>
+<p>The embedonomicon walks you through the process of creating a <code>#![no_std]</code> application from scratch
+and through the iterative process of building architecture-specific functionality for Cortex-M
+microcontrollers.</p>
+<h2 id="objectives"><a class="header" href="#objectives">Objectives</a></h2>
+<p>By reading this book you will learn</p>
+<ul>
+<li>
+<p>How to build a <code>#![no_std]</code> application. This is much more complex than building a <code>#![no_std]</code>
+library because the target system may not be running an OS (or you could be aiming to build an
+OS!) and the program could be the only process running in the target (or the first one).
+In that case, the program may need to be customized for the target system.</p>
+</li>
+<li>
+<p>Tricks to finely control the memory layout of a Rust program. You'll learn about linkers, linker
+scripts and about the Rust features that let you control a bit of the ABI of Rust programs.</p>
+</li>
+<li>
+<p>A trick to implement default functionality that can be statically overridden (no runtime cost).</p>
+</li>
+</ul>
+<h2 id="target-audience"><a class="header" href="#target-audience">Target audience</a></h2>
+<p>This book mainly targets to two audiences:</p>
+<ul>
+<li>
+<p>People that wish to bootstrap bare metal support for an architecture that the ecosystem doesn't
+yet support (e.g. Cortex-R as of Rust 1.28), or for an architecture that Rust just gained support
+for (e.g. maybe Xtensa some time in the future).</p>
+</li>
+<li>
+<p>People that are curious about the unusual implementation of <em>runtime</em> crates like <a href="https://crates.io/crates/cortex-m-rt"><code>cortex-m-rt</code></a>,
+<a href="https://crates.io/crates/msp430-rt"><code>msp430-rt</code></a> and <a href="https://crates.io/crates/riscv-rt"><code>riscv-rt</code></a>.</p>
+</li>
+</ul>
+<h2 id="translations"><a class="header" href="#translations">Translations</a></h2>
+<p>This book has been translated by generous volunteers. If you would like your
+translation listed here, please open a PR to add it.</p>
+<ul>
+<li>
+<p><a href="https://tomoyuki-nakabayashi.github.io/embedonomicon/">Japanese</a>
+(<a href="https://github.com/tomoyuki-nakabayashi/embedonomicon">repository</a>)</p>
+</li>
+<li>
+<p><a href="https://xxchang.github.io/embedonomicon/">Chinese</a>
+(<a href="https://github.com/xxchang/embedonomicon">repository</a>)</p>
+</li>
+</ul>
+<h2 id="requirements"><a class="header" href="#requirements">Requirements</a></h2>
+<p>This book is self contained. The reader doesn't need to be familiar with the
+Cortex-M architecture, nor is access to a Cortex-M microcontroller needed -- all
+the examples included in this book can be tested in QEMU. You will, however,
+need to install the following tools to run and inspect the examples in this
+book:</p>
+<ul>
+<li>
+<p>All the code in this book uses the 2024 edition. If you are not familiar with
+the 2024 features and idioms check the <a href="https://doc.rust-lang.org/edition-guide/"><code>edition guide</code></a>.</p>
+</li>
+<li>
+<p>Rust 1.89 or a newer toolchain with ARM Cortex-M compilation support.</p>
+</li>
+<li>
+<p><a href="https://github.com/japaric/cargo-binutils"><code>cargo-binutils</code></a>. v0.1.4 or newer.</p>
+</li>
+<li>
+<p><a href="https://crates.io/crates/cargo-edit"><code>cargo-edit</code></a>.</p>
+</li>
+<li>
+<p>QEMU with support for ARM emulation. The <code>qemu-system-arm</code> program must be
+installed on your computer.</p>
+</li>
+<li>
+<p>GDB with ARM support.</p>
+</li>
+</ul>
+<h3 id="example-setup"><a class="header" href="#example-setup">Example setup</a></h3>
+<p>Instructions common to all OSes</p>
+<pre><code class="language-console">$ # Rust toolchain
+$ # If you start from scratch, get rustup from https://rustup.rs/
+$ rustup default stable
+
+$ # toolchain should be newer than this one
+$ rustc -V
+rustc 1.89.0 (29483883e 2025-08-04)
+
+$ rustup target add thumbv7m-none-eabi
+
+$ # cargo-binutils
+$ cargo install cargo-binutils
+
+$ rustup component add llvm-tools
+
+</code></pre>
+<h4 id="macos"><a class="header" href="#macos">macOS</a></h4>
+<pre><code class="language-console">$ # arm-none-eabi-gdb
+$ # you may need to run `brew tap Caskroom/tap` first
+$ brew install --cask gcc-arm-embedded
+
+$ # QEMU
+$ brew install qemu
+</code></pre>
+<h4 id="ubuntu-1604"><a class="header" href="#ubuntu-1604">Ubuntu 16.04</a></h4>
+<pre><code class="language-console">$ # arm-none-eabi-gdb
+$ sudo apt install gdb-arm-none-eabi
+
+$ # QEMU
+$ sudo apt install qemu-system-arm
+</code></pre>
+<h4 id="ubuntu-1804-or-newer-or-debian"><a class="header" href="#ubuntu-1804-or-newer-or-debian">Ubuntu 18.04 (or newer) or Debian</a></h4>
+<pre><code class="language-console">$ # gdb-multiarch -- use `gdb-multiarch` when you wish to invoke gdb
+$ sudo apt install gdb-multiarch
+
+$ # QEMU
+$ sudo apt install qemu-system-arm
+</code></pre>
+<h4 id="windows"><a class="header" href="#windows">Windows</a></h4>
+<ul>
+<li>
+<p><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads">arm-none-eabi-gdb</a>.
+The GNU Arm Embedded Toolchain includes GDB.</p>
+</li>
+<li>
+<p><a href="https://www.qemu.org/download/#windows">QEMU</a></p>
+</li>
+</ul>
+<h2 id="installing-a-toolchain-bundle-from-arm-optional-step-tested-on-ubuntu-1804"><a class="header" href="#installing-a-toolchain-bundle-from-arm-optional-step-tested-on-ubuntu-1804">Installing a toolchain bundle from ARM (optional step) (tested on Ubuntu 18.04)</a></h2>
+<ul>
+<li>With the late 2018 switch from
+<a href="https://rust-embedded.github.io/blog/2018-08-2x-psa-cortex-m-breakage/">GCC's linker to LLD</a> for Cortex-M
+microcontrollers, <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads">gcc-arm-none-eabi</a> is no longer
+required.  But for those wishing to use the toolchain
+anyway, install from <a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads">here</a> and follow the steps outlined below:</li>
+</ul>
+<pre><code class="language-console">$ tar xvjf gcc-arm-none-eabi-8-2018-q4-major-linux.tar.bz2
+$ mv gcc-arm-none-eabi-&lt;version_downloaded&gt; &lt;your_desired_path&gt; # optional
+$ export PATH=${PATH}:&lt;path_to_arm_none_eabi_folder&gt;/bin # add this line to .bashrc to make persistent
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-smallest-no_std-program"><a class="header" href="#the-smallest-no_std-program">The smallest <code>#![no_std]</code> program</a></h1>
+<p>In this section we'll write the smallest <code>#![no_std]</code> program that <em>compiles</em>.</p>
+<h2 id="what-does-no_std-mean"><a class="header" href="#what-does-no_std-mean">What does <code>#![no_std]</code> mean?</a></h2>
+<p><code>#![no_std]</code> is a crate level attribute that indicates that the crate will link to the <a href="https://doc.rust-lang.org/core/"><code>core</code></a>
+crate instead of the <a href="https://doc.rust-lang.org/std/"><code>std</code></a> crate, but what does this mean for applications?</p>
+<p>The <code>std</code> crate is Rust's standard library. It contains functionality that assumes that the program
+will run on an operating system rather than <a href="https://en.wikipedia.org/wiki/Bare_machine"><em>directly on the metal</em></a>. <code>std</code> also assumes that the
+operating system is a general purpose operating system, like the ones one would find in servers and
+desktops. For this reason, <code>std</code> provides a standard API over functionality one usually finds in
+such operating systems: Threads, files, sockets, a filesystem, processes, etc.</p>
+<p>On the other hand, the <code>core</code> crate is a subset of the <code>std</code> crate that makes zero assumptions about
+the system the program will run on. As such, it provides APIs for language primitives like floats,
+strings and slices, as well as APIs that expose processor features like atomic operations and SIMD
+instructions. However it lacks APIs for anything that involves heap memory allocations and I/O.</p>
+<p>For an application, <code>std</code> does more than just providing a way to access OS abstractions. <code>std</code> also
+takes care of, among other things, setting up stack overflow protection, processing command line
+arguments and spawning the main thread before a program's <code>main</code> function is invoked. A <code>#![no_std]</code>
+application lacks all that standard runtime, so it must initialize its own runtime, if any is
+required.</p>
+<p>Because of these properties, a <code>#![no_std]</code> application can be the first and / or the only code that
+runs on a system. It can be many things that a standard Rust application can never be, for example:</p>
+<ul>
+<li>The kernel of an OS.</li>
+<li>Firmware.</li>
+<li>A bootloader.</li>
+</ul>
+<h2 id="the-code"><a class="header" href="#the-code">The code</a></h2>
+<p>With that out of the way, we can move on to the smallest <code>#![no_std]</code> program that compiles:</p>
+<pre><code class="language-console">$ cargo new --edition 2024 --bin app
+
+$ cd app
+</code></pre>
+<pre><code class="language-console">$ # modify main.rs so it has these contents
+$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_main]
+#![no_std]
+
+<span class="boring">fn main() {
+</span>use core::panic::PanicInfo;
+
+#[panic_handler]
+#[inline(never)]
+fn panic(_panic: &amp;PanicInfo&lt;'_&gt;) -&gt; ! {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This program contains some things that you won't see in standard Rust programs:</p>
+<p>The <code>#![no_std]</code> attribute which we have already extensively covered.</p>
+<p>The <code>#![no_main]</code> attribute which means that the program won't use the standard <code>main</code> function as
+its entry point. At the time of writing, Rust's <code>main</code> interface makes some assumptions about the
+environment the program executes in: For example, it assumes the existence of command line
+arguments, so in general, it's not appropriate for <code>#![no_std]</code> programs.</p>
+<p>The <code>#[panic_handler]</code> attribute. The function marked with this attribute defines the behavior of
+panics, both library level panics (<code>core::panic!</code>) and language level panics (out of bounds
+indexing).</p>
+<p>This program doesn't produce anything useful. In fact, it will produce an empty binary.</p>
+<pre><code class="language-console">$ # equivalent to `size target/thumbv7m-none-eabi/debug/app`
+$ cargo size --target thumbv7m-none-eabi --bin app
+</code></pre>
+<pre><code class="language-text">   text	   data	    bss	    dec	    hex	filename
+      0	      0	      0	      0	      0	app
+</code></pre>
+<p>Before linking, the crate contains the panicking symbol.</p>
+<pre><code class="language-console">$ cargo rustc --target thumbv7m-none-eabi -- --emit=obj
+
+$ cargo nm -- -C $(pwd)/target/thumbv7m-none-eabi/debug/deps/app-*.o | grep '[0-9]* [^N] '
+</code></pre>
+<pre><code class="language-text">00000000 T __rustc::rust_begin_unwind
+</code></pre>
+<p>However, it's our starting point. In the next section, we'll build something useful. But before
+continuing, let's set a default build target to avoid having to pass the <code>--target</code> flag to every
+Cargo invocation.</p>
+<pre><code class="language-console">$ mkdir .cargo
+
+$ # modify .cargo/config.toml so it has these contents
+$ cat .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[build]
+target = "thumbv7m-none-eabi"
+</code></pre>
+<h2 id="eh_personality"><a class="header" href="#eh_personality">eh_personality</a></h2>
+<p>If your configuration does not unconditionally abort on panic, which most targets for full operating
+systems don't (or if your <a href="./custom-target.html">custom target</a> does not contain
+<code>"panic-strategy": "abort"</code>), then you must tell Cargo to do so or add an <code>eh_personality</code> function,
+which requires a nightly compiler. <a href="https://doc.rust-lang.org/unstable-book/language-features/lang-items.html#more-about-the-language-items">Here is Rust's documentation about it</a>,
+and <a href="https://www.reddit.com/r/rust/comments/estvau/til_why_the_eh_personality_language_item_is/">here is some discussion about it</a>.</p>
+<p>In your Cargo.toml, add:</p>
+<pre><code class="language-toml">[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+</code></pre>
+<p>Alternatively, declare the <code>eh_personality</code> function. A simple implementation that does not do
+anything special when unwinding is as follows:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![feature(lang_items)]
+
+<span class="boring">fn main() {
+</span>#[lang = "eh_personality"]
+extern "C" fn eh_personality() {}
+<span class="boring">}</span></code></pre></pre>
+<p>You will receive the error <code>language item required, but not found: 'eh_personality'</code> if not
+included.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-layout"><a class="header" href="#memory-layout">Memory layout</a></h1>
+<p>The next step is to ensure the program has the right memory layout so that the target system will be
+able to execute it. In our example, we'll be working with a virtual Cortex-M3 microcontroller: the
+<a href="http://www.ti.com/product/LM3S6965">LM3S6965</a>. Our program will be the only process running on the device so it must also take care of
+initializing the device.</p>
+<h2 id="background-information"><a class="header" href="#background-information">Background information</a></h2>
+<p>Cortex-M devices require a <a href="https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table">vector table</a> to be present at the start of their <a href="https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/memory-model">code memory region</a>.
+The vector table is an array of pointers; the first two pointers are required to boot the device,
+the rest of the pointers are related to exceptions. We'll ignore them for now.</p>
+<p>Linkers decide the final memory layout of programs, but we can use <a href="https://sourceware.org/binutils/docs/ld/Scripts.html">linker scripts</a> to have some
+control over it. The control granularity that linker scripts give us over the layout
+is at the level of <em>sections</em>. A section is a collection of <em>symbols</em> laid out in contiguous memory.
+Symbols, in turn, can be data (a static variable), or instructions (a Rust function).</p>
+<p>Every symbol has a name assigned by the compiler. As of Rust 1.28 , the names that the Rust compiler
+assigns to symbols are of the form: <code>_ZN5krate6module8function17he1dfc17c86fe16daE</code>, which demangles to
+<code>krate::module::function::he1dfc17c86fe16da</code> where <code>krate::module::function</code> is the path of the
+function or variable and <code>he1dfc17c86fe16da</code> is some sort of hash. The Rust compiler will place each
+symbol into its own unique section; for example the symbol mentioned before will be placed in a
+section named <code>.text._ZN5krate6module8function17he1dfc17c86fe16daE</code>.</p>
+<p>These compiler generated symbol and section names are not guaranteed to remain constant across
+different releases of the Rust compiler. However, the language lets us control symbol names and
+section placement via these attributes:</p>
+<ul>
+<li><code>#[unsafe(export_name = "foo")]</code> sets the symbol name to <code>foo</code>.</li>
+<li><code>#[unsafe(no_mangle)]</code> means: use the function or variable name (not its full path) as its symbol name.
+<code>#[unsafe(no_mangle)] fn bar()</code> will produce a symbol named <code>bar</code>.</li>
+<li><code>#[unsafe(link_section = ".bar")]</code> places the symbol in a section named <code>.bar</code>.</li>
+</ul>
+<p>With these attributes, we can expose a stable ABI of the program and use it in the linker script.
+Each of these attributes has safety guarantees that must be upheld in your program, namely:</p>
+<ul>
+<li><code>#[unsafe(no_mangle)]</code> fixes the symbol name, regardless of the crate, module, variable or
+function name and arguments. Using this attribute, it is possible to create multiple symbols with
+the same name, leading to undefined behavior. The user must guarantee that the symbol does not collide
+with others.</li>
+<li><code>#[unsafe(export_name = "foo")]</code> also fixes the symbol name. The user must guarantee that
+the chosen symbol name (in this case <code>foo</code>) does not collide with any other symbol in the program.</li>
+<li><code>#[unsafe(link_section = ".bar")]</code> may place data and code into sections of memory not expecting them,
+such as mutable data into read-only areas, or memory regions that do not exist on the target device.</li>
+</ul>
+<h2 id="the-rust-side"><a class="header" href="#the-rust-side">The Rust side</a></h2>
+<p>As mentioned above, for Cortex-M devices, we need to populate the first two entries of the
+vector table. The first one, the initial value for the stack pointer, can be populated using
+only the linker script. The second one, the reset vector, needs to be created in Rust code
+and placed correctly using the linker script.</p>
+<p>The reset vector is a pointer into the reset handler. The reset handler is the function that the
+device will execute after a system reset, or after it powers up for the first time. The reset
+handler is always the first stack frame in the hardware call stack; returning from it is undefined
+behavior as there's no other stack frame to return to. We can enforce that the reset handler never
+returns by making it a divergent function, which is a function with signature <code>fn(/* .. */) -&gt; !</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[unsafe(no_mangle)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    let _x = 42;
+
+    // can't return so we go into an infinite loop here
+    loop {}
+}
+
+// The reset vector, a pointer into the reset handler
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
+pub static RESET_VECTOR: unsafe extern "C" fn() -&gt; ! = Reset;
+
+<span class="boring">}</span></code></pre></pre>
+<p>The hardware expects a certain format here, to which we adhere by using <code>extern "C"</code> to tell the
+compiler to lower the function using the C ABI, instead of the Rust ABI, which is unstable.</p>
+<p>To refer to the reset handler and reset vector from the linker script, we need them to have a stable
+symbol name so we use <code>#[unsafe(no_mangle)]</code>. We need fine control over the location of <code>RESET_VECTOR</code>, so we
+place it in a known section, <code>.vector_table.reset_vector</code>. The exact location of the reset handler
+itself, <code>Reset</code>, is not important. We just stick to the default compiler generated section.</p>
+<p>The linker will ignore symbols with internal linkage (also known as internal symbols) while traversing
+the list of input object files, so we need our two symbols to have external linkage. The only way to
+make a symbol external in Rust is to make its corresponding item public (<code>pub</code>) and <em>reachable</em> (no
+private module between the item and the root of the crate).</p>
+<h2 id="the-linker-script-side"><a class="header" href="#the-linker-script-side">The linker script side</a></h2>
+<p>A minimal linker script that places the vector table in the correct location is shown below. Let's
+walk through it.</p>
+<pre><code class="language-console">$ cat link.x
+</code></pre>
+<pre><code class="language-text">/* Memory layout of the LM3S6965 microcontroller */
+/* 1K = 1 KiBi = 1024 bytes */
+MEMORY
+{
+  FLASH : ORIGIN = 0x00000000, LENGTH = 256K
+  RAM : ORIGIN = 0x20000000, LENGTH = 64K
+}
+
+/* The entry point is the reset handler */
+ENTRY(Reset);
+
+EXTERN(RESET_VECTOR);
+
+SECTIONS
+{
+  .vector_table ORIGIN(FLASH) :
+  {
+    /* First entry: initial Stack Pointer value */
+    LONG(ORIGIN(RAM) + LENGTH(RAM));
+
+    /* Second entry: reset vector */
+    KEEP(*(.vector_table.reset_vector));
+  } &gt; FLASH
+
+  .text :
+  {
+    *(.text .text.*);
+  } &gt; FLASH
+
+  /DISCARD/ :
+  {
+    *(.ARM.exidx .ARM.exidx.*);
+  }
+}
+</code></pre>
+<h3 id="memory"><a class="header" href="#memory"><code>MEMORY</code></a></h3>
+<p>This section of the linker script describes the location and size of blocks of memory in the target.
+Two memory blocks are defined: <code>FLASH</code> and <code>RAM</code>; they correspond to the physical memory available
+in the target. The values used here correspond to the LM3S6965 microcontroller.</p>
+<h3 id="entry"><a class="header" href="#entry"><code>ENTRY</code></a></h3>
+<p>Here we indicate to the linker that the reset handler, whose symbol name is <code>Reset</code>, is the
+<em>entry point</em> of the program. Linkers aggressively discard unused sections. Linkers consider the
+entry point and functions called from it as <em>used</em> so they won't discard them. Without this line,
+the linker would discard the <code>Reset</code> function and all subsequent functions called from it.</p>
+<h3 id="extern"><a class="header" href="#extern"><code>EXTERN</code></a></h3>
+<p>Linkers are lazy; they will stop looking into the input object files once they have found all the
+symbols that are recursively referenced from the entry point. <code>EXTERN</code> forces the linker to look
+for <code>EXTERN</code>'s argument even after all other referenced symbols have been found. As a rule of thumb,
+if you need a symbol that's not called from the entry point to always be present in the output binary,
+you should use <code>EXTERN</code> in conjunction with <code>KEEP</code>.</p>
+<h3 id="sections"><a class="header" href="#sections"><code>SECTIONS</code></a></h3>
+<p>This part describes how sections in the input object files (also known as <em>input sections</em>) are to be arranged
+in the sections of the output object file (also known as output sections) or if they should be discarded. Here
+we define two output sections:</p>
+<pre><code class="language-text">  .vector_table ORIGIN(FLASH) : { /* .. */ } &gt; FLASH
+</code></pre>
+<p><code>.vector_table</code> contains the vector table and is located at the start of <code>FLASH</code> memory.</p>
+<pre><code class="language-text">  .text : { /* .. */ } &gt; FLASH
+</code></pre>
+<p><code>.text</code> contains the program subroutines and is located somewhere in <code>FLASH</code>. Its start
+address is not specified, but the linker will place it after the previous output section,
+<code>.vector_table</code>.</p>
+<p>The output <code>.vector_table</code> section contains:</p>
+<pre><code class="language-text">    /* First entry: initial Stack Pointer value */
+    LONG(ORIGIN(RAM) + LENGTH(RAM));
+</code></pre>
+<p>We'll place the (call) stack at the end of RAM (the stack is <em>full descending</em>; it grows towards
+smaller addresses) so the end address of RAM will be used as the initial Stack Pointer (SP) value.
+That address is computed in the linker script itself using the information we entered for the <code>RAM</code>
+memory block.</p>
+<pre><code>    /* Second entry: reset vector */
+    KEEP(*(.vector_table.reset_vector));
+</code></pre>
+<p>Next, we use <code>KEEP</code> to force the linker to insert all input sections named
+<code>.vector_table.reset_vector</code> right after the initial SP value. The only symbol located in that
+section is <code>RESET_VECTOR</code>, so this will effectively place <code>RESET_VECTOR</code> second in the vector table.</p>
+<p>The output <code>.text</code> section contains:</p>
+<pre><code class="language-text">    *(.text .text.*);
+</code></pre>
+<p>This includes all the input sections named <code>.text</code> and <code>.text.*</code>. Note that we don't use <code>KEEP</code>
+here to let the linker discard unused sections.</p>
+<p>Finally, we use the special <code>/DISCARD/</code> section to discard</p>
+<pre><code class="language-text">    *(.ARM.exidx .ARM.exidx.*);
+</code></pre>
+<p>input sections named <code>.ARM.exidx.*</code>. These sections are related to exception handling but we are not
+doing stack unwinding on panics and they take up space in Flash memory, so we just discard them.</p>
+<h2 id="putting-it-all-together"><a class="header" href="#putting-it-all-together">Putting it all together</a></h2>
+<p>Now we can link the application. For reference, here's the complete Rust program:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_main]
+#![no_std]
+
+<span class="boring">fn main() {
+</span>use core::panic::PanicInfo;
+
+// The reset handler
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    let _x = 42;
+
+    // can't return so we go into an infinite loop here
+    loop {}
+}
+
+// The reset vector, a pointer into the reset handler
+#[unsafe(link_section = ".vector_table.reset_vector")]
+#[unsafe(no_mangle)]
+pub static RESET_VECTOR: unsafe extern "C" fn() -&gt; ! = Reset;
+
+#[panic_handler]
+fn panic(_panic: &amp;PanicInfo&lt;'_&gt;) -&gt; ! {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We have to tweak the linker process to make it use our linker script. This is done
+passing the <code>-C link-arg</code> flag to <code>rustc</code>. This can be done with <code>cargo-rustc</code> or
+<code>cargo-build</code>.</p>
+<p><strong>IMPORTANT</strong>: Make sure you have the <code>.cargo/config.toml</code> file that was added at the
+end of the last section before running this command.</p>
+<p>Using the <code>cargo-rustc</code> subcommand:</p>
+<pre><code class="language-console">$ cargo rustc -- -C link-arg=-Tlink.x
+</code></pre>
+<p>Or you can set the rustflags in <code>.cargo/config.toml</code> and continue using the
+<code>cargo-build</code> subcommand. We'll do the latter because it better integrates with
+<code>cargo-binutils</code>.</p>
+<pre><code class="language-console"># modify .cargo/config.toml so it has these contents
+$ cat .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[target.thumbv7m-none-eabi]
+rustflags = ["-C", "link-arg=-Tlink.x"]
+
+[build]
+target = "thumbv7m-none-eabi"
+</code></pre>
+<p>The <code>[target.thumbv7m-none-eabi]</code> part says that these flags will only be used
+when cross compiling to that target.</p>
+<h2 id="inspecting-it"><a class="header" href="#inspecting-it">Inspecting it</a></h2>
+<p>Now let's inspect the output binary to confirm the memory layout looks the way we want
+(this requires <a href="https://github.com/rust-embedded/cargo-binutils#readme"><code>cargo-binutils</code></a>):</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -d --no-show-raw-insn
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+&lt;Reset&gt;:
+               	push	{r7, lr}
+               	mov	r7, sp
+               	sub	sp, #0x4
+               	movs	r0, #0x2a
+               	str	r0, [sp]
+               	b	0x14 &lt;Reset+0xc&gt;        @ imm = #-0x2
+               	b	0x14 &lt;Reset+0xc&gt;        @ imm = #-0x4
+</code></pre>
+<p>This is the disassembly of the <code>.text</code> section. We see that the reset handler, named <code>Reset</code>, is
+located at address <code>0x8</code>.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -s --section .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 09000000                    ... ....
+</code></pre>
+<p>This shows the contents of the <code>.vector_table</code> section. We can see that the section starts at
+address <code>0x0</code> and that the first word of the section is <code>0x2001_0000</code> (the <code>objdump</code> output is in
+little endian format). This is the initial SP value and matches the end address of RAM. The second
+word is <code>0x9</code>; this is the <em>thumb mode</em> address of the reset handler. When a function is to be
+executed in thumb mode the first bit of its address is set to 1.</p>
+<h2 id="testing-it"><a class="header" href="#testing-it">Testing it</a></h2>
+<p>This program is a valid LM3S6965 program; we can execute it in a virtual microcontroller (QEMU) to
+test it out.</p>
+<pre><code class="language-console">$ # this program will block
+$ qemu-system-arm \
+      -cpu cortex-m3 \
+      -machine lm3s6965evb \
+      -gdb tcp::3333 \
+      -S \
+      -nographic \
+      -kernel target/thumbv7m-none-eabi/debug/app
+</code></pre>
+<pre><code class="language-console">$ # on a different terminal
+$ arm-none-eabi-gdb -q target/thumbv7m-none-eabi/debug/app
+Reading symbols from target/thumbv7m-none-eabi/debug/app...done.
+
+(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at src/main.rs:8
+8       pub unsafe extern "C" fn Reset() -&gt; ! {
+
+(gdb) # the SP has the initial value we programmed in the vector table
+(gdb) print/x $sp
+$1 = 0x20010000
+
+(gdb) step
+9           let _x = 42;
+
+(gdb) step
+12          loop {}
+
+(gdb) # next we inspect the stack variable `_x`
+(gdb) print _x
+$2 = 42
+
+(gdb) print &amp;_x
+$3 = (i32 *) 0x2000fff4
+
+(gdb) quit
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="a-main-interface"><a class="header" href="#a-main-interface">A <code>main</code> interface</a></h1>
+<p>We have a minimal working program now, but we need to package it in a way that the end user can build
+safe programs on top of it. In this section, we'll implement a <code>main</code> interface like the one standard
+Rust programs use.</p>
+<p>First, we'll convert our binary crate into a library crate:</p>
+<pre><code class="language-console">$ mv src/main.rs src/lib.rs
+</code></pre>
+<p>And then rename it to <code>rt</code> which stands for "runtime".</p>
+<pre><code class="language-console">$ sed -i s/app/rt/ Cargo.toml
+
+$ head -n4 Cargo.toml
+</code></pre>
+<pre><code class="language-toml">[package]
+edition = "2024"
+name = "rt" # &lt;-
+version = "0.1.0"
+</code></pre>
+<p>The first change is to have the reset handler call an external <code>main</code> function:</p>
+<pre><code class="language-console">$ head -n13 src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+
+use core::panic::PanicInfo;
+
+// CHANGED!
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    unsafe extern "Rust" {
+        safe fn main() -&gt; !;
+    }
+
+    main()
+}</code></pre></pre>
+<p>We also drop the <code>#![no_main]</code> attribute as it has no effect on library crates.</p>
+<blockquote>
+<p>There's an orthogonal question that arises at this stage: Should the <code>rt</code>
+library provide a standard panicking behavior, or should it <em>not</em> provide a
+<code>#[panic_handler]</code> function and leave the end user to choose the panicking
+behavior? This document won't delve into that question and for simplicity will
+leave the dummy <code>#[panic_handler]</code> function in the <code>rt</code> crate. However, we
+wanted to inform the reader that there are other options.</p>
+</blockquote>
+<p>The second change involves providing the linker script we wrote before to the application crate. The linker will search for linker scripts in the library search path (<code>-L</code>) and in the directory
+from which it's invoked. The application crate shouldn't need to carry around a copy of <code>link.x</code> so
+we'll have the <code>rt</code> crate put the linker script in the library search path using a <a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html">build script</a>.</p>
+<pre><code class="language-console">$ # create a build.rs file in the root of `rt` with these contents
+$ cat build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{env, error::Error, fs::File, io::Write, path::PathBuf};
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // build directory for this crate
+    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+
+    // extend the library search path
+    println!("cargo:rustc-link-search={}", out_dir.display());
+
+    // put `link.x` in the build directory
+    File::create(out_dir.join("link.x"))?.write_all(include_bytes!("link.x"))?;
+
+    Ok(())
+}</code></pre></pre>
+<p>Now the user can write an application that exposes the <code>main</code> symbol and link it to the <code>rt</code> crate.
+The <code>rt</code> will take care of giving the program the right memory layout.</p>
+<pre><code class="language-console">$ cd ..
+
+$ cargo new --edition 2024 --bin app
+
+$ cd app
+
+$ # modify Cargo.toml to include the `rt` crate as a dependency
+$ tail -n2 Cargo.toml
+</code></pre>
+<pre><code class="language-toml">[dependencies]
+rt = { path = "../rt" }
+</code></pre>
+<pre><code class="language-console">$ # copy over the config file that sets a default target and tweaks the linker invocation
+$ cp -r ../rt/.cargo .
+
+$ # change the contents of `main.rs` to
+$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+#![no_main]
+
+extern crate rt;
+
+#[unsafe(no_mangle)]
+pub fn main() -&gt; ! {
+    let _x = 42;
+
+    loop {}
+}</code></pre></pre>
+<p>The disassembly will be similar but will now include the user <code>main</code> function.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -d --no-show-raw-insn
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+&lt;main&gt;:
+               	push	{r7, lr}
+               	mov	r7, sp
+               	sub	sp, #0x4
+               	movs	r0, #0x2a
+               	str	r0, [sp]
+               	b	0x14 &lt;main+0xc&gt;         @ imm = #-0x2
+               	b	0x14 &lt;main+0xc&gt;         @ imm = #-0x4
+
+&lt;Reset&gt;:
+               	push	{r7, lr}
+               	mov	r7, sp
+               	bl	0x8 &lt;main&gt;              @ imm = #-0x16
+</code></pre>
+<h2 id="making-it-type-safe"><a class="header" href="#making-it-type-safe">Making it type safe</a></h2>
+<p>The <code>main</code> interface works, but it's easy to get it wrong. For example, the user could write <code>main</code>
+as a non-divergent function, and they would get no compile time error and undefined behavior (the
+compiler will misoptimize the program).</p>
+<p>We can add type safety by exposing a macro to the user instead of the symbol interface. In the
+<code>rt</code> crate, we can write this macro:</p>
+<pre><code class="language-console">$ tail -n12 ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[macro_export]
+macro_rules! entry {
+    ($path:path) =&gt; {
+        #[unsafe(export_name = "main")]
+        pub unsafe fn __main() -&gt; ! {
+            // type check the given path
+            let f: fn() -&gt; ! = $path;
+
+            f()
+        }
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Then the application writers can invoke it like this:</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+#![no_main]
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let _x = 42;
+
+    loop {}
+}</code></pre></pre>
+<p>Now the author will get an error if they change the signature of <code>main</code> to be
+non divergent function, e.g. <code>fn()</code>.</p>
+<h2 id="life-before-main"><a class="header" href="#life-before-main">Life before main</a></h2>
+<p><code>rt</code> is looking good but it's not feature complete! Applications written against it can't use
+<code>static</code> variables or string literals because <code>rt</code>'s linker script doesn't define the standard
+<code>.bss</code>, <code>.data</code> and <code>.rodata</code> sections. Let's fix that!</p>
+<p>The first step is to define these sections in the linker script:</p>
+<pre><code class="language-console">$ # showing just a fragment of the file
+$ sed -n 25,46p ../rt/link.x
+</code></pre>
+<pre><code class="language-text">  .text :
+  {
+    *(.text .text.*);
+  } &gt; FLASH
+
+  /* NEW! */
+  .rodata :
+  {
+    *(.rodata .rodata.*);
+  } &gt; FLASH
+
+  .bss :
+  {
+    *(.bss .bss.*);
+  } &gt; RAM
+
+  .data :
+  {
+    *(.data .data.*);
+  } &gt; RAM
+
+  /DISCARD/ :
+</code></pre>
+<p>They just re-export the input sections and specify in which memory region each output section will
+go.</p>
+<p>With these changes, the following program will compile:</p>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+#![no_main]
+
+use rt::entry;
+
+entry!(main);
+
+static RODATA: &amp;[u8] = b"Hello, world!";
+static mut BSS: u8 = 0;
+static mut DATA: u16 = 1;
+
+#[allow(static_mut_refs)]
+fn main() -&gt; ! {
+    let _x = RODATA;
+    let _y = unsafe { &amp;BSS };
+    let _z = unsafe { &amp;DATA };
+
+    loop {}
+}</code></pre></pre>
+<p>However if you run this program on real hardware and debug it, you'll observe that the <code>static</code>
+variables <code>BSS</code> and <code>DATA</code> don't have the values <code>0</code> and <code>1</code> by the time <code>main</code> has been reached.
+Instead, these variables will have junk values. The problem is that the contents of RAM are
+random after powering up the device. You won't be able to observe this effect if you run the
+program in QEMU.</p>
+<p>As things stand if your program reads any <code>static</code> variable before performing a write to it then
+your program has undefined behavior. Let's fix that by initializing all <code>static</code> variables before
+calling <code>main</code>.</p>
+<p>We'll need to tweak the linker script a bit more to do the RAM initialization:</p>
+<pre><code class="language-console">$ # showing just a fragment of the file
+$ sed -n 25,52p ../rt/link.x
+</code></pre>
+<pre><code class="language-text">  .text :
+  {
+    *(.text .text.*);
+  } &gt; FLASH
+
+  /* CHANGED! */
+  .rodata :
+  {
+    *(.rodata .rodata.*);
+  } &gt; FLASH
+
+  .bss :
+  {
+    _sbss = .;
+    *(.bss .bss.*);
+    _ebss = .;
+  } &gt; RAM
+
+  .data : AT(ADDR(.rodata) + SIZEOF(.rodata))
+  {
+    _sdata = .;
+    *(.data .data.*);
+    _edata = .;
+  } &gt; RAM
+
+  _sidata = LOADADDR(.data);
+
+  /DISCARD/ :
+</code></pre>
+<p>Let's go into the details of these changes:</p>
+<pre><code class="language-text">    _sbss = .;
+</code></pre>
+<pre><code class="language-text">    _ebss = .;
+</code></pre>
+<pre><code class="language-text">    _sdata = .;
+</code></pre>
+<pre><code class="language-text">    _edata = .;
+</code></pre>
+<p>We associate symbols to the start and end addresses of the <code>.bss</code> and <code>.data</code> sections, which we'll
+later use to initialize them.</p>
+<pre><code class="language-text">  .data : AT(ADDR(.rodata) + SIZEOF(.rodata))
+</code></pre>
+<p>We set the Load Memory Address (LMA) of the <code>.data</code> section to the end of the <code>.rodata</code>
+section. The <code>.data</code> contains <code>static</code> variables with a non-zero initial value; the Virtual Memory
+Address (VMA) of the <code>.data</code> section is somewhere in RAM -- this is where the <code>static</code> variables are
+located. The initial values of those <code>static</code> variables, however, must be allocated in non volatile
+memory (Flash); the LMA is where in Flash those initial values are stored.</p>
+<pre><code class="language-text">  _sidata = LOADADDR(.data);
+</code></pre>
+<p>Finally, we associate a symbol to the LMA of <code>.data</code>.</p>
+<p>Using our initialization code, we zero the <code>.bss</code> section and initialize the <code>.data</code> section. We can reference
+the symbols we created in the linker script from the code. The <em>addresses</em><sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup> of these symbols are
+the boundaries of the <code>.bss</code> and <code>.data</code> sections.</p>
+<p>We could write the initialization <code>.bss</code> and <code>.data</code> section code in pure Rust code. In fact, earlier
+versions of this book did so. However, several soundness questions have been raised over time,
+and it is no longer considered good practice to initialize them in Rust code. See the
+<a href="./sections-in-rust.html">Why don't we initialize .data and .bss using Rust</a> section of the book for more details.
+We will write the initialization code using the <code>global_asm!</code> macro to define our reset handler.</p>
+<p>The updated reset handler, now written in <code>Thumb-2</code> assembly, is shown below:</p>
+<pre><code class="language-console">$ head -n53 ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>use core::panic::PanicInfo;
+
+use core::arch::global_asm;
+
+global_asm!(
+    ".text
+
+     .syntax unified
+     .global _sbss
+     .global _ebss
+
+     .global _sdata
+     .global _edata
+     .global _sidata
+
+     .global main
+     .global Reset
+
+     .type Reset,%function
+     .thumb_func
+     Reset:
+
+     _init_bss:
+         movs r2, #0
+         ldr r0, =_sbss
+         ldr r1, =_ebss
+
+     1:
+         cmp r1, r0
+         beq _init_data
+         strb r2, [r0]
+         add r0, #1
+         b 1b
+
+     _init_data:
+         ldr r0, =_sdata
+         ldr r1, =_edata
+         ldr r2, =_sidata
+
+     1:
+         cmp r0, r1
+         beq _main_trampoline
+         ldrb r3, [r2]
+         strb r3, [r0]
+         add r0, #1
+         add r2, #1
+         b 1b
+     _main_trampoline:
+         ldr r0, =main
+         bx r0"
+);
+<span class="boring">}</span></code></pre></pre>
+<p>Now end users can directly and indirectly make use of <code>static</code> variables without running into
+undefined behavior!</p>
+<blockquote>
+<p>In the code above we performed the memory initialization in a bytewise fashion. It's possible to
+force the <code>.bss</code> and <code>.data</code> sections to be aligned to, say, 4 bytes. This fact can then be used
+in the Rust code to perform the initialization wordwise while omitting alignment checks. If you
+are interested in learning how this can be achieved check the <a href="https://github.com/japaric/cortex-m-rt/tree/v0.5.1"><code>cortex-m-rt</code></a> crate.</p>
+</blockquote>
+<hr>
+<ol class="footnote-definition"><li id="footnote-1">
+<p>The fact that the addresses of the linker script symbols must be used here can be confusing and
+unintuitive. An elaborate explanation for this oddity can be found <a href="https://stackoverflow.com/a/40392131">here</a>. <a href="#fr-1-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="why-dont-we-initialize-data-and-bss-using-rust"><a class="header" href="#why-dont-we-initialize-data-and-bss-using-rust">Why don't we initialize <code>.data</code> and <code>.bss</code> using Rust</a></h1>
+<p>Earlier versions of this book initialized the <code>.data</code> and <code>.bss</code> sections using Rust code.
+This has proven to have questionable soundness, and the recommended method of
+performing the initialization of these sections nowadays relies on assembly.</p>
+<p>This chapter discusses the reasons that led to the decision of various crates like
+<a href="https://crates.io/crates/cortex-m-rt">cortex-m-rt</a> and <a href="https://crates.io/crates/riscv-rt">riscv-rt</a>
+to migrate to performing assembly initialization of these sections. There are
+<a href="https://github.com/rust-embedded/cortex-m-rt/issues/300">a</a>
+<a href="https://github.com/rust-embedded/embedonomicon/issues/69">decent</a>
+<a href="https://rust-lang.zulipchat.com/#narrow/stream/136281-t-lang.2Fwg-unsafe-code-guidelines/topic/The.20least.20incorrect.20init.20code.20.3A)">number</a>
+<a href="https://github.com/rust-lang/unsafe-code-guidelines/issues/259">of</a>
+<a href="https://github.com/rust-embedded/wg/issues/771">threads</a>
+where the soundness of such code has been questioned. We will summarize
+them in this chapter.</p>
+<p>The original code used for global data initialization in Rust in this book is listed
+as follows:</p>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+
+use core::panic::PanicInfo;
+use core::ptr;
+
+#[unsafe(no_mangle)]
+#[allow(static_mut_refs)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    // NEW!
+    // Initialize RAM
+    unsafe extern "C" {
+        static mut _sbss: u8;
+        static mut _ebss: u8;
+
+        static mut _sdata: u8;
+        static mut _edata: u8;
+        static _sidata: u8;
+    }
+
+    let count = unsafe { &amp;_ebss as *const u8 as usize - &amp;_sbss as *const u8 as usize };
+    unsafe { ptr::write_bytes(&amp;mut _sbss as *mut u8, 0, count) };
+
+    let count = unsafe { &amp;_edata as *const u8 as usize - &amp;_sdata as *const u8 as usize };
+    unsafe { ptr::copy_nonoverlapping(&amp;_sidata as *const u8, &amp;mut _sdata as *mut u8, count) };
+
+    // Call user entry point
+    unsafe extern "Rust" {
+        safe fn main() -&gt; !;
+    }
+
+    main()
+}</code></pre></pre>
+<p>Five <code>extern "C"</code> variables are declared to reference specific memory locations.
+Our linker script defines each symbol, so we do not need to worry about their
+exact placement.</p>
+<h2 id="pointer-proventace"><a class="header" href="#pointer-proventace">Pointer proventace</a></h2>
+<p>To initialize the <code>.bss</code> section, we take the address of <code>_sbss</code> <code>u8</code> variable,
+which points to the start of the <code>.bss</code> section. Then we write an arbitrary
+amount of data to its location. <code>_sbss</code> is declared as an <code>u8</code> variables, and
+the pointer provenance rules only allow us to write an amount of data that fits
+within the allocation of our <code>_sbss</code> variable. Despite that, we are writing past
+the single byte (as far as Rust is aware, a single byte is allocated at this
+address) up until we hit the location of the <code>_ebss</code>.</p>
+<p>There is a separate issue in which we actually have an <code>_ebss</code> variable that is
+pointing one byte outside of the <code>.bss</code> section. In specific implementations,
+accessing this byte might not even be possible if the <code>.bss</code> section exhausted
+the available memory. Ideally <code>_ebss</code> needs to be declared as a ZST. And by
+extension, because the <code>.bss</code> section can be empty, <code>_sbss</code> should also be a
+ZST, because in this case <code>_sbss</code> would also fall outside of the region reserved
+for the <code>.bss</code>.</p>
+<h2 id="aliasing"><a class="header" href="#aliasing">Aliasing</a></h2>
+<p>Another potential problem with the code above is aliasing. Consider our linker
+script.</p>
+<pre><code class="language-text">  .bss :
+  {
+    _sbss = .;
+    *(.bss .bss.*);
+    _ebss = .;
+  } &gt; RAM
+
+  .data : AT(ADDR(.rodata) + SIZEOF(.rodata))
+  {
+    _sdata = .;
+    *(.data .data.*);
+    _edata = .;
+  } &gt; RAM
+</code></pre>
+<p>The following situations can occur:</p>
+<ul>
+<li><code>_sbss</code> might be located at the same address as the first variable in the <code>.bss</code>
+section, assuming that the section is not empty.</li>
+<li><code>_ebss</code> will be located at the same address as <code>_sdata</code>, and by extension, it
+will also be located at the same address as the first variable in the <code>.data</code>
+section.</li>
+<li>If the <code>.bss</code> section is empty, both <code>_sbss</code> and <code>_ebss</code> will alias each other.</li>
+<li>If the <code>.data</code> section is empty, both <code>_sdata</code> and <code>_edata</code> will alias each other.</li>
+</ul>
+<p>Rust does not allow to have more than one variable to be located at the same address
+(with ZSTs being a key exception). But even if it did, we are using these variables
+to write the whole global memory area, which effectively is mutably aliasing all
+global data defined in the program.</p>
+<h2 id="abstract-machine-initialization"><a class="header" href="#abstract-machine-initialization">Abstract machine initialization</a></h2>
+<p>Another question is whether it is safe to enter any Rust code before the Rust
+abstract machine has been fully initialized. Can we rely on Rust not using any
+of the global memory while it is not yet initialized? The answer to this question
+is not clear (or does not seem clear to the author of the section at the time of
+this writing).</p>
+<h2 id="more-potential-provenance-issues"><a class="header" href="#more-potential-provenance-issues">More potential provenance issues</a></h2>
+<p>A clever reader might have seen how we compute the offset between <code>_ebss</code> and <code>_sbss</code> and thought,
+couldn't we instad use the <a href="https://doc.rust-lang.org/std/primitive.pointer.html#method.offset_from"><code>offset_from</code></a>
+method of a pointer?</p>
+<p>The problem with this approach, however, is that, as we mentioned above, both <code>_ebss</code>
+and <code>_sbss</code> belong to different allocations, so they do not share the same pointer
+provenance. This is true even if they both are aliased and happen to fall at the
+same address (i.e. when the <code>.bss</code> section is empty).</p>
+<p>Running Miri on this <a href="https://play.rust-lang.org/?version=stable&amp;mode=release&amp;edition=2024&amp;gist=3225a585752704d9c58b1842e0fc5307">Rust Playground Snippet</a>
+shows the undefined behavior.</p>
+<h2 id="ok-but-it-works-doesnt-it"><a class="header" href="#ok-but-it-works-doesnt-it">Ok, but it works, doesn't it?</a></h2>
+<p>Yes. While the code provided at the beginning of this chapter does produce the
+right behavior as of Rust 1.89, the problem is that <strong>we cannot rely on this behavior
+being preserved in future releases</strong>, or even in the optimizer doing something
+funky in the future.</p>
+<p>That is why, overall, the recommendation of this books is to <strong>not</strong> perform the initialization
+using Rust code for this purpose.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="exception-handling"><a class="header" href="#exception-handling">Exception handling</a></h1>
+<p>During the "Memory layout" section, we decided to start out simple and leave out handling of
+exceptions. In this section, we'll add support for handling them; this serves as an example of
+how to achieve compile time overridable behavior in stable Rust (i.e. without relying on the
+unstable <code>#[linkage = "weak"]</code> attribute, which makes a symbol weak).</p>
+<h2 id="background-information-1"><a class="header" href="#background-information-1">Background information</a></h2>
+<p>In a nutshell, <em>exceptions</em> are a mechanism the Cortex-M and other architectures provide to let
+applications respond to asynchronous, usually external, events. The most prominent type of exception,
+that most people will know, is the classical (hardware) interrupt.</p>
+<p>The Cortex-M exception mechanism works like this:
+When the processor receives a signal or event associated to a type of exception, it suspends
+the execution of the current subroutine (by stashing the state in the call stack) and then proceeds
+to execute the corresponding exception handler, another subroutine, in a new stack frame. After
+finishing the execution of the exception handler (i.e. returning from it), the processor resumes the
+execution of the suspended subroutine.</p>
+<p>The processor uses the vector table to decide what handler to execute. Each entry in the table
+contains a pointer to a handler, and each entry corresponds to a different exception type. For
+example, the second entry is the reset handler, the third entry is the NMI (Non Maskable Interrupt)
+handler, and so on.</p>
+<p>As mentioned before, the processor expects the vector table to be at some specific location in memory,
+and each entry in it can potentially be used by the processor at runtime. Hence, the entries must always
+contain valid values. Furthermore, we want the <code>rt</code> crate to be flexible so the end user can customize the
+behavior of each exception handler. Finally, the vector table resides in read only memory, or rather in not
+easily modified memory, so the user has to register the handler statically, rather than at runtime.</p>
+<p>To satisfy all these constraints, we'll assign a <em>default</em> value to all the entries of the vector
+table in the <code>rt</code> crate, but make these values kind of <em>weak</em> to let the end user override them
+at compile time.</p>
+<h2 id="rust-side"><a class="header" href="#rust-side">Rust side</a></h2>
+<p>Let's see how all this can be implemented. For simplicity, we'll only work with the first 16 entries
+of the vector table; these entries are not device specific so they have the same function on any
+kind of Cortex-M microcontroller.</p>
+<p>The first thing we'll do is create an array of vectors (pointers to exception handlers) in the
+<code>rt</code> crate's code:</p>
+<pre><code class="language-console">$ sed -n 56,91p ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>
+<span class="boring">fn main() {
+</span>pub union Vector {
+    reserved: u32,
+    handler: unsafe extern "C" fn(),
+}
+
+unsafe extern "C" {
+    fn NMI();
+    fn HardFault();
+    fn MemManage();
+    fn BusFault();
+    fn UsageFault();
+    fn SVCall();
+    fn PendSV();
+    fn SysTick();
+}
+
+#[unsafe(link_section = ".vector_table.exceptions")]
+#[unsafe(no_mangle)]
+pub static EXCEPTIONS: [Vector; 14] = [
+    Vector { handler: NMI },
+    Vector { handler: HardFault },
+    Vector { handler: MemManage },
+    Vector { handler: BusFault },
+    Vector {
+        handler: UsageFault,
+    },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: SVCall },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: PendSV },
+    Vector { handler: SysTick },
+<span class="boring">}</span></code></pre></pre>
+<p>Some of the entries in the vector table are <em>reserved</em>; the ARM documentation states that they
+should be assigned the value <code>0</code> so we use a union to do exactly that. The entries that must point
+to a handler make use of <em>external</em> functions; this is important because it lets the end user
+<em>provide</em> the actual function definition.</p>
+<p>Next, we define a default exception handler in the Rust code. Exceptions that have not been assigned
+a handler by the end user will make use of this default handler.</p>
+<pre><code class="language-console">$ tail -n4 ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>
+<span class="boring">fn main() {
+</span>#[unsafe(no_mangle)]
+pub extern "C" fn DefaultExceptionHandler() {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="linker-script-side"><a class="header" href="#linker-script-side">Linker script side</a></h2>
+<p>On the linker script side, we place these new exception vectors right after the reset vector.</p>
+<pre><code class="language-console">$ sed -n 12,25p ../rt/link.x
+</code></pre>
+<pre><code class="language-text">EXTERN(RESET_VECTOR);
+EXTERN(EXCEPTIONS); /* &lt;- NEW */
+
+SECTIONS
+{
+  .vector_table ORIGIN(FLASH) :
+  {
+    /* First entry: initial Stack Pointer value */
+    LONG(ORIGIN(RAM) + LENGTH(RAM));
+
+    /* Second entry: reset vector */
+    KEEP(*(.vector_table.reset_vector));
+
+    /* The next 14 entries are exception vectors */
+    KEEP(*(.vector_table.exceptions)); /* &lt;- NEW */
+  } &gt; FLASH
+</code></pre>
+<p>And we use <code>PROVIDE</code> to give a default value to the handlers that we left undefined in <code>rt</code> (<code>NMI</code>
+and the others above):</p>
+<pre><code class="language-console">$ tail -n8 ../rt/link.x
+</code></pre>
+<pre><code class="language-text">PROVIDE(NMI = DefaultExceptionHandler);
+PROVIDE(HardFault = DefaultExceptionHandler);
+PROVIDE(MemManage = DefaultExceptionHandler);
+PROVIDE(BusFault = DefaultExceptionHandler);
+PROVIDE(UsageFault = DefaultExceptionHandler);
+PROVIDE(SVCall = DefaultExceptionHandler);
+PROVIDE(PendSV = DefaultExceptionHandler);
+PROVIDE(SysTick = DefaultExceptionHandler);
+</code></pre>
+<p><code>PROVIDE</code> only takes effect when the symbol to the left of the equal sign is still undefined after
+inspecting all the input object files. This is the scenario where the user didn't implement the
+handler for the respective exception.</p>
+<h2 id="testing-it-1"><a class="header" href="#testing-it-1">Testing it</a></h2>
+<p>That's it! The <code>rt</code> crate now has support for exception handlers. We can test it out with following
+application:</p>
+<blockquote>
+<p><strong>NOTE</strong>: Turns out it's hard to generate an exception in QEMU. On real
+hardware a read to an invalid memory address (i.e. outside of the Flash and
+RAM regions) would be enough but QEMU happily accepts the operation and
+returns zero. A trap instruction works on both QEMU and hardware but
+unfortunately it's not available as pure Rust code. We will use inline assembly
+to generate the trap instruction. Later chapters describe the use of assembly
+in more detail.</p>
+</blockquote>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::arch::asm;
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    // this executes the undefined instruction (UDF) and causes a HardFault exception
+    unsafe { asm!("udf #0", options(noreturn)) };
+}</code></pre></pre>
+<pre><code class="language-console">(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at ../rt/src/lib.rs:7
+7       pub unsafe extern "C" fn Reset() -&gt; ! {
+
+(gdb) b DefaultExceptionHandler
+Breakpoint 1 at 0xec: file ../rt/src/lib.rs, line 95.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, DefaultExceptionHandler ()
+    at ../rt/src/lib.rs:95
+95          loop {}
+
+(gdb) list
+90          Vector { handler: SysTick },
+91      ];
+92
+93      #[no_mangle]
+94      pub extern "C" fn DefaultExceptionHandler() {
+95          loop {}
+96      }
+</code></pre>
+<p>And for completeness, here's the disassembly of the optimized version of the program:</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00000040 &lt;main&gt;:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	udf	#0x0
+      46:      	trap
+
+00000048 &lt;Reset&gt;:
+      48:      	push	{r7, lr}
+      4a:      	mov	r7, sp
+      4c:      	movw	r1, #0x0
+      50:      	movw	r0, #0x0
+      54:      	movt	r1, #0x2000
+      58:      	movt	r0, #0x2000
+      5c:      	subs	r1, r1, r0
+      5e:      	bl	0x8a &lt;__aeabi_memclr&gt;   @ imm = #0x28
+      62:      	movw	r1, #0x0
+      66:      	movw	r0, #0x0
+      6a:      	movt	r1, #0x2000
+      6e:      	movt	r0, #0x2000
+      72:      	subs	r2, r1, r0
+      74:      	movw	r1, #0x44e
+      78:      	movt	r1, #0x0
+      7c:      	bl	0x15a &lt;__aeabi_memcpy&gt;  @ imm = #0xda
+      80:      	bl	0x40 &lt;main&gt;             @ imm = #-0x44
+
+00000084 &lt;UsageFault&gt;:
+      84:      	push	{r7, lr}
+      86:      	mov	r7, sp
+      88:      	b	0x88 &lt;UsageFault+0x4&gt;   @ imm = #-0x4
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -s -j .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 49000000 85000000 85000000  ... I...........
+ 0010 85000000 85000000 85000000 00000000  ................
+ 0020 00000000 00000000 00000000 85000000  ................
+ 0030 00000000 00000000 85000000 85000000  ................
+</code></pre>
+<p>The vector table now resembles the results of all the code snippets in this book
+so far. To summarize:</p>
+<ul>
+<li>In the <a href="https://docs.rust-embedded.org/embedonomicon/memory-layout.html#inspecting-it"><em>Inspecting it</em></a> section of the earlier memory chapter, we learned
+that:
+<ul>
+<li>The first entry in the vector table contains the initial value of the
+stack pointer.</li>
+<li>Objdump prints in <code>little endian</code> format, so the stack starts at
+<code>0x2001_0000</code>.</li>
+<li>The second entry points to address <code>0x0000_0049</code>, the Reset handler.
+<ul>
+<li>The address of the Reset handler can be seen in the disassembly above,
+being <code>0x48</code>.</li>
+<li>The first bit being set to 1 does not alter the address due to
+alignment requirements. Instead, it causes the function to be executed
+in <em>thumb mode</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Afterwards, a pattern of addresses alternating between <code>0x85</code> and <code>0x00</code> is
+visible.
+<ul>
+<li>Looking at the disassembly above, it is clear that <code>0x85</code> refers to the
+<code>UsageFault</code> (<code>0x84</code> executed in thumb mode).</li>
+<li>Cross referencing the pattern to the vector table that was set up earlier
+in this chapter (see the definition of <code>pub static EXCEPTIONS</code>) with <a href="https://developer.arm.com/docs/dui0552/latest/the-cortex-m3-processor/exception-model/vector-table">the
+vector table layout for the Cortex-M</a>, it is clear that the address of the
+<code>UsageFault</code> is present each time a respective handler entry
+is present in the table.</li>
+<li>But we did not explicitly insert <code>UsageFault</code> in each entry. Instead, we
+aliased each handler to <code>DefaultExceptionHandler</code>. Our disassembler found
+multiple symbols at the same location, and chose one of them for the
+function name.</li>
+<li>In turn, it is also visible that the layout of the vector table data
+structure in the Rust code is aligned with all the reserved slots in the
+Cortex-M vector table. Hence, all reserved slots are correctly set to a
+value of zero.</li>
+</ul>
+</li>
+</ul>
+<h2 id="overriding-a-handler"><a class="header" href="#overriding-a-handler">Overriding a handler</a></h2>
+<p>To override an exception handler, the user has to provide a function whose symbol name exactly
+matches the name we used in <code>EXCEPTIONS</code>.</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::arch::asm;
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    unsafe { asm!("udf #0", options(noreturn)) };
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn HardFault() -&gt; ! {
+    // do something interesting here
+    loop {}
+}</code></pre></pre>
+<p>You can test it in QEMU:</p>
+<pre><code class="language-console">(gdb) target remote :3333
+Remote debugging using :3333
+Reset () at /home/japaric/rust/embedonomicon/ci/exceptions/rt/src/lib.rs:7
+7       pub unsafe extern "C" fn Reset() -&gt; ! {
+
+(gdb) b HardFault
+Breakpoint 1 at 0x44: file src/main.rs, line 18.
+
+(gdb) continue
+Continuing.
+
+Breakpoint 1, HardFault () at src/main.rs:18
+18          loop {}
+
+(gdb) list
+13      }
+14
+15      #[no_mangle]
+16      pub extern "C" fn HardFault() -&gt; ! {
+17          // do something interesting here
+18          loop {}
+19      }
+</code></pre>
+<p>The program now executes the user defined <code>HardFault</code> function instead of the
+<code>DefaultExceptionHandler</code> in the <code>rt</code> crate.</p>
+<p>Like our first attempt at a <code>main</code> interface, this first implementation has the problem of having no
+type safety. It's also easy to mistype the name of the exception, but that doesn't produce an error
+or warning. Instead the user defined handler is simply ignored. Those problems can be fixed using a
+macro like the <a href="https://github.com/japaric/cortex-m-rt/blob/v0.5.1/src/lib.rs#L792"><code>exception!</code></a> macro defined in <code>cortex-m-rt</code> v0.5.x or the
+<a href="https://github.com/rust-embedded/cortex-m-rt/blob/v0.6.3/macros/src/lib.rs#L254"><code>exception</code></a> attribute in <code>cortex-m-rt</code> v0.6.x.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="assembly-on-stable"><a class="header" href="#assembly-on-stable">Assembly on stable</a></h1>
+<blockquote>
+<p>Note: Since Rust 1.59, both <em>inline</em> assembly (<code>asm!</code>) and <em>free form</em> assembly
+(<code>global_asm!</code>) become stable. But since it will take some time for the
+existing crates to catchup the change, and since it's good for us to know the
+other ways in history we used to deal with assembly, we will keep this chapter
+here.</p>
+</blockquote>
+<p>So far we have managed to boot the device and handle interrupts without a single
+line of assembly. That's quite a feat! But depending on the architecture you are
+targeting you may need some assembly to get to this point. There are also some
+operations, for example context switching, that require assembly.</p>
+<p>Both <em>inline</em> assembly (<code>asm!</code>) and <em>free form</em> assembly (<code>global_asm!</code>) were
+unstable before Rust 1.59. Normally, you will want to use <code>global_asm!</code> and
+<code>asm!</code> in your crates. However, this chapter describes an alternative approach
+you may also use.</p>
+<p>To motivate this section we'll tweak the <code>HardFault</code> handler to provide
+information about the stack frame that generated the exception.</p>
+<p>Here's what we want to do:</p>
+<p>Instead of letting the user directly put their <code>HardFault</code> handler in the vector
+table we'll make the <code>rt</code> crate put a trampoline to the user-defined <code>HardFault</code>
+handler in the vector table.</p>
+<pre><code class="language-console">$ tail -n36 ../rt/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe extern "C" {
+    fn NMI();
+    fn HardFaultTrampoline(); // &lt;- CHANGED!
+    fn MemManage();
+    fn BusFault();
+    fn UsageFault();
+    fn SVCall();
+    fn PendSV();
+    fn SysTick();
+}
+
+#[unsafe(link_section = ".vector_table.exceptions")]
+#[unsafe(no_mangle)]
+pub static EXCEPTIONS: [Vector; 14] = [
+    Vector { handler: NMI },
+    Vector { handler: HardFaultTrampoline }, // &lt;- CHANGED!
+    Vector { handler: MemManage },
+    Vector { handler: BusFault },
+    Vector { handler: UsageFault },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: SVCall },
+    Vector { reserved: 0 },
+    Vector { reserved: 0 },
+    Vector { handler: PendSV },
+    Vector { handler: SysTick },
+];
+
+#[unsafe(no_mangle)]
+pub extern "C" fn DefaultExceptionHandler() {
+    loop {}
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This trampoline will read the stack pointer and then call the user <code>HardFault</code>
+handler. The trampoline will have to be written in assembly:</p>
+<pre><code class="language-armasm">  mrs r0, MSP
+  b HardFault
+</code></pre>
+<p>Due to how the ARM ABI works this sets the Main Stack Pointer (MSP) as the first
+argument of the <code>HardFault</code> function / routine. This MSP value also happens to
+be a pointer to the registers pushed to the stack by the exception. With these
+changes the user <code>HardFault</code> handler must now have signature
+<code>fn(&amp;StackedRegisters) -&gt; !</code>.</p>
+<h2 id="s-files"><a class="header" href="#s-files"><code>.s</code> files</a></h2>
+<p>One approach to stable assembly is to write the assembly in an external file:</p>
+<pre><code class="language-console">$ cat ../rt/asm.s
+</code></pre>
+<pre><code class="language-armasm">  .section .text.HardFaultTrampoline
+  .global HardFaultTrampoline
+  .thumb_func
+HardFaultTrampoline:
+  mrs r0, MSP
+  b HardFault
+</code></pre>
+<p>And use the <code>cc</code> crate in the build script of the <code>rt</code> crate to assemble that
+file into an object file (<code>.o</code>) and then into an archive (<code>.a</code>).</p>
+<pre><code class="language-console">$ cat ../rt/build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{env, error::Error, fs::File, io::Write, path::PathBuf};
+
+use cc::Build;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // build directory for this crate
+    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+
+    // extend the library search path
+    println!("cargo:rustc-link-search={}", out_dir.display());
+
+    // put `link.x` in the build directory
+    File::create(out_dir.join("link.x"))?.write_all(include_bytes!("link.x"))?;
+
+    // assemble the `asm.s` file
+    Build::new().file("asm.s").compile("asm"); // &lt;- NEW!
+
+    // rebuild if `asm.s` changed
+    println!("cargo:rerun-if-changed=asm.s"); // &lt;- NEW!
+
+    Ok(())
+}</code></pre></pre>
+<pre><code class="language-console">$ tail -n2 ../rt/Cargo.toml
+</code></pre>
+<pre><code class="language-toml">[build-dependencies]
+cc = "1.0.25"
+</code></pre>
+<p>And that's it!</p>
+<p>We can confirm that the vector table contains a pointer to <code>HardFaultTrampoline</code>
+by writing a very simple program.</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    loop {}
+}
+
+#[allow(non_snake_case)]
+#[unsafe(no_mangle)]
+pub fn HardFault(_ef: *const u32) -&gt; ! {
+    loop {}
+}</code></pre></pre>
+<p>Here's the disassembly. Look at the address of <code>HardFaultTrampoline</code>.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00000040 &lt;HardFault&gt;:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	b	0x44 &lt;HardFault+0x4&gt;    @ imm = #-0x4
+
+00000046 &lt;main&gt;:
+      46:      	push	{r7, lr}
+      48:      	mov	r7, sp
+      4a:      	b	0x4a &lt;main+0x4&gt;         @ imm = #-0x4
+
+0000004c &lt;Reset&gt;:
+      4c:      	push	{r7, lr}
+      4e:      	mov	r7, sp
+      50:      	bl	0x46 &lt;main&gt;             @ imm = #-0xe
+
+00000054 &lt;UsageFault&gt;:
+      54:      	push	{r7, lr}
+      56:      	mov	r7, sp
+      58:      	b	0x58 &lt;UsageFault+0x4&gt;   @ imm = #-0x4
+
+0000005a &lt;HardFaultTrampoline&gt;:
+      5a:      	mrs	r0, msp
+      5e:      	b	0x40 &lt;HardFault&gt;        @ imm = #-0x22
+</code></pre>
+<blockquote>
+<p><strong>NOTE:</strong> To make this disassembly smaller I commented out the initialization
+of RAM.</p>
+</blockquote>
+<p>Now look at the vector table. The 4th entry should be the address of
+<code>HardFaultTrampoline</code> plus one.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -s -j .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 4d000000 55000000 5b000000  ... M...U...[...
+ 0010 55000000 55000000 55000000 00000000  U...U...U.......
+ 0020 00000000 00000000 00000000 55000000  ............U...
+ 0030 00000000 00000000 55000000 55000000  ........U...U...
+</code></pre>
+<h2 id="o--a-files"><a class="header" href="#o--a-files"><code>.o</code> / <code>.a</code> files</a></h2>
+<p>The downside of using the <code>cc</code> crate is that it requires some assembler program
+on the build machine. For example when targeting ARM Cortex-M the <code>cc</code> crate
+uses <code>arm-none-eabi-gcc</code> as the assembler.</p>
+<p>Instead of assembling the file on the build machine we can ship a pre-assembled
+file with the <code>rt</code> crate. That way no assembler program is required on the build
+machine. However, you would still need an assembler on the machine that packages
+and publishes the crate.</p>
+<p>There's not much difference between an assembly (<code>.s</code>) file and its <em>compiled</em>
+version: the object (<code>.o</code>) file. The assembler doesn't do any optimization; it
+simply chooses the right object file format for the target architecture.</p>
+<p>Cargo provides support for bundling archives (<code>.a</code>) with crates. We can package
+object files into an archive using the <code>ar</code> command and then bundle the archive
+with the crate. In fact, this what the <code>cc</code> crate does; you can see the commands
+it invoked by searching for a file named <code>output</code> in the <code>target</code> directory.</p>
+<pre><code class="language-console">$ grep running $(find target -name output)
+</code></pre>
+<pre><code class="language-text">running: "arm-none-eabi-gcc" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-g" "-fno-omit-frame-pointer" "-mthumb" "-march=armv7-m" "-Wall" "-Wextra" "-o" "/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out/asm.o" "-c" "asm.s"
+running: "ar" "crs" "/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out/libasm.a" "/home/japaric/rust-embedded/embedonomicon/ci/asm/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out/asm.o"
+</code></pre>
+<pre><code class="language-console">$ grep cargo $(find target -name output)
+</code></pre>
+<pre><code class="language-tetx">cargo:rustc-link-search=/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out
+cargo:rustc-link-lib=static=asm
+cargo:rustc-link-search=native=/tmp/app/target/thumbv7m-none-eabi/debug/build/rt-6ee84e54724f2044/out
+</code></pre>
+<p>We'll do something similar to produce an archive.</p>
+<pre><code class="language-console">$ # most of flags `cc` uses have no effect when assembling so we drop them
+$ arm-none-eabi-as -march=armv7-m asm.s -o asm.o
+
+$ ar crs librt.a asm.o
+
+$ arm-none-eabi-objdump -Cd librt.a
+</code></pre>
+<pre><code class="language-text">In archive librt.a:
+
+asm.o:     file format elf32-littlearm
+
+
+Disassembly of section .text.HardFaultTrampoline:
+
+00000000 &lt;HardFaultTrampoline&gt;:
+   0:	f3ef 8008 	mrs	r0, MSP
+   4:	e7fe      	b.n	0 &lt;HardFault&gt;
+</code></pre>
+<p>Next we modify the build script to bundle this archive with the <code>rt</code> rlib.</p>
+<pre><code class="language-console">$ cat ../rt/build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{
+    env,
+    error::Error,
+    fs::{self, File},
+    io::Write,
+    path::PathBuf,
+};
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // build directory for this crate
+    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+
+    // extend the library search path
+    println!("cargo:rustc-link-search={}", out_dir.display());
+
+    // put `link.x` in the build directory
+    File::create(out_dir.join("link.x"))?.write_all(include_bytes!("link.x"))?;
+
+    // link to `librt.a`
+    fs::copy("librt.a", out_dir.join("librt.a"))?; // &lt;- NEW!
+    println!("cargo:rustc-link-lib=static=rt"); // &lt;- NEW!
+
+    // rebuild if `librt.a` changed
+    println!("cargo:rerun-if-changed=librt.a"); // &lt;- NEW!
+
+    Ok(())
+}</code></pre></pre>
+<p>Now we can test this new version against the simple program from before and
+we'll get the same output.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -d --no-show-raw-insn --print-imm-hex
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00000040 &lt;HardFault&gt;:
+      40:      	push	{r7, lr}
+      42:      	mov	r7, sp
+      44:      	b	0x44 &lt;HardFault+0x4&gt;    @ imm = #-0x4
+
+00000046 &lt;main&gt;:
+      46:      	push	{r7, lr}
+      48:      	mov	r7, sp
+      4a:      	b	0x4a &lt;main+0x4&gt;         @ imm = #-0x4
+
+0000004c &lt;Reset&gt;:
+      4c:      	push	{r7, lr}
+      4e:      	mov	r7, sp
+      50:      	bl	0x46 &lt;main&gt;             @ imm = #-0xe
+
+00000054 &lt;UsageFault&gt;:
+      54:      	push	{r7, lr}
+      56:      	mov	r7, sp
+      58:      	b	0x58 &lt;UsageFault+0x4&gt;   @ imm = #-0x4
+
+0000005a &lt;HardFaultTrampoline&gt;:
+      5a:      	mrs	r0, msp
+      5e:      	b	0x40 &lt;HardFault&gt;        @ imm = #-0x22
+</code></pre>
+<blockquote>
+<p><strong>NOTE</strong>: As before I have commented out the RAM initialization to make the
+disassembly smaller.</p>
+</blockquote>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -s -j .vector_table
+</code></pre>
+<pre><code class="language-text">
+app:	file format elf32-littlearm
+Contents of section .vector_table:
+ 0000 00000120 4d000000 55000000 5b000000  ... M...U...[...
+ 0010 55000000 55000000 55000000 00000000  U...U...U.......
+ 0020 00000000 00000000 00000000 55000000  ............U...
+ 0030 00000000 00000000 55000000 55000000  ........U...U...
+</code></pre>
+<p>The downside of shipping pre-assembled archives is that, in the worst case
+scenario, you'll need to ship one build artifact for each compilation target
+your library supports.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="logging-with-symbols"><a class="header" href="#logging-with-symbols">Logging with symbols</a></h1>
+<p>This section will show you how to utilize symbols and the ELF format to achieve
+super cheap logging.</p>
+<h2 id="arbitrary-symbols"><a class="header" href="#arbitrary-symbols">Arbitrary symbols</a></h2>
+<p>Whenever we needed a stable symbol interface between crates we have mainly used
+the <code>no_mangle</code> attribute and sometimes the <code>export_name</code> attribute. The
+<code>export_name</code> attribute takes a string which becomes the name of the symbol
+whereas <code>#[unsafe(no_mangle)]</code> is basically sugar for <code>#[unsafe(export_name = &lt;item-name&gt;)]</code>.</p>
+<p>Turns out we are not limited to single word names; we can use arbitrary strings,
+e.g. sentences, as the argument of the <code>export_name</code> attribute. As least when
+the output format is ELF anything that doesn't contain a null byte is fine.
+This is generally true when using the gnu linker. However, there are some <a href="https://github.com/knurling-rs/defmt/issues/979#issuecomment-3133721969">known
+limitations</a>
+with the macOS and Windows linkers.</p>
+<p>Let's check that out:</p>
+<pre><code class="language-console">$ cargo new --lib foo
+
+$ cat foo/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[unsafe(export_name = "Hello, world!")]
+#[used]
+static A: u8 = 0;
+
+#[unsafe(export_name = "こんにちは")]
+#[used]
+static B: u8 = 0;
+<span class="boring">}</span></code></pre></pre>
+<pre><code class="language-console">$ ( cd foo &amp;&amp; cargo nm --lib )
+foo-d26a39c34b4e80ce.3lnzqy0jbpxj4pld.rcgu.o:
+0000000000000000 r Hello, world!
+0000000000000000 V __rustc_debug_gdb_scripts_section__
+0000000000000000 r こんにちは
+</code></pre>
+<p>Can you see where this is going?</p>
+<h2 id="encoding"><a class="header" href="#encoding">Encoding</a></h2>
+<p>Here's what we'll do: we'll create one <code>static</code> variable per log message but
+instead of storing the messages <em>in</em> the variables we'll store the messages in
+the variables' <em>symbol names</em>. What we'll log then will not be the contents of
+the <code>static</code> variables but their addresses.</p>
+<p>As long as the <code>static</code> variables are not zero sized each one will have a
+different address. What we're doing here is effectively encoding each message
+into a unique identifier, which happens to be the variable address. Some part of
+the log system will have to decode this ID back into the message.</p>
+<p>Let's write some code to illustrate the idea.</p>
+<p>In this example we'll need some way to do I/O so we'll use the
+<a href="https://crates.io/crates/cortex-m-semihosting"><code>cortex-m-semihosting</code></a> crate for that. Semihosting is a technique for having a
+target device borrow the host I/O capabilities; the host here usually refers to
+the machine that's debugging the target device. In our case, QEMU supports
+semihosting out of the box so there's no need for a debugger. On a real device
+you'll have other ways to do I/O like a serial port; we use semihosting in this
+case because it's the easiest way to do I/O on QEMU.</p>
+<p>Here's the code</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::fmt::Write;
+use cortex_m_semihosting::{debug, hio};
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let mut hstdout = hio::hstdout().unwrap();
+
+    #[unsafe(export_name = "Hello, world!")]
+    static A: u8 = 0;
+
+    let _ = writeln!(hstdout, "{:#x}", &amp;A as *const u8 as usize);
+
+    #[unsafe(export_name = "Goodbye")]
+    static B: u8 = 0;
+
+    let _ = writeln!(hstdout, "{:#x}", &amp;B as *const u8 as usize);
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}</code></pre></pre>
+<p>We also make use of the <code>debug::exit</code> API to have the program terminate the QEMU
+process. This is a convenience so we don't have to manually terminate the QEMU
+process.</p>
+<p>And here's the <code>dependencies</code> section of the Cargo.toml:</p>
+<pre><code class="language-toml">[dependencies]
+cortex-m-semihosting = "0.3.1"
+rt = { path = "../rt" }
+</code></pre>
+<p>Now we can build the program</p>
+<pre><code class="language-console">$ cargo build
+</code></pre>
+<p>To run it we'll have to add the <code>--semihosting-config</code> flag to our QEMU
+invocation:</p>
+<pre><code class="language-console">$ qemu-system-arm \
+      -cpu cortex-m3 \
+      -machine lm3s6965evb \
+      -nographic \
+      -semihosting-config enable=on,target=native \
+      -kernel target/thumbv7m-none-eabi/debug/app
+</code></pre>
+<pre><code class="language-text">0x1fe0
+0x1fe1
+</code></pre>
+<blockquote>
+<p><strong>NOTE</strong>: These addresses may not be the ones you get locally because the
+addresses of <code>static</code> variables are not guaranteed to remain the same when the
+toolchain is changed (e.g. optimizations may have improved).</p>
+</blockquote>
+<p>Now we have two addresses printed to the console.</p>
+<h2 id="decoding"><a class="header" href="#decoding">Decoding</a></h2>
+<p>How do we convert these addresses into strings? The answer is in the symbol
+table of the ELF file.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.rodata\s*0*1\b'
+</code></pre>
+<pre><code class="language-text">00001fe1 g       .rodata		 00000001 Goodbye
+00001fe0 g       .rodata		 00000001 Hello, world!
+$ # first column is the symbol address; last column is the symbol name
+</code></pre>
+<p><code>objdump -t</code> prints the symbol table. This table contains <em>all</em> the symbols but
+we are only looking for the ones in the <code>.rodata</code> section and whose size is one
+byte (our variables have type <code>u8</code>).</p>
+<p>It's important to note that the addresses of the symbols will likely change when
+optimizing the program. Let's check that.</p>
+<blockquote>
+<p><strong>PROTIP</strong> You can set <code>target.thumbv7m-none-eabi.runner</code> to the long QEMU
+command from before (<code>qemu-system-arm -cpu ... -kernel ...</code>) in the Cargo
+configuration file (<code>.cargo/config.toml</code>) to have <code>cargo run</code> use that <em>runner</em> to
+execute the output binary.</p>
+</blockquote>
+<pre><code class="language-console">$ head -n2 .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[target.thumbv7m-none-eabi]
+runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
+</code></pre>
+<pre><code class="language-console">$ cargo run --release
+     Running `qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7m-none-eabi/release/app`
+</code></pre>
+<pre><code class="language-text">0xb9c
+0xb9d
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -t | grep '\.rodata\s*0*1\b'
+</code></pre>
+<pre><code class="language-text">00000b9d g     O .rodata	00000001 Goodbye
+00000b9c g     O .rodata	00000001 Hello, world!
+</code></pre>
+<p>So make sure to always look for the strings in the ELF file you executed.</p>
+<p>Of course, the process of looking up the strings in the ELF file can be automated
+using a tool that parses the symbol table (<code>.symtab</code> section) contained in the
+ELF file. Implementing such tool is out of scope for this book and it's left as
+an exercise for the reader.</p>
+<h2 id="making-it-zero-cost"><a class="header" href="#making-it-zero-cost">Making it zero cost</a></h2>
+<p>Can we do better? Yes, we can!</p>
+<p>The current implementation places the <code>static</code> variables in <code>.rodata</code>, which
+means they occupy space in flash even though we never use their contents. Using
+a little bit of linker script magic we can make them occupy <em>zero</em> space in
+flash.</p>
+<pre><code class="language-console">$ cat log.x
+</code></pre>
+<pre><code class="language-text">SECTIONS
+{
+  .log 0 (INFO) : {
+    *(.log);
+  }
+}
+</code></pre>
+<p>We'll place the <code>static</code> variables in this new output <code>.log</code> section. This
+linker script will collect all the symbols in the <code>.log</code> sections of input
+object files and put them in an output <code>.log</code> section. We have seen this pattern
+in the <a href="memory-layout.html">Memory layout</a> chapter.</p>
+<p>The new bit here is the <code>(INFO)</code> part; this tells the linker that this section
+is a non-allocatable section. Non-allocatable sections are kept in the ELF
+binary as metadata but they are not loaded onto the target device.</p>
+<p>We also specified the start address of this output section: the <code>0</code> in <code>.log 0 (INFO)</code>.</p>
+<p>The other improvement we can do is switch from formatted I/O (<code>fmt::Write</code>) to
+binary I/O, sending the addresses to the host as bytes rather than as strings.</p>
+<p>Binary serialization can be hard but we'll keep things super simple by
+serializing each address as a single byte. With this approach we don't have to
+worry about endianness or framing. The downside of this format is that a single
+byte can only represent up to 256 different addresses.</p>
+<p>Let's make those changes:</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_semihosting::{debug, hio};
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let mut hstdout = hio::hstdout().unwrap();
+
+    #[unsafe(export_name = "Hello, world!")]
+    #[unsafe(link_section = ".log")] // &lt;- NEW!
+    static A: u8 = 0;
+
+    let address = &amp;A as *const u8 as usize as u8;
+    hstdout.write_all(&amp;[address]).unwrap(); // &lt;- CHANGED!
+
+    #[unsafe(export_name = "Goodbye")]
+    #[unsafe(link_section = ".log")] // &lt;- NEW!
+    static B: u8 = 0;
+
+    let address = &amp;B as *const u8 as usize as u8;
+    hstdout.write_all(&amp;[address]).unwrap(); // &lt;- CHANGED!
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}</code></pre></pre>
+<p>Before you run this you'll have to append <code>-Tlog.x</code> to the arguments passed to
+the linker. That can be done in the Cargo configuration file.</p>
+<pre><code class="language-console">$ cat .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[target.thumbv7m-none-eabi]
+runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+  "-C", "link-arg=-Tlog.x", # &lt;- NEW!
+]
+
+[build]
+target = "thumbv7m-none-eabi"
+</code></pre>
+<p>Now you can run it! Since the output now has a binary format we'll pipe it
+through the <code>xxd</code> command to reformat it as a hexadecimal string.</p>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0001
+</code></pre>
+<p>The addresses are <code>0x00</code> and <code>0x01</code>. Let's now look at the symbol table.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000001 g     O .log	00000001 Goodbye
+00000000 g     O .log	00000001 Hello, world!
+</code></pre>
+<p>There are our strings. You'll notice that their addresses now start at zero;
+this is because we set a start address for the output <code>.log</code> section.</p>
+<p>Each variable is 1 byte in size because we are using <code>u8</code> as their type. If we
+used something like <code>u16</code> then all address would be even and we would not be
+able to efficiently use all the address space (<code>0...255</code>).</p>
+<h2 id="packaging-it-up"><a class="header" href="#packaging-it-up">Packaging it up</a></h2>
+<p>You've noticed that the steps to log a string are always the same so we can
+refactor them into a macro that lives in its own crate. Also, we can make the
+logging library more reusable by abstracting the I/O part behind a trait.</p>
+<pre><code class="language-console">$ cargo new --lib log
+
+$ cat log/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>pub trait Log {
+    type Error;
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), Self::Error&gt;;
+}
+
+#[macro_export]
+macro_rules! log {
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log")]
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Given that this library depends on the <code>.log</code> section it should be its
+responsibility to provide the <code>log.x</code> linker script so let's make that happen.</p>
+<pre><code class="language-console">$ mv log.x ../log/
+</code></pre>
+<pre><code class="language-console">$ cat ../log/build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{env, error::Error, fs::File, io::Write, path::PathBuf};
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // Put the linker script somewhere the linker can find it
+    let out = PathBuf::from(env::var("OUT_DIR")?);
+
+    File::create(out.join("log.x"))?.write_all(include_bytes!("log.x"))?;
+
+    println!("cargo:rustc-link-search={}", out.display());
+
+    Ok(())
+}</code></pre></pre>
+<p>Now we can refactor our application to use the <code>log!</code> macro:</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_semihosting::{
+    debug,
+    hio::{self, HStdout},
+};
+
+use log::{log, Log};
+use rt::entry;
+
+struct Logger {
+    hstdout: HStdout,
+}
+
+impl Log for Logger {
+    type Error = ();
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), ()&gt; {
+        self.hstdout.write_all(&amp;[address])
+    }
+}
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let hstdout = hio::hstdout().unwrap();
+    let mut logger = Logger { hstdout };
+
+    let _ = log!(logger, "Hello, world!");
+
+    let _ = log!(logger, "Goodbye");
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}</code></pre></pre>
+<p>Don't forget to update the <code>Cargo.toml</code> file to depend on the new <code>log</code> crate.</p>
+<pre><code class="language-console">$ tail -n4 Cargo.toml
+</code></pre>
+<pre><code class="language-toml">[dependencies]
+cortex-m-semihosting = "0.3.1"
+log = { path = "../log" }
+rt = { path = "../rt" }
+</code></pre>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0001
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000001 g     O .log	00000001 Goodbye
+00000000 g     O .log	00000001 Hello, world!
+</code></pre>
+<p>Same output as before!</p>
+<h2 id="bonus-multiple-log-levels"><a class="header" href="#bonus-multiple-log-levels">Bonus: Multiple log levels</a></h2>
+<p>Many logging frameworks provide ways to log messages at different <em>log levels</em>.
+These log levels convey the severity of the message: "this is an error", "this
+is just a warning", etc. These log levels can be used to filter out unimportant
+messages when searching for e.g. error messages.</p>
+<p>We can extend our logging library to support log levels without increasing its
+footprint. Here's how we'll do that:</p>
+<p>We have a flat address space for the messages: from <code>0</code> to <code>255</code> (inclusive). To
+keep things simple let's say we only want to differentiate between error
+messages and warning messages. We can place all the error messages at the
+beginning of the address space, and all the warning messages <em>after</em> the error
+messages. If the decoder knows the address of the first warning message then it
+can classify the messages. This idea can be extended to support more than two
+log levels.</p>
+<p>Let's test the idea by replacing the <code>log</code> macro with two new macros: <code>error!</code>
+and <code>warn!</code>.</p>
+<pre><code class="language-console">$ cat ../log/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>pub trait Log {
+    type Error;
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), Self::Error&gt;;
+}
+
+/// Logs messages at the ERROR log level
+#[macro_export]
+macro_rules! error {
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log.error")] // &lt;- CHANGED!
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+
+/// Logs messages at the WARNING log level
+#[macro_export]
+macro_rules! warn {
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log.warning")] // &lt;- CHANGED!
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We distinguish errors from warnings by placing the messages in different link
+sections.</p>
+<p>The next thing we have to do is update the linker script to place error messages
+before the warning messages.</p>
+<pre><code class="language-console">$ cat ../log/log.x
+</code></pre>
+<pre><code class="language-text">SECTIONS
+{
+  .log 0 (INFO) : {
+    *(.log.error);
+    __log_warning_start__ = .;
+    *(.log.warning);
+  }
+}
+</code></pre>
+<p>We also give a name, <code>__log_warning_start__</code>, to the boundary between the errors
+and the warnings. The address of this symbol will be the address of the first
+warning message.</p>
+<p>We can now update the application to make use of these new macros.</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_semihosting::{
+    debug,
+    hio::{self, HStdout},
+};
+
+use log::{error, warn, Log};
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let hstdout = hio::hstdout().unwrap();
+    let mut logger = Logger { hstdout };
+
+    let _ = warn!(logger, "Hello, world!"); // &lt;- CHANGED!
+
+    let _ = error!(logger, "Goodbye"); // &lt;- CHANGED!
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}
+
+struct Logger {
+    hstdout: HStdout,
+}
+
+impl Log for Logger {
+    type Error = ();
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), ()&gt; {
+        self.hstdout.write_all(&amp;[address])
+    }
+}</code></pre></pre>
+<p>The output won't change much:</p>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0100
+</code></pre>
+<p>We still get two bytes in the output but the error is given the address 0 and
+the warning is given the address 1 even though the warning was logged first.</p>
+<p>Now look at the symbol table.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000000 g     O .log	00000001 Goodbye
+00000001 g     O .log	00000001 Hello, world!
+00000001 g       .log	00000000 __log_warning_start__
+</code></pre>
+<p>There's now an extra symbol, <code>__log_warning_start__</code>, in the <code>.log</code> section.
+The address of this symbol is the address of the first warning message.
+Symbols with addresses lower than this value are errors, and the rest of symbols
+are warnings.</p>
+<p>With an appropriate decoder you could get the following human readable output
+from all this information:</p>
+<pre><code class="language-text">WARNING Hello, world!
+ERROR Goodbye
+</code></pre>
+<hr />
+<p>If you liked this section check out the <a href="https://crates.io/crates/stlog"><code>stlog</code></a> logging framework which is a
+complete implementation of this idea.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="global-singletons"><a class="header" href="#global-singletons">Global singletons</a></h1>
+<p>In this section we'll cover how to implement a global, shared singleton. The
+embedded Rust book covered local, owned singletons which are pretty much unique
+to Rust. Global singletons are essentially the singleton pattern you see in C
+and C++; they are not specific to embedded development but since they involve
+symbols they seemed a good fit for the Embedonomicon. The embedded Rust book
+also has a chapter on <a href="https://docs.rust-embedded.org/book/peripherals/singletons.html">singletons</a>.</p>
+<p>To illustrate this section we'll extend the logger we developed in the last
+section to support global logging. The result will be very similar to the
+<code>#[global_allocator]</code> feature covered in the <a href="https://docs.rust-embedded.org/book/collections/index.html#using-alloc">collections</a> chapter of the
+embedded Rust book.</p>
+<p>Here's the summary of what we want to do:</p>
+<p>In the last section we created a <code>log!</code> macro to log messages through a specific
+logger, a value that implements the <code>Log</code> trait. The syntax of the <code>log!</code> macro
+is <code>log!(logger, "String")</code>. We want to extend the macro such that
+<code>log!("String")</code> also works. Using the <code>logger</code>-less version should log the
+message through a global logger; this is how <code>std::println!</code> works. We'll also
+need a mechanism to declare what the global logger is; this is the part that's
+similar to <code>#[global_allocator]</code>.</p>
+<p>It could be that the global logger is declared in the top crate, and it could
+also be that the type of the global logger is defined in the top crate. In this
+scenario the dependencies <em>cannot</em> know the exact type of the global logger. To
+support this scenario we'll need some indirection.</p>
+<p>Instead of hardcoding the type of the global logger in the <code>log</code> crate we'll
+declare only the <em>interface</em> of the global logger in that crate. That is we'll
+add a new trait, <code>GlobalLog</code>, to the <code>log</code> crate. The <code>log!</code> macro will also
+have to make use of that trait.</p>
+<pre><code class="language-console">$ cat ../log/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>// NEW!
+pub trait GlobalLog: Sync {
+    fn log(&amp;self, address: u8);
+}
+
+pub trait Log {
+    type Error;
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), Self::Error&gt;;
+}
+
+#[macro_export]
+macro_rules! log {
+    // NEW!
+    ($string:expr) =&gt; {
+        unsafe {
+            unsafe extern "Rust" {
+                static LOGGER: &amp;'static dyn $crate::GlobalLog;
+            }
+
+            #[unsafe(export_name = $string)]
+            #[unsafe(link_section = ".log")]
+            static SYMBOL: u8 = 0;
+
+            $crate::GlobalLog::log(LOGGER, &amp;SYMBOL as *const u8 as usize as u8)
+        }
+    };
+
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log")]
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+
+// NEW!
+#[macro_export]
+macro_rules! global_logger {
+    ($logger:expr) =&gt; {
+        #[unsafe(no_mangle)]
+        pub static LOGGER: &amp;dyn $crate::GlobalLog = &amp;$logger;
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There's quite a bit to unpack here.</p>
+<p>Let's start with the trait.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait GlobalLog: Sync {
+    fn log(&amp;self, address: u8);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Both <code>GlobalLog</code> and <code>Log</code> have a <code>log</code> method. The difference is that
+<code>GlobalLog.log</code> takes a shared reference to the receiver (<code>&amp;self</code>). This is
+necessary because the global logger will be a <code>static</code> variable. More on that
+later.</p>
+<p>The other difference is that <code>GlobalLog.log</code> doesn't return a <code>Result</code>. This
+means that it can <em>not</em> report errors to the caller. This is not a strict
+requirement for traits used to implement global singletons. Error handling in
+global singletons is fine but then all users of the global version of the <code>log!</code>
+macro have to agree on the error type. Here we are simplifying the interface a
+bit by having the <code>GlobalLog</code> implementer deal with the errors.</p>
+<p>Yet another difference is that <code>GlobalLog</code> requires that the implementer is
+<code>Sync</code>, that is that it can be shared between threads. This is a requirement for
+values placed in <code>static</code> variables; their types must implement the <code>Sync</code>
+trait.</p>
+<p>At this point it may not be entirely clear why the interface has to look this
+way. The other parts of the crate will make this clearer so keep reading.</p>
+<p>Next up is the <code>log!</code> macro:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    ($string:expr) =&gt; {
+        unsafe {
+            unsafe extern "Rust" {
+                static LOGGER: &amp;'static dyn $crate::GlobalLog;
+            }
+
+            #[unsafe(export_name = $string)]
+            #[unsafe(link_section = ".log")]
+            static SYMBOL: u8 = 0;
+
+            $crate::GlobalLog::log(LOGGER, &amp;SYMBOL as *const u8 as usize as u8)
+        }
+    };
+<span class="boring">}</span></code></pre></pre>
+<p>When called without a specific <code>$logger</code> the macros uses an <code>extern</code> <code>static</code>
+variable called <code>LOGGER</code> to log the message. This variable <em>is</em> the global
+logger that's defined somewhere else; that's why we use the <code>extern</code> block. We
+saw this pattern in the <a href="main.html">main interface</a> chapter.</p>
+<p>We need to declare a type for <code>LOGGER</code> or the code won't type check. We don't
+know the concrete type of <code>LOGGER</code> at this point but we know, or rather require,
+that it implements the <code>GlobalLog</code> trait so we can use a trait object here.</p>
+<p>The rest of the macro expansion looks very similar to the expansion of the local
+version of the <code>log!</code> macro so I won't explain it here as it's explained in the
+<a href="logging.html">previous</a> chapter.</p>
+<p>Now that we know that <code>LOGGER</code> has to be a trait object it's clearer why we
+omitted the associated <code>Error</code> type in <code>GlobalLog</code>. If we had not omitted then
+we would have need to pick a type for <code>Error</code> in the type signature of <code>LOGGER</code>.
+This is what I earlier meant by "all users of <code>log!</code> would need to agree on the
+error type".</p>
+<p>Now the final piece: the <code>global_logger!</code> macro. It could have been a proc macro
+attribute but it's easier to write a <code>macro_rules!</code> macro.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[macro_export]
+macro_rules! global_logger {
+    ($logger:expr) =&gt; {
+        #[unsafe(no_mangle)]
+        pub static LOGGER: &amp;dyn $crate::GlobalLog = &amp;$logger;
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This macro creates the <code>LOGGER</code> variable that <code>log!</code> uses. Because we need a
+stable ABI interface we use the <code>no_mangle</code> attribute. This way the symbol name
+of <code>LOGGER</code> will be "LOGGER" which is what the <code>log!</code> macro expects.</p>
+<p>The other important bit is that the type of this static variable must exactly
+match the type used in the expansion of the <code>log!</code> macro. If they don't match
+Bad Stuff will happen due to ABI mismatch.</p>
+<p>Let's write an example that uses this new global logger functionality.</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::cell::RefCell;
+use cortex_m::interrupt;
+use cortex_m::interrupt::Mutex;
+use cortex_m_semihosting::{
+    debug,
+    hio::{self, HostStream},
+};
+
+use log::{GlobalLog, global_logger, log};
+use rt::entry;
+
+struct Logger;
+
+global_logger!(Logger);
+
+entry!(main);
+
+fn main() -&gt; ! {
+    log!("Hello, world!");
+
+    log!("Goodbye");
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}
+
+impl GlobalLog for Logger {
+    fn log(&amp;self, address: u8) {
+        // we use a critical section (`interrupt::free`) to make the access to the
+        // `HSTDOUT` variable interrupt-safe which is required for memory safety
+        interrupt::free(|cs| {
+            static HSTDOUT: Mutex&lt;RefCell&lt;Option&lt;HostStream&gt;&gt;&gt; = Mutex::new(RefCell::new(None));
+            let mut hstdout = HSTDOUT.borrow(cs).borrow_mut();
+
+            // lazy initialization
+            if hstdout.is_none() {
+                hstdout.replace(hio::hstdout()?);
+            }
+
+            let hstdout = hstdout.as_mut().unwrap();
+
+            hstdout.write_all(&amp;[address])
+        })
+        .ok(); // `.ok()` = ignore errors
+    }
+}</code></pre></pre>
+<p>We had to add <code>cortex-m</code> to the dependencies.</p>
+<pre><code class="language-console">$ tail -n5 Cargo.toml
+</code></pre>
+<pre><code class="language-text">[dependencies]
+cortex-m = "0.7.7"
+cortex-m-semihosting = "0.5.0"
+log = { path = "../log" }
+rt = { path = "../rt" }
+</code></pre>
+<p>This is a port of one of the examples written in the <a href="logging.html">previous</a> section. The
+output is the same as what we got back there.</p>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0001
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000001 g     O .log	00000001 Goodbye
+00000000 g     O .log	00000001 Hello, world!
+</code></pre>
+<hr />
+<p>Some readers may be concerned about this implementation of global singletons not
+being zero cost because it uses trait objects which involve dynamic dispatch,
+that is method calls are performed through a vtable lookup.</p>
+<p>However, it appears that LLVM is smart enough to eliminate the dynamic dispatch
+when compiling with optimizations / LTO. This can be confirmed by searching for
+<code>LOGGER</code> in the symbol table.</p>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -t | grep LOGGER
+</code></pre>
+<pre><code class="language-text">
+</code></pre>
+<p>If the <code>static</code> is missing that means that there is no vtable and that LLVM was
+capable of transforming all the <code>LOGGER.log</code> calls into <code>Logger.log</code> calls.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="direct-memory-access-dma"><a class="header" href="#direct-memory-access-dma">Direct Memory Access (DMA)</a></h1>
+<p>This section covers the core requirements for building a memory safe API around
+DMA transfers.</p>
+<p>The DMA peripheral is used to perform memory transfers in parallel to the work
+of the processor (the execution of the main program). A DMA transfer is more or
+less equivalent to spawning a thread (see <a href="https://doc.rust-lang.org/std/thread/fn.spawn.html"><code>thread::spawn</code></a>) to do a <code>memcpy</code>.
+We'll use the fork-join model to illustrate the requirements of a memory-safe
+API.</p>
+<p>Consider the following DMA primitives:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A singleton that represents a single DMA channel (channel 1 in this case)
+///
+/// This singleton has exclusive access to the registers of the DMA channel 1
+pub struct Dma1Channel1 {
+    // ..
+}
+
+impl Dma1Channel1 {
+    /// Data will be written to this `address`
+    ///
+    /// `inc` indicates whether the address will be incremented after every byte
+    /// transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn set_destination_address(&amp;mut self, address: usize, inc: bool) {
+        // ..
+    }
+
+    /// Data will be read from this `address`
+    ///
+    /// `inc` indicates whether the address will be incremented after every byte
+    /// transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn set_source_address(&amp;mut self, address: usize, inc: bool) {
+        // ..
+    }
+
+    /// Number of bytes to transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn set_transfer_length(&amp;mut self, len: usize) {
+        // ..
+    }
+
+    /// Starts the DMA transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn start(&amp;mut self) {
+        // ..
+    }
+
+    /// Stops the DMA transfer
+    ///
+    /// NOTE this performs a volatile write
+    pub fn stop(&amp;mut self) {
+        // ..
+    }
+
+    /// Returns `true` if there's a transfer in progress
+    ///
+    /// NOTE this performs a volatile read
+    pub fn in_progress() -&gt; bool {
+        // ..
+        false
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Assume that the <code>Dma1Channel1</code> is statically configured to work with serial port
+(AKA UART or USART) #1, <code>Serial1</code>, in one-shot mode (i.e. not circular mode).
+<code>Serial1</code> provides the following <em>blocking</em> API:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A singleton that represents serial port #1
+pub struct Serial1 {
+    // ..
+}
+
+impl Serial1 {
+    /// Reads out a single byte
+    ///
+    /// NOTE: blocks if no byte is available to be read
+    pub fn read(&amp;mut self) -&gt; Result&lt;u8, Error&gt; {
+        // ..
+        Ok(0)
+    }
+
+    /// Sends out a single byte
+    ///
+    /// NOTE: blocks if the output FIFO buffer is full
+    pub fn write(&amp;mut self, byte: u8) -&gt; Result&lt;(), Error&gt; {
+        // ..
+        Ok(())
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Let's say we want to extend the <code>Serial1</code> API to (a) asynchronously send out a
+buffer and (b) asynchronously fill a buffer.</p>
+<p>We'll start with a memory-unsafe API and we'll iterate on it until it's
+completely memory-safe. At each step we'll show you how the API can be broken to
+make you aware of the issues that need to be addressed when dealing with
+asynchronous memory operations.</p>
+<h2 id="a-first-stab"><a class="header" href="#a-first-stab">A first stab</a></h2>
+<p>For starters, let's try to use the <a href="https://doc.rust-lang.org/std/io/trait.Write.html#method.write_all"><code>Write::write_all</code></a> API as a reference. To
+keep things simple let's ignore all error handling.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A singleton that represents serial port #1
+pub struct Serial1 {
+    // NOTE: we extend this struct by adding the DMA channel singleton
+    dma: Dma1Channel1,
+    // ..
+}
+
+impl Serial1 {
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;'a&gt;(mut self, buffer: &amp;'a [u8]) -&gt; Transfer&lt;&amp;'a [u8]&gt; {
+        self.dma.set_destination_address(USART1_TX, false);
+        self.dma.set_source_address(buffer.as_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        self.dma.start();
+
+        Transfer { buffer }
+    }
+}
+
+/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    buffer: B,
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Returns `true` if the DMA transfer has finished
+    pub fn is_done(&amp;self) -&gt; bool {
+        !Dma1Channel1::in_progress()
+    }
+
+    /// Blocks until the transfer is done and returns the buffer
+    pub fn wait(self) -&gt; B {
+        // Busy wait until the transfer is done
+        while !self.is_done() {}
+
+        self.buffer
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p><strong>NOTE:</strong> <code>Transfer</code> could expose a futures- or generator-based API instead of
+the API shown above. That's an API design question that has little bearing on
+the memory safety of the overall API so we won't delve into it in this text.</p>
+</blockquote>
+<p>We can also implement an asynchronous version of <a href="https://doc.rust-lang.org/std/io/trait.Read.html#method.read_exact"><code>Read::read_exact</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;'a&gt;(&amp;mut self, buffer: &amp;'a mut [u8]) -&gt; Transfer&lt;&amp;'a mut [u8]&gt; {
+        self.dma.set_source_address(USART1_RX, false);
+        self.dma
+            .set_destination_address(buffer.as_mut_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        self.dma.start();
+
+        Transfer { buffer }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here's how to use the <code>write_all</code> API:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn write(serial: Serial1) {
+    // fire and forget
+    serial.write_all(b"Hello, world!\n");
+
+    // do other stuff
+}
+<span class="boring">}</span></code></pre></pre>
+<p>And here's an example of using the <code>read_exact</code> API:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn read(mut serial: Serial1) {
+    let mut buf = [0; 16];
+    let t = serial.read_exact(&amp;mut buf);
+
+    // do other stuff
+
+    t.wait();
+
+    match buf.split(|b| *b == b'\n').next() {
+        Some(b"some-command") =&gt; { /* do something */ }
+        _ =&gt; { /* do something else */ }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="memforget"><a class="header" href="#memforget"><code>mem::forget</code></a></h2>
+<p><a href="https://doc.rust-lang.org/std/mem/fn.forget.html"><code>mem::forget</code></a> is a safe API. If our API is truly safe then we should be able
+to use both together without running into undefined behavior. However, that's
+not the case; consider the following example:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn unsound(mut serial: Serial1) {
+    start(&amp;mut serial);
+    bar();
+}
+
+#[inline(never)]
+fn start(serial: &amp;mut Serial1) {
+    let mut buf = [0; 16];
+
+    // start a DMA transfer and forget the returned `Transfer` value
+    mem::forget(serial.read_exact(&amp;mut buf));
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here we start a DMA transfer, in <code>start</code>, to fill an array allocated on the
+stack and then <code>mem::forget</code> the returned <code>Transfer</code> value. Then we proceed to
+return from <code>start</code> and execute the function <code>bar</code>.</p>
+<p>This series of operations results in undefined behavior. The DMA transfer writes
+to stack memory but that memory is released when <code>start</code> returns and then reused
+by <code>bar</code> to allocate variables like <code>x</code> and <code>y</code>. At runtime this could result in
+variables <code>x</code> and <code>y</code> changing their value at random times. The DMA transfer
+could also overwrite the state (e.g. link register) pushed onto the stack by the
+prologue of function <code>bar</code>.</p>
+<p>Note that if we had used <code>mem::drop</code> instead of <code>mem::forget</code>, it would have
+been possible to make <code>Transfer</code>'s destructor stop the DMA transfer and then the
+program would have been safe. But one <em>cannot</em> rely on destructors running to
+enforce memory safety because <code>mem::forget</code> and memory leaks (see <code>Rc</code> cycles)
+are safe in Rust. (Refer to <a href="https://doc.rust-lang.org/std/mem/fn.forget.html#safety"><code>mem::forget</code> safety</a>.)</p>
+<p>We can fix this particular problem by changing the lifetime of the buffer from
+<code>'a</code> to <code>'static</code> in both APIs.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact(&amp;mut self, buffer: &amp;'static mut [u8]) -&gt; Transfer&lt;&amp;'static mut [u8]&gt; {
+        // .. same as before ..
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all(mut self, buffer: &amp;'static [u8]) -&gt; Transfer&lt;&amp;'static [u8]&gt; {
+        // .. same as before ..
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If we try to replicate the previous problem we note that <code>mem::forget</code> no longer
+causes problems.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[allow(dead_code)]
+fn sound(mut serial: Serial1, buf: &amp;'static mut [u8; 16]) {
+    // NOTE `buf` is moved into `foo`
+    foo(&amp;mut serial, buf);
+    bar();
+}
+
+#[inline(never)]
+fn foo(serial: &amp;mut Serial1, buf: &amp;'static mut [u8]) {
+    // start a DMA transfer and forget the returned `Transfer` value
+    mem::forget(serial.read_exact(buf));
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As before, the DMA transfer continues after <code>mem::forget</code>-ing the <code>Transfer</code>
+value. This time that's not an issue because <code>buf</code> is statically allocated
+(e.g. <code>static mut</code> variable) and not on the stack.</p>
+<h2 id="overlapping-use"><a class="header" href="#overlapping-use">Overlapping use</a></h2>
+<p>Our API doesn't prevent the user from using the <code>Serial</code> interface while the DMA
+transfer is in progress. This could lead the transfer to fail or data to be
+lost.</p>
+<p>There are several ways to prevent overlapping use. One way is to have <code>Transfer</code>
+take ownership of <code>Serial1</code> and return it back when <code>wait</code> is called.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    buffer: B,
+    // NOTE: added
+    serial: Serial1,
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Blocks until the transfer is done and returns the buffer
+    // NOTE: the return value has changed
+    pub fn wait(self) -&gt; (B, Serial1) {
+        // Busy wait until the transfer is done
+        while !self.is_done() {}
+
+        (self.buffer, self.serial)
+    }
+
+    // ..
+}
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    // NOTE we now take `self` by value
+    pub fn read_exact(mut self, buffer: &amp;'static mut [u8]) -&gt; Transfer&lt;&amp;'static mut [u8]&gt; {
+        // .. same as before ..
+
+        Transfer {
+            buffer,
+            // NOTE: added
+            serial: self,
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    // NOTE we now take `self` by value
+    pub fn write_all(mut self, buffer: &amp;'static [u8]) -&gt; Transfer&lt;&amp;'static [u8]&gt; {
+        // .. same as before ..
+
+        Transfer {
+            buffer,
+            // NOTE: added
+            serial: self,
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The move semantics statically prevent access to <code>Serial1</code> while the transfer is
+in progress.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn read(serial: Serial1, buf: &amp;'static mut [u8; 16]) {
+    let t = serial.read_exact(buf);
+
+    // let byte = serial.read(); //~ ERROR: `serial` has been moved
+
+    // .. do stuff ..
+
+    let (serial, buf) = t.wait();
+
+    // .. do more stuff ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There are other ways to prevent overlapping use. For example, a (<code>Cell</code>) flag
+that indicates whether a DMA transfer is in progress could be added to
+<code>Serial1</code>. When the flag is set <code>read</code>, <code>write</code>, <code>read_exact</code> and <code>write_all</code>
+would all return an error (e.g. <code>Error::InUse</code>) at runtime. The flag would be
+set when <code>write_all</code> / <code>read_exact</code> is used and cleared in <code>Transfer.wait</code>.</p>
+<h2 id="compiler-misoptimizations"><a class="header" href="#compiler-misoptimizations">Compiler (mis)optimizations</a></h2>
+<p>The compiler is free to re-order and merge non-volatile memory operations to
+better optimize a program. With our current API, this freedom can lead to
+undefined behavior. Consider the following example:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reorder(serial: Serial1, buf: &amp;'static mut [u8]) {
+    // zero the buffer (for no particular reason)
+    buf.iter_mut().for_each(|byte| *byte = 0);
+
+    let t = serial.read_exact(buf);
+
+    // ... do other stuff ..
+
+    let (buf, serial) = t.wait();
+
+    buf.reverse();
+
+    // .. do stuff with `buf` ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here the compiler is free to move <code>buf.reverse()</code> before <code>t.wait()</code>, which would
+result in a data race: both the processor and the DMA would end up modifying
+<code>buf</code> at the same time. Similarly the compiler can move the zeroing operation to
+after <code>read_exact</code>, which would also result in a data race.</p>
+<p>To prevent these problematic reorderings we can use a <a href="https://doc.rust-lang.org/core/sync/atomic/fn.compiler_fence.html"><code>compiler_fence</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact(mut self, buffer: &amp;'static mut [u8]) -&gt; Transfer&lt;&amp;'static mut [u8]&gt; {
+        self.dma.set_source_address(USART1_RX, false);
+        self.dma
+            .set_destination_address(buffer.as_mut_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        // NOTE: added
+        atomic::compiler_fence(Ordering::Release);
+
+        // NOTE: this is a volatile *write*
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all(mut self, buffer: &amp;'static [u8]) -&gt; Transfer&lt;&amp;'static [u8]&gt; {
+        self.dma.set_destination_address(USART1_TX, false);
+        self.dma.set_source_address(buffer.as_ptr() as usize, true);
+        self.dma.set_transfer_length(buffer.len());
+
+        // NOTE: added
+        atomic::compiler_fence(Ordering::Release);
+
+        // NOTE: this is a volatile *write*
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Blocks until the transfer is done and returns the buffer
+    pub fn wait(self) -&gt; (B, Serial1) {
+        // NOTE: this is a volatile *read*
+        while !self.is_done() {}
+
+        // NOTE: added
+        atomic::compiler_fence(Ordering::Acquire);
+
+        (self.buffer, self.serial)
+    }
+
+    // ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We use <code>Ordering::Release</code> in <code>read_exact</code> and <code>write_all</code> to prevent all
+preceding memory operations from being moved <em>after</em> <code>self.dma.start()</code>, which
+performs a volatile write.</p>
+<p>Likewise, we use <code>Ordering::Acquire</code> in <code>Transfer.wait</code> to prevent all
+subsequent memory operations from being moved <em>before</em> <code>self.is_done()</code>, which
+performs a volatile read.</p>
+<p>To better visualize the effect of the fences here's a slightly tweaked version
+of the example from the previous section. We have added the fences and their
+orderings in the comments.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reorder(serial: Serial1, buf: &amp;'static mut [u8], x: &amp;mut u32) {
+    // zero the buffer (for no particular reason)
+    buf.iter_mut().for_each(|byte| *byte = 0);
+
+    *x += 1;
+
+    let t = serial.read_exact(buf); // compiler_fence(Ordering::Release) ▲
+
+    // NOTE: the processor can't access `buf` between the fences
+    // ... do other stuff ..
+    *x += 2;
+
+    let (buf, serial) = t.wait(); // compiler_fence(Ordering::Acquire) ▼
+
+    *x += 3;
+
+    buf.reverse();
+
+    // .. do stuff with `buf` ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The zeroing operation <em>cannot</em> be moved <em>after</em> <code>read_exact</code> due to the
+<code>Release</code> fence. Similarly, the <code>reverse</code> operation <em>cannot</em> be moved <em>before</em>
+<code>wait</code> due to the <code>Acquire</code> fence. The memory operations <em>between</em> both fences
+<em>can</em> be freely reordered across the fences but none of those operations
+involves <code>buf</code> so such reorderings do <em>not</em> result in undefined behavior.</p>
+<p>Note that <code>compiler_fence</code> is a bit stronger than what's required. For example,
+the fences will prevent the operations on <code>x</code> from being merged even though we
+know that <code>buf</code> doesn't overlap with <code>x</code> (due to Rust aliasing rules). However,
+there exists no intrinsic that's more fine grained than <code>compiler_fence</code>.</p>
+<h3 id="dont-we-need-a-memory-barrier"><a class="header" href="#dont-we-need-a-memory-barrier">Don't we need a memory barrier?</a></h3>
+<p>That depends on the target architecture. In the case of Cortex M0 to M4F cores,
+<a href="https://documentation-service.arm.com/static/5efefb97dbdee951c1cd5aaf">AN321</a> says:</p>
+<blockquote>
+<p>3.2 Typical usages</p>
+<p>(..)</p>
+<p>The use of <code>DMB</code> is rarely needed in Cortex-M processors because they do not
+reorder memory transactions. However, it is needed if the software is to be
+reused on other ARM processors, especially multi-master systems. For example:</p>
+<ul>
+<li>DMA controller configuration. A barrier is required between a CPU memory
+access and a DMA operation.</li>
+</ul>
+<p>(..)</p>
+<p>4.18 Multi-master systems</p>
+<p>(..)</p>
+<p>Omitting the <code>DMB</code> or <code>DSB</code> instruction in the examples in Figure 41 on page
+47 and Figure 42 would not cause any error because the Cortex-M processors:</p>
+<ul>
+<li>do not re-order memory transfers</li>
+<li>do not permit two write transfers to be overlapped.</li>
+</ul>
+</blockquote>
+<p>Where Figure 41 shows a <code>DMB</code> (memory barrier) instruction being used before
+starting a DMA transaction.</p>
+<p>In the case of Cortex-M7 cores you'll need memory barriers (<code>DMB</code>/<code>DSB</code>) if you
+are using the data cache (DCache), unless you manually invalidate the buffer
+used by the DMA. Even with the data cache disabled, memory barriers might still
+be required to avoid reordering in the store buffer.</p>
+<p>If your target is a multi-core system then it's very likely that you'll need
+memory barriers.</p>
+<p>If you do need the memory barrier then you need to use <a href="https://doc.rust-lang.org/core/sync/atomic/fn.fence.html"><code>atomic::fence</code></a> instead
+of <code>compiler_fence</code>. That should generate a <code>DMB</code> instruction on Cortex-M
+devices.</p>
+<h2 id="dont-we-need-atomics"><a class="header" href="#dont-we-need-atomics">Don't we need atomics?</a></h2>
+<p>The documentation on fences states that they only work in combination with atomics:</p>
+<blockquote>
+<p>A fence ‘A’ which has (at least) Release ordering semantics, synchronizes with
+a fence ‘B’ with (at least) Acquire semantics, if and only if there exist
+operations X and Y, both operating on some atomic object ‘m’ such that A is
+sequenced before X, Y is sequenced before B and Y observes the change to m.</p>
+</blockquote>
+<p>The same is true for <code>compiler_fence</code>:</p>
+<blockquote>
+<p>Note that just like fence, synchronization still requires atomic operations
+to be used in both threads – it is not possible to perform synchronization
+entirely with fences and non-atomic operations.</p>
+</blockquote>
+<p>So how does this work when not talking to another thread, but to
+some hardware like the DMA engine? The answer is that in the current
+implementation, volatiles happen to work just like relaxed atomic
+operations. There's work going on to actually guarantee this behavior
+for future versions of Rust.</p>
+<h2 id="generic-buffer"><a class="header" href="#generic-buffer">Generic buffer</a></h2>
+<p>Our API is more restrictive that it needs to be. For example, the following
+program won't be accepted even though it's valid.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reuse(serial: Serial1, msg: &amp;'static mut [u8]) {
+    // send a message
+    let t1 = serial.write_all(msg);
+
+    // ..
+
+    let (msg, serial) = t1.wait(); // `msg` is now `&amp;'static [u8]`
+
+    msg.reverse();
+
+    // now send it in reverse
+    let t2 = serial.write_all(msg);
+
+    // ..
+
+    let (buf, serial) = t2.wait();
+
+    // ..
+}
+<span class="boring">}</span></code></pre></pre>
+<p>To accept such program we can make the buffer argument generic.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// as-slice = "0.1.0"
+use as_slice::{AsMutSlice, AsSlice};
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: B) -&gt; Transfer&lt;B&gt;
+    where
+        B: AsMutSlice&lt;Element = u8&gt;,
+    {
+        // NOTE: added
+        let slice = buffer.as_mut_slice();
+        let (ptr, len) = (slice.as_mut_ptr(), slice.len());
+
+        self.dma.set_source_address(USART1_RX, false);
+
+        // NOTE: tweaked
+        self.dma.set_destination_address(ptr as usize, true);
+        self.dma.set_transfer_length(len);
+
+        atomic::compiler_fence(Ordering::Release);
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    fn write_all&lt;B&gt;(mut self, buffer: B) -&gt; Transfer&lt;B&gt;
+    where
+        B: AsSlice&lt;Element = u8&gt;,
+    {
+        // NOTE: added
+        let slice = buffer.as_slice();
+        let (ptr, len) = (slice.as_ptr(), slice.len());
+
+        self.dma.set_destination_address(USART1_TX, false);
+
+        // NOTE: tweaked
+        self.dma.set_source_address(ptr as usize, true);
+        self.dma.set_transfer_length(len);
+
+        atomic::compiler_fence(Ordering::Release);
+        self.dma.start();
+
+        Transfer {
+            buffer,
+            serial: self,
+        }
+    }
+}
+
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p><strong>NOTE:</strong> <code>AsRef&lt;[u8]&gt;</code> (<code>AsMut&lt;[u8]&gt;</code>) could have been used instead of
+<code>AsSlice&lt;Element = u8&gt;</code> (<code>AsMutSlice&lt;Element = u8</code>).</p>
+</blockquote>
+<p>Now the <code>reuse</code> program will be accepted.</p>
+<h2 id="immovable-buffers"><a class="header" href="#immovable-buffers">Immovable buffers</a></h2>
+<p>With this modification the API will also accept arrays by value (e.g. <code>[u8; 16]</code>). However, using arrays can result in pointer invalidation. Consider the
+following program.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn invalidate(serial: Serial1) {
+    let t = start(serial);
+
+    bar();
+
+    let (buf, serial) = t.wait();
+}
+
+#[inline(never)]
+fn start(serial: Serial1) -&gt; Transfer&lt;[u8; 16]&gt; {
+    // array allocated in this frame
+    let buffer = [0; 16];
+
+    serial.read_exact(buffer)
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The <code>read_exact</code> operation will use the address of the <code>buffer</code> local to the
+<code>start</code> function. That local <code>buffer</code> will be freed when <code>start</code> returns and the
+pointer used in <code>read_exact</code> will become invalidated. You'll end up with a
+situation similar to the <a href="dma.html#dealing-with-memforget"><code>unsound</code></a> example.</p>
+<p>To avoid this problem we require that the buffer used with our API retains its
+memory location even when it's moved. The <a href="https://doc.rust-lang.org/nightly/std/pin/index.html"><code>Pin</code></a> newtype provides such a
+guarantee. We can update our API to required that all buffers are "pinned"
+first.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    // NOTE: changed
+    buffer: Pin&lt;B&gt;,
+    serial: Serial1,
+}
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: bounds changed
+        B: DerefMut,
+        B::Target: AsMutSlice&lt;Element = u8&gt; + Unpin,
+    {
+        // .. same as before ..
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;B&gt;(mut self, buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: bounds changed
+        B: Deref,
+        B::Target: AsSlice&lt;Element = u8&gt;,
+    {
+        // .. same as before ..
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p><strong>NOTE:</strong> We could have used the <a href="https://crates.io/crates/stable_deref_trait"><code>StableDeref</code></a> trait instead of the <code>Pin</code>
+newtype but opted for <code>Pin</code> since it's provided in the standard library.</p>
+</blockquote>
+<p>With this new API we can use <code>&amp;'static mut</code> references, <code>Box</code>-ed slices, <code>Rc</code>-ed
+slices, etc.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn static_mut(serial: Serial1, buf: &amp;'static mut [u8]) {
+    let buf = Pin::new(buf);
+
+    let t = serial.read_exact(buf);
+
+    // ..
+
+    let (buf, serial) = t.wait();
+
+    // ..
+}
+
+fn boxed(serial: Serial1, buf: Box&lt;[u8]&gt;) {
+    let buf = Pin::new(buf);
+
+    let t = serial.read_exact(buf);
+
+    // ..
+
+    let (buf, serial) = t.wait();
+
+    // ..
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="static-bound"><a class="header" href="#static-bound"><code>'static</code> bound</a></h2>
+<p>Does pinning let us safely use stack allocated arrays? The answer is <em>no</em>.
+Consider the following example.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn unsound(serial: Serial1) {
+    start(serial);
+
+    bar();
+}
+
+// pin-utils = "0.1.0-alpha.4"
+use pin_utils::pin_mut;
+
+#[inline(never)]
+fn start(serial: Serial1) {
+    let buffer = [0; 16];
+
+    // pin the `buffer` to this stack frame
+    // `buffer` now has type `Pin&lt;&amp;mut [u8; 16]&gt;`
+    pin_mut!(buffer);
+
+    mem::forget(serial.read_exact(buffer));
+}
+
+#[inline(never)]
+fn bar() {
+    // stack variables
+    let mut x = 0;
+    let mut y = 0;
+
+    // use `x` and `y`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As seen many times before, the above program runs into undefined behavior due to
+stack frame corruption.</p>
+<p>The API is unsound for buffers of type <code>Pin&lt;&amp;'a mut [u8]&gt;</code> where <code>'a</code> is <em>not</em>
+<code>'static</code>. To prevent the problem we have to add a <code>'static</code> bound in some
+places.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: added 'static bound
+        B: DerefMut + 'static,
+        B::Target: AsMutSlice&lt;Element = u8&gt; + Unpin,
+    {
+        // .. same as before ..
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;B&gt;(mut self, buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        // NOTE: added 'static bound
+        B: Deref + 'static,
+        B::Target: AsSlice&lt;Element = u8&gt;,
+    {
+        // .. same as before ..
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Now the problematic program will be rejected.</p>
+<h2 id="destructors"><a class="header" href="#destructors">Destructors</a></h2>
+<p>Now that the API accepts <code>Box</code>-es and other types that have destructors we need
+to decide what to do when <code>Transfer</code> is early-dropped.</p>
+<p>Normally, <code>Transfer</code> values are consumed using the <code>wait</code> method but it's also
+possible to, implicitly or explicitly, <code>drop</code> the value before the transfer is
+over. For example, dropping a <code>Transfer&lt;Box&lt;[u8]&gt;&gt;</code> value will cause the buffer
+to be deallocated. This can result in undefined behavior if the transfer is
+still in progress as the DMA would end up writing to deallocated memory.</p>
+<p>In such a scenario one option is to make <code>Transfer.drop</code> stop the DMA transfer.
+The other option is to make <code>Transfer.drop</code> wait for the transfer to finish.
+We'll pick the former option as it's cheaper.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// A DMA transfer
+pub struct Transfer&lt;B&gt; {
+    // NOTE: always `Some` variant
+    inner: Option&lt;Inner&lt;B&gt;&gt;,
+}
+
+// NOTE: previously named `Transfer&lt;B&gt;`
+struct Inner&lt;B&gt; {
+    buffer: Pin&lt;B&gt;,
+    serial: Serial1,
+}
+
+impl&lt;B&gt; Transfer&lt;B&gt; {
+    /// Blocks until the transfer is done and returns the buffer
+    pub fn wait(mut self) -&gt; (Pin&lt;B&gt;, Serial1) {
+        while !self.is_done() {}
+
+        atomic::compiler_fence(Ordering::Acquire);
+
+        let inner = self
+            .inner
+            .take()
+            .unwrap_or_else(|| unsafe { hint::unreachable_unchecked() });
+        (inner.buffer, inner.serial)
+    }
+}
+
+impl&lt;B&gt; Drop for Transfer&lt;B&gt; {
+    fn drop(&amp;mut self) {
+        if let Some(inner) = self.inner.as_mut() {
+            // NOTE: this is a volatile write
+            inner.serial.dma.stop();
+
+            // we need a read here to make the Acquire fence effective
+            // we do *not* need this if `dma.stop` does a RMW operation
+            unsafe {
+                ptr::read_volatile(&amp;0);
+            }
+
+            // we need a fence here for the same reason we need one in `Transfer.wait`
+            atomic::compiler_fence(Ordering::Acquire);
+        }
+    }
+}
+
+impl Serial1 {
+    /// Receives data into the given `buffer` until it's filled
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn read_exact&lt;B&gt;(mut self, mut buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        B: DerefMut + 'static,
+        B::Target: AsMutSlice&lt;Element = u8&gt; + Unpin,
+    {
+        // .. same as before ..
+
+        Transfer {
+            inner: Some(Inner {
+                buffer,
+                serial: self,
+            }),
+        }
+    }
+
+    /// Sends out the given `buffer`
+    ///
+    /// Returns a value that represents the in-progress DMA transfer
+    pub fn write_all&lt;B&gt;(mut self, buffer: Pin&lt;B&gt;) -&gt; Transfer&lt;B&gt;
+    where
+        B: Deref + 'static,
+        B::Target: AsSlice&lt;Element = u8&gt;,
+    {
+        // .. same as before ..
+
+        Transfer {
+            inner: Some(Inner {
+                buffer,
+                serial: self,
+            }),
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Now the DMA transfer will be stopped before the buffer is deallocated.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reuse(serial: Serial1) {
+    let buf = Pin::new(Box::new([0; 16]));
+
+    let t = serial.read_exact(buf); // compiler_fence(Ordering::Release) ▲
+
+    // ..
+
+    // this stops the DMA transfer and frees memory
+    mem::drop(t); // compiler_fence(Ordering::Acquire) ▼
+
+    // this likely reuses the previous memory allocation
+    let mut buf = Box::new([0; 16]);
+
+    // .. do stuff with `buf` ..
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>To sum it up, we need to consider all the following points to achieve
+memory-safe DMA transfers:</p>
+<ul>
+<li>
+<p>Use immovable buffers plus indirection: <code>Pin&lt;B&gt;</code>. Alternatively, you can use
+the <code>StableDeref</code> trait.</p>
+</li>
+<li>
+<p>The ownership of the buffer must be passed to the DMA : <code>B: 'static</code>.</p>
+</li>
+<li>
+<p>Do <em>not</em> rely on destructors running for memory safety. Consider what happens
+if <code>mem::forget</code> is used with your API.</p>
+</li>
+<li>
+<p><em>Do</em> add a custom destructor that stops the DMA transfer, or waits for it to
+finish. Consider what happens if <code>mem::drop</code> is used with your API.</p>
+</li>
+</ul>
+<hr />
+<p>This text leaves out several details required to build a production-grade DMA
+abstraction, like configuring the DMA channels (e.g. streams, circular vs
+one-shot mode, etc.), alignment of buffers, error handling, how to make the
+abstraction device-agnostic, etc. All those aspects are left as an exercise for
+the reader / community (<code>:P</code>).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="a-note-on-compiler-support"><a class="header" href="#a-note-on-compiler-support">A note on compiler support</a></h1>
+<p>This book makes use of a built-in <em>compiler</em> target, the <code>thumbv7m-none-eabi</code>, for which the Rust
+team distributes a <code>rust-std</code> component, which is a pre-compiled collection of crates like <a href="https://doc.rust-lang.org/core/index.html"><code>core</code></a>
+and <a href="https://doc.rust-lang.org/std/index.html"><code>std</code></a>.</p>
+<p>If you want to attempt replicating the contents of this book for a different target architecture,
+you need to take into account the different levels of support that Rust provides for (compilation)
+targets.</p>
+<h2 id="llvm-support"><a class="header" href="#llvm-support">LLVM support</a></h2>
+<p>As of Rust 1.28, the official Rust compiler, <code>rustc</code>, uses LLVM for (machine) code generation. The
+minimal level of support Rust provides for an architecture is having its LLVM backend enabled in
+<code>rustc</code>. You can see all the architectures that <code>rustc</code> supports, through LLVM, by running the
+following command:</p>
+<pre><code class="language-console">$ # you need to have `cargo-binutils` installed to run this command
+$ cargo objdump -- --version
+LLVM (http://llvm.org/):
+  LLVM version 7.0.0svn
+  Optimized build.
+  Default target: x86_64-unknown-linux-gnu
+  Host CPU: skylake
+
+  Registered Targets:
+    aarch64    - AArch64 (little endian)
+    aarch64_be - AArch64 (big endian)
+    arm        - ARM
+    arm64      - ARM64 (little endian)
+    armeb      - ARM (big endian)
+    hexagon    - Hexagon
+    mips       - Mips
+    mips64     - Mips64 [experimental]
+    mips64el   - Mips64el [experimental]
+    mipsel     - Mipsel
+    msp430     - MSP430 [experimental]
+    nvptx      - NVIDIA PTX 32-bit
+    nvptx64    - NVIDIA PTX 64-bit
+    ppc32      - PowerPC 32
+    ppc64      - PowerPC 64
+    ppc64le    - PowerPC 64 LE
+    sparc      - Sparc
+    sparcel    - Sparc LE
+    sparcv9    - Sparc V9
+    systemz    - SystemZ
+    thumb      - Thumb
+    thumbeb    - Thumb (big endian)
+    wasm32     - WebAssembly 32-bit
+    wasm64     - WebAssembly 64-bit
+    x86        - 32-bit X86: Pentium-Pro and above
+    x86-64     - 64-bit X86: EM64T and AMD64
+</code></pre>
+<p>If LLVM supports the architecture you are interested in, but <code>rustc</code> is built with the backend
+disabled (which is the case of AVR as of Rust 1.28), then you will need to modify the Rust source
+enabling it. The first two commits of PR <a href="https://github.com/rust-lang/rust/pull/52787">rust-lang/rust#52787</a> give you an idea of the required
+changes.</p>
+<p>On the other hand, if LLVM doesn't support the architecture, but a fork of LLVM does, you will have
+to replace the original version of LLVM with the fork before building <code>rustc</code>. The Rust build system
+allows this and in principle it should just require changing the <code>llvm</code> submodule to point to the
+fork.</p>
+<p>If your target architecture is only supported by some vendor-provided GCC, you have the option of
+using <a href="https://github.com/thepowersgang/mrustc"><code>mrustc</code></a>, an unofficial Rust compiler, to translate your Rust program into C code and then
+compile that using GCC.</p>
+<h2 id="built-in-target"><a class="header" href="#built-in-target">Built-in target</a></h2>
+<p>A compilation target is more than just its architecture. Each target has a <a href="https://github.com/rust-lang/rfcs/blob/master/text/0131-target-specification.md">specification</a>
+associated to it that describes, among other things, its architecture, its operating system and the
+default linker.</p>
+<p>The Rust compiler knows about several targets. These are <em>built into</em> the compiler and can be listed
+by running the following command:</p>
+<pre><code class="language-console">$ rustc --print target-list | column
+aarch64-fuchsia                   mipsisa32r6el-unknown-linux-gnu
+aarch64-linux-android             mipsisa64r6-unknown-linux-gnuabi64
+aarch64-pc-windows-msvc           mipsisa64r6el-unknown-linux-gnuabi64
+aarch64-unknown-cloudabi          msp430-none-elf
+aarch64-unknown-freebsd           nvptx64-nvidia-cuda
+aarch64-unknown-hermit            powerpc-unknown-linux-gnu
+aarch64-unknown-linux-gnu         powerpc-unknown-linux-gnuspe
+aarch64-unknown-linux-musl        powerpc-unknown-linux-musl
+aarch64-unknown-netbsd            powerpc-unknown-netbsd
+aarch64-unknown-none              powerpc-wrs-vxworks
+aarch64-unknown-none-softfloat    powerpc-wrs-vxworks-spe
+aarch64-unknown-openbsd           powerpc64-unknown-freebsd
+aarch64-unknown-redox             powerpc64-unknown-linux-gnu
+aarch64-uwp-windows-msvc          powerpc64-unknown-linux-musl
+aarch64-wrs-vxworks               powerpc64-wrs-vxworks
+arm-linux-androideabi             powerpc64le-unknown-linux-gnu
+arm-unknown-linux-gnueabi         powerpc64le-unknown-linux-musl
+arm-unknown-linux-gnueabihf       riscv32i-unknown-none-elf
+arm-unknown-linux-musleabi        riscv32imac-unknown-none-elf
+arm-unknown-linux-musleabihf      riscv32imc-unknown-none-elf
+armebv7r-none-eabi                riscv64gc-unknown-linux-gnu
+armebv7r-none-eabihf              riscv64gc-unknown-none-elf
+armv4t-unknown-linux-gnueabi      riscv64imac-unknown-none-elf
+armv5te-unknown-linux-gnueabi     s390x-unknown-linux-gnu
+armv5te-unknown-linux-musleabi    sparc-unknown-linux-gnu
+armv6-unknown-freebsd             sparc64-unknown-linux-gnu
+armv6-unknown-netbsd-eabihf       sparc64-unknown-netbsd
+armv7-linux-androideabi           sparc64-unknown-openbsd
+armv7-unknown-cloudabi-eabihf     sparcv9-sun-solaris
+armv7-unknown-freebsd             thumbv6m-none-eabi
+armv7-unknown-linux-gnueabi       thumbv7a-pc-windows-msvc
+armv7-unknown-linux-gnueabihf     thumbv7em-none-eabi
+armv7-unknown-linux-musleabi      thumbv7em-none-eabihf
+armv7-unknown-linux-musleabihf    thumbv7m-none-eabi
+armv7-unknown-netbsd-eabihf       thumbv7neon-linux-androideabi
+armv7-wrs-vxworks-eabihf          thumbv7neon-unknown-linux-gnueabihf
+armv7a-none-eabi                  thumbv7neon-unknown-linux-musleabihf
+armv7a-none-eabihf                thumbv8m.base-none-eabi
+armv7r-none-eabi                  thumbv8m.main-none-eabi
+armv7r-none-eabihf                thumbv8m.main-none-eabihf
+asmjs-unknown-emscripten          wasm32-unknown-emscripten
+hexagon-unknown-linux-musl        wasm32-unknown-unknown
+i586-pc-windows-msvc              wasm32-wasi
+i586-unknown-linux-gnu            x86_64-apple-darwin
+i586-unknown-linux-musl           x86_64-fortanix-unknown-sgx
+i686-apple-darwin                 x86_64-fuchsia
+i686-linux-android                x86_64-linux-android
+i686-pc-windows-gnu               x86_64-linux-kernel
+i686-pc-windows-msvc              x86_64-pc-solaris
+i686-unknown-cloudabi             x86_64-pc-windows-gnu
+i686-unknown-freebsd              x86_64-pc-windows-msvc
+i686-unknown-haiku                x86_64-rumprun-netbsd
+i686-unknown-linux-gnu            x86_64-sun-solaris
+i686-unknown-linux-musl           x86_64-unknown-cloudabi
+i686-unknown-netbsd               x86_64-unknown-dragonfly
+i686-unknown-openbsd              x86_64-unknown-freebsd
+i686-unknown-uefi                 x86_64-unknown-haiku
+i686-uwp-windows-gnu              x86_64-unknown-hermit
+i686-uwp-windows-msvc             x86_64-unknown-hermit-kernel
+i686-wrs-vxworks                  x86_64-unknown-illumos
+mips-unknown-linux-gnu            x86_64-unknown-l4re-uclibc
+mips-unknown-linux-musl           x86_64-unknown-linux-gnu
+mips-unknown-linux-uclibc         x86_64-unknown-linux-gnux32
+mips64-unknown-linux-gnuabi64     x86_64-unknown-linux-musl
+mips64-unknown-linux-muslabi64    x86_64-unknown-netbsd
+mips64el-unknown-linux-gnuabi64   x86_64-unknown-openbsd
+mips64el-unknown-linux-muslabi64  x86_64-unknown-redox
+mipsel-unknown-linux-gnu          x86_64-unknown-uefi
+mipsel-unknown-linux-musl         x86_64-uwp-windows-gnu
+mipsel-unknown-linux-uclibc       x86_64-uwp-windows-msvc
+mipsisa32r6-unknown-linux-gnu     x86_64-wrs-vxworks
+</code></pre>
+<p>You can print the specification of one of these targets using the following command:</p>
+<pre><code class="language-console">$ rustc +nightly -Z unstable-options --print target-spec-json --target thumbv7m-none-eabi
+{
+  "abi-blacklist": [
+    "stdcall",
+    "fastcall",
+    "vectorcall",
+    "thiscall",
+    "win64",
+    "sysv64"
+  ],
+  "arch": "arm",
+  "data-layout": "e-m:e-p:32:32-i64:64-v128:64:128-a:0:32-n32-S64",
+  "emit-debug-gdb-scripts": false,
+  "env": "",
+  "executables": true,
+  "is-builtin": true,
+  "linker": "arm-none-eabi-gcc",
+  "linker-flavor": "gcc",
+  "llvm-target": "thumbv7m-none-eabi",
+  "max-atomic-width": 32,
+  "os": "none",
+  "panic-strategy": "abort",
+  "relocation-model": "static",
+  "target-c-int-width": "32",
+  "target-endian": "little",
+  "target-pointer-width": "32",
+  "vendor": ""
+}
+</code></pre>
+<p>If none of these built-in targets seems appropriate for your target system, you'll have to create a
+custom target by writing your own target specification file in JSON format which is described in the
+<a href="./custom-target.html">next section</a>.</p>
+<h2 id="rust-std-component"><a class="header" href="#rust-std-component"><code>rust-std</code> component</a></h2>
+<p>For some of the built-in target the Rust team distributes <code>rust-std</code> components via <code>rustup</code>. This
+component is a collection of pre-compiled crates like <code>core</code> and <code>std</code>, and it's required for cross
+compilation.</p>
+<p>You can find the list of targets that have a <code>rust-std</code> component available via <code>rustup</code> by running
+the following command:</p>
+<pre><code class="language-console">$ rustup target list | column
+aarch64-apple-ios                       mipsel-unknown-linux-musl
+aarch64-fuchsia                         nvptx64-nvidia-cuda
+aarch64-linux-android                   powerpc-unknown-linux-gnu
+aarch64-pc-windows-msvc                 powerpc64-unknown-linux-gnu
+aarch64-unknown-linux-gnu               powerpc64le-unknown-linux-gnu
+aarch64-unknown-linux-musl              riscv32i-unknown-none-elf
+aarch64-unknown-none                    riscv32imac-unknown-none-elf
+aarch64-unknown-none-softfloat          riscv32imc-unknown-none-elf
+arm-linux-androideabi                   riscv64gc-unknown-linux-gnu
+arm-unknown-linux-gnueabi               riscv64gc-unknown-none-elf
+arm-unknown-linux-gnueabihf             riscv64imac-unknown-none-elf
+arm-unknown-linux-musleabi              s390x-unknown-linux-gnu
+arm-unknown-linux-musleabihf            sparc64-unknown-linux-gnu
+armebv7r-none-eabi                      sparcv9-sun-solaris
+armebv7r-none-eabihf                    thumbv6m-none-eabi
+armv5te-unknown-linux-gnueabi           thumbv7em-none-eabi
+armv5te-unknown-linux-musleabi          thumbv7em-none-eabihf
+armv7-linux-androideabi                 thumbv7m-none-eabi
+armv7-unknown-linux-gnueabi             thumbv7neon-linux-androideabi
+armv7-unknown-linux-gnueabihf           thumbv7neon-unknown-linux-gnueabihf
+armv7-unknown-linux-musleabi            thumbv8m.base-none-eabi
+armv7-unknown-linux-musleabihf          thumbv8m.main-none-eabi
+armv7a-none-eabi                        thumbv8m.main-none-eabihf
+armv7r-none-eabi                        wasm32-unknown-emscripten
+armv7r-none-eabihf                      wasm32-unknown-unknown
+asmjs-unknown-emscripten                wasm32-wasi
+i586-pc-windows-msvc                    x86_64-apple-darwin
+i586-unknown-linux-gnu                  x86_64-apple-ios
+i586-unknown-linux-musl                 x86_64-fortanix-unknown-sgx
+i686-linux-android                      x86_64-fuchsia
+i686-pc-windows-gnu                     x86_64-linux-android
+i686-pc-windows-msvc                    x86_64-pc-windows-gnu
+i686-unknown-freebsd                    x86_64-pc-windows-msvc
+i686-unknown-linux-gnu                  x86_64-rumprun-netbsd
+i686-unknown-linux-musl                 x86_64-sun-solaris
+mips-unknown-linux-gnu                  x86_64-unknown-cloudabi
+mips-unknown-linux-musl                 x86_64-unknown-freebsd
+mips64-unknown-linux-gnuabi64           x86_64-unknown-linux-gnu (default)
+mips64-unknown-linux-muslabi64          x86_64-unknown-linux-gnux32
+mips64el-unknown-linux-gnuabi64         x86_64-unknown-linux-musl
+mips64el-unknown-linux-muslabi64        x86_64-unknown-netbsd
+mipsel-unknown-linux-gnu                x86_64-unknown-redox
+</code></pre>
+<p>If there's no <code>rust-std</code> component for your target, or you are using a custom target, then you'll
+have to use a nightly toolchain to build the standard library. See the next page about <a href="./custom-target.html#use-the-target-file">building for
+custom targets</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-custom-target"><a class="header" href="#creating-a-custom-target">Creating a custom target</a></h1>
+<p>If a custom target triple is not available for your platform, you must create a custom target file
+that describes your target to <code>rustc</code>.</p>
+<p>Keep in mind that it is required to use a nightly compiler to build the core library, which must be
+done for a target unknown to <code>rustc</code>.</p>
+<h2 id="deciding-on-a-target-triple"><a class="header" href="#deciding-on-a-target-triple">Deciding on a target triple</a></h2>
+<p>Many targets already have a known triple used to describe them, typically in the form
+ARCH-VENDOR-SYS-ABI. You should aim to use the same triple that <a href="https://clang.llvm.org/docs/CrossCompilation.html#target-triple">LLVM uses</a>;
+however, it may differ if you need to specify additional information to Rust that LLVM does not know
+about. Although the triple is technically only for human use, it's important for it to be unique and
+descriptive especially if the target will be upstreamed in the future.</p>
+<p>The ARCH part is typically just the architecture name, except in the case of 32-bit ARM. For
+example, you would probably use x86_64 for those processors, but specify the exact ARM architecture
+version. Typical values might be <code>armv7</code>, <code>armv5te</code>, or <code>thumbv7neon</code>. Take a look at the names of
+the <a href="./compiler-support.html#built-in-target">built-in targets</a> for inspiration.</p>
+<p>The VENDOR part is optional and describes the manufacturer. Omitting this field is the same as
+using <code>unknown</code>.</p>
+<p>The SYS part describes the OS that is used. Typical values include <code>win32</code>, <code>linux</code>, and <code>darwin</code>
+for desktop platforms. <code>none</code> is used for bare-metal usage.</p>
+<p>The ABI part describes how the process starts up. <code>eabi</code> is used for bare metal, while <code>gnu</code> is used
+for glibc, <code>musl</code> for musl, etc.</p>
+<p>Now that you have a target triple, create a file with the name of the triple and a <code>.json</code>
+extension. For example, a file describing <code>armv7a-none-eabi</code> would have the filename
+<code>armv7a-none-eabi.json</code>.</p>
+<h2 id="fill-the-target-file"><a class="header" href="#fill-the-target-file">Fill the target file</a></h2>
+<p>The target file must be valid JSON. There are two places where its contents are described:
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_target/spec/struct.Target.html"><code>Target</code></a>, where every field is mandatory, and <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_target/spec/struct.TargetOptions.html"><code>TargetOptions</code></a>, where every field is optional.
+<strong>All underscores are replaced with hyphens</strong>.</p>
+<p>The recommended way is to base your target file on the specification of a built-in target that's
+similar to your target system, then tweak it to match the properties of your target system. To do
+so, use the command
+<code>rustc +nightly -Z unstable-options --print target-spec-json --target $SOME_SIMILAR_TARGET</code>, using
+<a href="./compiler-support.html#built-in-target">a target that's already built into the compiler</a>.</p>
+<p>You can pretty much copy that output into your file. Start with a few modifications:</p>
+<ul>
+<li>Remove <code>"is-builtin": true</code></li>
+<li>Fill <code>llvm-target</code> with <a href="https://clang.llvm.org/docs/CrossCompilation.html#target-triple">the triple that LLVM expects</a></li>
+<li>Decide on a panicking strategy. A bare metal implementation will likely use
+<code>"panic-strategy": "abort"</code>. If you decide not to <code>abort</code> on panicking, unless you <a href="./smallest-no-std.html#eh_personality">tell Cargo
+to</a> per-project, you must define an <a href="./smallest-no-std.html#eh_personality">eh_personality</a> function.</li>
+<li>Configure atomics. Pick the first option that describes your target:
+<ul>
+<li>I have a single-core processor, no threads, <a href="https://github.com/rust-lang/rust/issues/58500#issuecomment-654341233"><strong>no interrupts</strong></a>, or any way for
+multiple things to be happening in parallel: if you are <strong>sure</strong> that is the case, such as WASM
+(for now), you may set <code>"singlethread": true</code>. This will configure LLVM to convert all atomic
+operations to use their single threaded counterparts. Incorrectly using this option may result
+in UB if using threads or interrupts.</li>
+<li>I have native atomic operations: set <code>max-atomic-width</code> to the biggest type in bits that your
+target can operate on atomically. For example, many ARM cores have 32-bit atomic operations. You
+may set <code>"max-atomic-width": 32</code> in that case.</li>
+<li>I have no native atomic operations, but I can emulate them myself: set <code>max-atomic-width</code> to the
+highest number of bits that you can emulate up to 128, then implement all of the
+<a href="http://llvm.org/docs/Atomics.html#libcalls-atomic">atomic</a> and <a href="http://llvm.org/docs/Atomics.html#libcalls-sync">sync</a> functions expected by LLVM as
+<code>#[no_mangle] unsafe extern "C"</code>. These functions have been standardized by GCC, so the <a href="https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html">GCC
+documentation</a> may have more notes. Missing functions will cause a linker error, while
+incorrectly implemented functions will possibly cause UB. For example, if you have a
+single-core, single-thread processor with interrupts, you can implement these functions to
+disable interrupts, perform the regular operation, and then re-enable them.</li>
+<li>I have no native atomic operations: you'll have to do some unsafe work to manually ensure
+synchronization in your code. You must set <code>"max-atomic-width": 0</code>.</li>
+</ul>
+</li>
+<li>Change the linker if integrating with an existing toolchain. For example, if you're using a
+toolchain that uses a custom build of GCC, set <code>"linker-flavor": "gcc"</code> and <code>linker</code> to the
+command name of your linker. If you require additional linker arguments, use <code>pre-link-args</code> and
+<code>post-link-args</code> as so:
+<pre><code class="language-json">"pre-link-args": {
+    "gcc": [
+        "-Wl,--as-needed",
+        "-Wl,-z,noexecstack",
+        "-m64"
+    ]
+},
+"post-link-args": {
+    "gcc": [
+        "-Wl,--allow-multiple-definition",
+        "-Wl,--start-group,-lc,-lm,-lgcc,-lstdc++,-lsupc++,--end-group"
+    ]
+}
+</code></pre>
+Ensure that the linker type is the key within <code>link-args</code>.</li>
+<li>Configure LLVM features. Run <code>llc -march=ARCH -mattr=help</code> where ARCH is the base architecture
+(not including the version in the case of ARM) to list the available features and their
+descriptions. <strong>If your target requires strict memory alignment access (e.g. <code>armv5te</code>), make sure
+that you enable <code>strict-align</code></strong>. To enable a feature, place a plus before it. Likewise, to
+disable a feature, place a minus before it. Features should be comma-separated like so:
+<code>"features": "+soft-float,+neon"</code>. Note that this may not be necessary if LLVM knows enough about
+your target based on the provided triple and CPU.</li>
+<li>Configure the CPU that LLVM uses if you know it. This will enable CPU-specific optimizations and
+features. At the top of the output of the command in the last step, there is a list of known CPUs.
+If you know that you will be targeting a specific CPU, you may set it in the <code>cpu</code> field in the
+JSON target file.</li>
+</ul>
+<h2 id="use-the-target-file"><a class="header" href="#use-the-target-file">Use the target file</a></h2>
+<p>Once you have a target specification file, you may refer to it by its path or by its name (i.e.
+excluding <code>.json</code>) if it is in the current directory or in <code>$RUST_TARGET_PATH</code>.</p>
+<p>Verify that it is readable by <code>rustc</code>:</p>
+<pre><code class="language-sh">❱ rustc --print cfg --target foo.json # or just foo if in the current directory
+debug_assertions
+target_arch="arm"
+target_endian="little"
+target_env=""
+target_feature="mclass"
+target_feature="v7"
+target_has_atomic="16"
+target_has_atomic="32"
+target_has_atomic="8"
+target_has_atomic="cas"
+target_has_atomic="ptr"
+target_os="none"
+target_pointer_width="32"
+target_vendor=""
+</code></pre>
+<p>Now, you finally get to use it! Many resources have been recommending <a href="https://github.com/japaric/xargo"><code>xargo</code></a> or <a href="https://github.com/rust-osdev/cargo-xbuild"><code>cargo-xbuild</code></a>.
+However, its successor, cargo's <code>build-std</code> feature, has received a lot of work recently and has
+quickly reached feature parity with the other options. As such, this guide will only cover that
+option.</p>
+<p>Start with a bare minimum <a href="./smallest-no-std.html"><code>no_std</code> program</a>. Now, run
+<code>cargo build -Z build-std=core --target foo.json</code>, again using the above rules about referencing the
+path. Hopefully, you should now have a binary in the target directory.</p>
+<p>You may optionally configure cargo to always use your target. See the recommendations at the end of
+the page about <a href="./smallest-no-std.html">the smallest <code>no_std</code> program</a>. However, you'll currently have to
+use the flag <code>-Z build-std=core</code> as that option is unstable.</p>
+<h3 id="build-additional-built-in-crates"><a class="header" href="#build-additional-built-in-crates">Build additional built-in crates</a></h3>
+<p>When using cargo's <code>build-std</code> feature, you can choose which crates to compile in. By default, when
+only passing <code>-Z build-std</code>, <code>std</code>, <code>core</code>, and <code>alloc</code> are compiled. However, you may want to
+exclude <code>std</code> when compiling for bare-metal. To do so, specify the crated you'd like after
+<code>build-std</code>. For example, to include <code>core</code> and <code>alloc</code>, pass <code>-Z build-std=core,alloc</code>.</p>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h2>
+<h3 id="language-item-required-but-not-found-eh_personality"><a class="header" href="#language-item-required-but-not-found-eh_personality">language item required, but not found: <code>eh_personality</code></a></h3>
+<p>Either add <code>"panic-strategy": "abort"</code> to your target file, or define an <a href="./smallest-no-std.html#eh_personality">eh_personality</a> function.
+Alternatively, <a href="./smallest-no-std.html#eh_personality">tell Cargo to ignore it</a>.</p>
+<h3 id="undefined-reference-to-__sync_val_compare_and_swap_"><a class="header" href="#undefined-reference-to-__sync_val_compare_and_swap_">undefined reference to <code>__sync_val_compare_and_swap_#</code></a></h3>
+<p>Rust thinks that your target has atomic instructions, but LLVM doesn't. Go back to the step about
+<a href="custom-target.html#fill-the-target-file">configuring atomics</a>. You will need to reduce the number in <code>max-atomic-width</code>.
+See <a href="https://github.com/rust-lang/rust/issues/58500">#58500</a> for more details.</p>
+<h3 id="could-not-find-sync-in-alloc"><a class="header" href="#could-not-find-sync-in-alloc">could not find <code>sync</code> in <code>alloc</code></a></h3>
+<p>Similar to the above case, Rust doesn't think that you have atomics. You must implement them
+yourself or <a href="custom-target.html#fill-the-target-file">tell Rust that you have atomic instructions</a>.</p>
+<h3 id="multiple-definition-of-__something"><a class="header" href="#multiple-definition-of-__something">multiple definition of <code>__(something)</code></a></h3>
+<p>You're likely linking your Rust program with code built from another language, and the other
+language includes compiler built-ins that Rust also creates. To fix this, you'll need to tell your
+linker to allow multiple definitions. If using gcc, you may add:</p>
+<pre><code class="language-json">"post-link-args": {
+    "gcc": [
+        "-Wl,--allow-multiple-definition"
+    ]
+}
+</code></pre>
+<h3 id="error-adding-symbols-file-format-not-recognized"><a class="header" href="#error-adding-symbols-file-format-not-recognized">error adding symbols: file format not recognized</a></h3>
+<p>Switch to cargo's <code>build-std</code> feature and update your compiler. This <a href="https://github.com/rust-lang/cargo/issues/8239">was a bug</a> introduced
+for a few compiler builds that tried to pass in internal Rust object to an external linker.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="guide-for-silicon-vendors-to-enable-rust-support-for-their-socs"><a class="header" href="#guide-for-silicon-vendors-to-enable-rust-support-for-their-socs">Guide for silicon vendors to enable Rust support for their SoCs</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Rust has emerged as a powerful and safety-focused programming language, gaining
+traction among embedded developers. Silicon vendors who wish to enable Rust
+support for their System-on-Chip (SoC) products can benefit from this trend by
+attracting a growing community of Rust developers.</p>
+<p>This guide aims to help silicon vendors enable Rust support, either
+independently or by empowering third-party developers. It outlines the
+essential resources, tasks, and priorities required to foster a robust Rust
+ecosystem around their System-on-Chip (SoC).</p>
+<p><strong>Note:</strong> For assistance with strategy in engaging with the community, we
+recommend reaching out to the Rust Embedded Working Group (REWG) leads. They
+can provide valuable insights and support to help you navigate the process
+effectively.</p>
+<h2 id="essential-resources"><a class="header" href="#essential-resources">Essential resources</a></h2>
+<h3 id="documentation"><a class="header" href="#documentation">Documentation</a></h3>
+<p>Detailed documentation is essential for effective development and debugging. It
+enables developers to comprehend the System-on-Chip (SoC), including its memory
+map, peripherals, interrupt handling, low-power modes, etc. Ensure that the
+documentation covers all hardware aspects comprehensively, from register-level
+details to system-level interactions. The documentation should be publicly
+available; in cases where public availability is not feasible, any
+non-disclosure agreement (NDA) must permit the publication of open-source code
+derived from it.</p>
+<h3 id="register-description-files"><a class="header" href="#register-description-files">Register description files</a></h3>
+<p>Register description files are used to generate Peripheral Access Crates
+(PACs). The most common format for these files is SVD
+(<a href="https://open-cmsis-pack.github.io/svd-spec">System View Description</a>). Rust
+developers have often encountered issues with SVD files, so it is crucial to
+provide clear contact information for reporting any discrepancies or problems.
+Up-to-date SVD files ensure that the community can collaborate effectively to
+resolve issues and improve the quality of the PACs.</p>
+<h3 id="flash-algorithms"><a class="header" href="#flash-algorithms">Flash Algorithms</a></h3>
+<p><a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/flashAlgorithm.html">Flash Algorithms</a>
+are integrated with debugging tools like <a href="https://probe.rs">probe-rs</a>. They
+facilitate and speed up firmware programming and debugging, streamlining
+development workflows. Providing well-supported FlashAlgos will enhance the
+integration with these tools and improve the overall developer experience.
+Flash Algorithms can be authored in Rust (see
+<a href="https://github.com/probe-rs/flash-algorithm-template">flash-algorithm-template</a>
+for an template to write one).</p>
+<h3 id="vendor-tooling"><a class="header" href="#vendor-tooling">Vendor tooling</a></h3>
+<p>Some System-on-Chip (SoC) devices require custom tools for generating images or
+flashing them onto the device. It is beneficial to provide these tools in an
+open-source manner, fostering community contributions and accelerating
+ecosystem growth. Open-sourcing vendor tooling enables third-party developers
+to extend and enhance the toolchain, ensuring improved compatibility with the
+broader Embedded Rust ecosystem.</p>
+<h3 id="contact-information"><a class="header" href="#contact-information">Contact information</a></h3>
+<p>Providing contact information is vital for addressing maintainer queries and
+issues related to register description files or other resources. The use of a
+public issue tracking system (like GitHub Issues) for reporting and tracking
+problems might help. Actively engage with the community through forums,
+discussions, and updates to build trust and collaboration.</p>
+<h2 id="maintaining-pac-and-hal-crates"><a class="header" href="#maintaining-pac-and-hal-crates">Maintaining PAC and HAL crates</a></h2>
+<p>Peripheral Access Crates (PACs) and Hardware Abstraction Layer (HAL) crates are
+at the core of enabling Rust support.</p>
+<h3 id="generate-and-maintain-pacs"><a class="header" href="#generate-and-maintain-pacs">Generate and maintain PACs</a></h3>
+<p>Multiple tools such as <a href="https://crates.io/crates/svd2rust">svd2rust</a>,
+<a href="https://github.com/embassy-rs/chiptool">chiptool</a>,
+<a href="https://github.com/imxrt-rs/imxrt-ral/tree/master/raltool">raltool</a>, and
+<a href="https://github.com/Infineon/svd2pac">svd2pac</a> automate the generation of PACs
+from register description files. Each tool has its strengths, and selecting the
+right one depends on the requirements and the complexity of the hardware.</p>
+<h3 id="develop-and-maintain-hal-crates"><a class="header" href="#develop-and-maintain-hal-crates">Develop and maintain HAL crates</a></h3>
+<p>Implement <a href="https://crates.io/crates/embedded-hal">embedded-hal</a>,
+<a href="https://crates.io/crates/embedded-hal-async">embedded-hal-async</a>, and
+<a href="https://crates.io/crates/embedded-io">embedded-io</a> traits in your HAL crates.
+Adhering to these traits ensures compatibility across the Embedded Rust
+ecosystem, enhancing interoperability. It is an essential goal that HALs use
+Rust code rather than wrapping existing C code. An incremental porting
+strategy, where all core functionality is implemented in Rust, but C with Rust
+bindings is used for complex drivers, is acceptable, allowing for gradual
+adoption and community contributions.</p>
+<p>Start with essential peripherals (clock, timer, GPIO) and expand progressively
+(I2C, SPI, UART, etc.) based on community feedback. Release early and often to
+engage the community and gather valuable insights for further development.</p>
+<h3 id="common-recommendations"><a class="header" href="#common-recommendations">Common recommendations</a></h3>
+<ul>
+<li>Ensure that crates are compatible with <code>no_std</code> environments, which are
+common in embedded systems without an operating system. Functionality that
+needs <code>alloc</code> or <code>std</code> can be included when gated with Cargo
+<a href="https://doc.rust-lang.org/cargo/reference/features.html">features</a>.</li>
+<li>Make your crates available on <a href="https://crates.io">crates.io</a> to maximize
+visibility and ease of use for developers.</li>
+<li>Use <a href="https://semver.org">semantic versioning</a> to maintain consistency and
+predictability in your releases.</li>
+<li>Prefer licenses like Apache 2.0 and MIT for their permissive nature, which
+encourages broader adoption and collaboration.</li>
+</ul>
+<h3 id="issue-tracking"><a class="header" href="#issue-tracking">Issue tracking</a></h3>
+<p>Effective issue tracking is crucial for maintaining a healthy and collaborative
+ecosystem. Discuss triaging, labeling, and community involvement in issue
+resolution. Implement transparent processes for:</p>
+<ul>
+<li>Triage and prioritize issues based on severity and impact.</li>
+<li>Use labels to categorize issues (e.g., bugs, feature requests).</li>
+<li>Encourage community members to contribute to resolving issues by providing
+feedback or submitting pull requests (PRs).</li>
+</ul>
+<h3 id="facilitate-debugging-and-testing"><a class="header" href="#facilitate-debugging-and-testing">Facilitate debugging and testing</a></h3>
+<p>The Embedded Rust ecosystem offers various tools used for debugging
+and testing, with <a href="https://probe.rs">probe-rs</a> being one of the most widely
+used. <a href="https://probe.rs">probe-rs</a> supports a wide range
+of target architectures, debug interfaces, and debug probe protocols.
+Combined with debug-based facilities like
+<a href="https://crates.io/crates/defmt-rtt">defmt-rtt</a>, which provide logging
+capabilities for embedded systems, these tools form a robust foundation for
+development.</p>
+<p>Thorough testing ensures hardware-software reliability, and leveraging these
+tools can significantly enhance development workflows.</p>
+<h2 id="nice-to-have-features-for-enhanced-ecosystem-support"><a class="header" href="#nice-to-have-features-for-enhanced-ecosystem-support">Nice-to-have features for enhanced ecosystem support</a></h2>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<p>Including some basic examples as part of the HAL is essential for helping
+developers get started. These examples should demonstrate key functionalities,
+such as initializing peripherals or handling interrupts. They serve as
+practical starting points and learning aids.</p>
+<h3 id="bsp-board-support-package-crates"><a class="header" href="#bsp-board-support-package-crates">BSP (Board Support Package) crates</a></h3>
+<p>BSP crates are relevant when you need to provide board-specific configurations
+and initializations. Unlike HALs, which focus on hardware abstraction, BSPs
+handle the integration of multiple components for a specific board. Separation
+in BSP and HAL crates offers a layered approach, making it easier for developers
+to build applications targeting a particular hardware board.</p>
+<h3 id="project-templates"><a class="header" href="#project-templates">Project templates</a></h3>
+<p>Project templates are boilerplate code structures that provide a starting point
+for new projects. They include prevalent configurations, dependencies, and
+setup steps, saving developers time and reducing the learning curve. Examples
+of project templates include bare-metal (using the HAL without any framework),
+Embassy, RTIC, and others.</p>
+<h3 id="integration-with-popular-ides-and-tools"><a class="header" href="#integration-with-popular-ides-and-tools">Integration with popular IDEs and tools</a></h3>
+<p>Offer guides on setting up development environments for Embedded Rust projects
+with popular tools such as:</p>
+<ul>
+<li><a href="https://rust-analyzer.github.io">rust-analyzer</a>: for Rust syntax
+highlighting and error checking.</li>
+<li><a href="https://probe.rs">probe-rs</a>: for flashing and debugging firmware.</li>
+<li><a href="https://crates.io/crates/defmt">defmt</a>: a logging framework optimized for
+embedded systems, including a test harness called
+<a href="https://crates.io/crates/defmt-test">defmt-test</a>.</li>
+</ul>
+<p>Providing setup instructions for these tools will help developers integrate
+them into their workflows, enhancing productivity and collaboration.</p>
+<h2 id="suggested-flow-for-adding-soc-support"><a class="header" href="#suggested-flow-for-adding-soc-support">Suggested flow for adding SoC Support</a></h2>
+<ul>
+<li>A preliminary requirement of this flow is that the Rust toolchain includes
+a <a href="https://doc.rust-lang.org/rustc/platform-support.html">target</a> that
+matches the System-on-Chip (SoC). If this not the case the solution can be as
+simple as adding a
+<a href="https://doc.rust-lang.org/rustc/targets/custom.html">custom target</a> or as
+difficult as adding support for the underlying architecture to
+<a href="https://llvm.org">LLVM</a>.</li>
+<li>Before starting from scratch, check if any existing community efforts for
+already exist (e.g. checking on
+<a href="https://github.com/rust-embedded/awesome-embedded-rust">awesome-embedded-rust</a>
+or joining the
+<a href="https://matrix.to/#/#rust-embedded:matrix.org">Rust Embedded Matrix room</a>).
+This could save significant development time.</li>
+<li>Ensure that your target is supported by <a href="https://probe.rs">probe-rs</a>. The
+ability to debug using SWD or JTAG is highly beneficial. Support for flashing
+programming can be added with a Flash Algorithm (e.g. from a CMSIS-Pack or
+<a href="https://github.com/probe-rs/flash-algorithm-template">writing one in Rust</a>).</li>
+<li>Generate Peripheral Access Crates (PACs) from register description files,
+with SVD (System View Description) being the most common and preferred
+format. Alternatives include extracting the register descriptions from PDF
+datasheets or C header files, but this can be much more labor-intensive.</li>
+<li>Create a minimal project containing the PAC and/or an empty Hardware
+Abstraction Layer (HAL). The goal is to get a minimal working binary that
+either blinks an LED or sends messages through
+<a href="https://crates.io/crates/defmt-rtt">defmt-rtt</a> using only the PAC crate or
+with a minimal HAL. This will require a linker script and exercise the
+availability to flash and debug programs. Additional crates for core
+registers and peripheral, or startup code and interrupt handling will also be
+required (see <a href="https://github.com/rust-embedded/cortex-m">Cortex-M</a> or
+<a href="https://github.com/rust-embedded/riscv">RISC-V</a>).</li>
+<li>Add core functionality in HAL: clocks, timers, interrupts. Verify the
+accuracy of timers and interrupts with external tools like a logic analyzer
+or an oscilloscope.</li>
+<li>Progressively add drivers for other peripherals (GPIO, I2C, SPI, UART, etc.)
+implementing standard Rust Embedded traits
+(<a href="https://crates.io/crates/embedded-hal">embedded-hal</a>,
+<a href="https://crates.io/crates/embedded-hal-async">embedded-hal-async</a>,
+<a href="https://crates.io/crates/embedded-io">embedded-io</a>).</li>
+<li>Release early and often in the beginning, engage with the community to get
+feedback.</li>
+</ul>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Enabling Rust support for your SoC opens the door to a vibrant community of
+developers who value safety, performance, and reliability. By providing
+essential resources, maintaining high-quality PACs and HAL crates, and
+fostering a supportive ecosystem, you empower both internal teams and
+third-party developers to unlock the full potential of your hardware.</p>
+<p>As the Rust embedded ecosystem continues to grow, embracing these practices
+positions your company at the forefront of this movement, attracting developers
+passionate about building robust and innovative systems. Encourage ongoing
+engagement with the Rust community to stay updated on best practices and tools,
+ensuring your System-on-Chip (SoC) remains a preferred choice for Rust
+developers.</p>
+<p>By following this guide, you can create a comprehensive and supportive
+environment that not only enables Rust support but also nurtures a thriving
+developer ecosystem around your products.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>

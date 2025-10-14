@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Why don&#x27;t we initialize .data and .bss using Rust - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="why-dont-we-initialize-data-and-bss-using-rust"><a class="header" href="#why-dont-we-initialize-data-and-bss-using-rust">Why don't we initialize <code>.data</code> and <code>.bss</code> using Rust</a></h1>
+<p>Earlier versions of this book initialized the <code>.data</code> and <code>.bss</code> sections using Rust code.
+This has proven to have questionable soundness, and the recommended method of
+performing the initialization of these sections nowadays relies on assembly.</p>
+<p>This chapter discusses the reasons that led to the decision of various crates like
+<a href="https://crates.io/crates/cortex-m-rt">cortex-m-rt</a> and <a href="https://crates.io/crates/riscv-rt">riscv-rt</a>
+to migrate to performing assembly initialization of these sections. There are
+<a href="https://github.com/rust-embedded/cortex-m-rt/issues/300">a</a>
+<a href="https://github.com/rust-embedded/embedonomicon/issues/69">decent</a>
+<a href="https://rust-lang.zulipchat.com/#narrow/stream/136281-t-lang.2Fwg-unsafe-code-guidelines/topic/The.20least.20incorrect.20init.20code.20.3A)">number</a>
+<a href="https://github.com/rust-lang/unsafe-code-guidelines/issues/259">of</a>
+<a href="https://github.com/rust-embedded/wg/issues/771">threads</a>
+where the soundness of such code has been questioned. We will summarize
+them in this chapter.</p>
+<p>The original code used for global data initialization in Rust in this book is listed
+as follows:</p>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+
+use core::panic::PanicInfo;
+use core::ptr;
+
+#[unsafe(no_mangle)]
+#[allow(static_mut_refs)]
+pub unsafe extern "C" fn Reset() -&gt; ! {
+    // NEW!
+    // Initialize RAM
+    unsafe extern "C" {
+        static mut _sbss: u8;
+        static mut _ebss: u8;
+
+        static mut _sdata: u8;
+        static mut _edata: u8;
+        static _sidata: u8;
+    }
+
+    let count = unsafe { &amp;_ebss as *const u8 as usize - &amp;_sbss as *const u8 as usize };
+    unsafe { ptr::write_bytes(&amp;mut _sbss as *mut u8, 0, count) };
+
+    let count = unsafe { &amp;_edata as *const u8 as usize - &amp;_sdata as *const u8 as usize };
+    unsafe { ptr::copy_nonoverlapping(&amp;_sidata as *const u8, &amp;mut _sdata as *mut u8, count) };
+
+    // Call user entry point
+    unsafe extern "Rust" {
+        safe fn main() -&gt; !;
+    }
+
+    main()
+}</code></pre></pre>
+<p>Five <code>extern "C"</code> variables are declared to reference specific memory locations.
+Our linker script defines each symbol, so we do not need to worry about their
+exact placement.</p>
+<h2 id="pointer-proventace"><a class="header" href="#pointer-proventace">Pointer proventace</a></h2>
+<p>To initialize the <code>.bss</code> section, we take the address of <code>_sbss</code> <code>u8</code> variable,
+which points to the start of the <code>.bss</code> section. Then we write an arbitrary
+amount of data to its location. <code>_sbss</code> is declared as an <code>u8</code> variables, and
+the pointer provenance rules only allow us to write an amount of data that fits
+within the allocation of our <code>_sbss</code> variable. Despite that, we are writing past
+the single byte (as far as Rust is aware, a single byte is allocated at this
+address) up until we hit the location of the <code>_ebss</code>.</p>
+<p>There is a separate issue in which we actually have an <code>_ebss</code> variable that is
+pointing one byte outside of the <code>.bss</code> section. In specific implementations,
+accessing this byte might not even be possible if the <code>.bss</code> section exhausted
+the available memory. Ideally <code>_ebss</code> needs to be declared as a ZST. And by
+extension, because the <code>.bss</code> section can be empty, <code>_sbss</code> should also be a
+ZST, because in this case <code>_sbss</code> would also fall outside of the region reserved
+for the <code>.bss</code>.</p>
+<h2 id="aliasing"><a class="header" href="#aliasing">Aliasing</a></h2>
+<p>Another potential problem with the code above is aliasing. Consider our linker
+script.</p>
+<pre><code class="language-text">  .bss :
+  {
+    _sbss = .;
+    *(.bss .bss.*);
+    _ebss = .;
+  } &gt; RAM
+
+  .data : AT(ADDR(.rodata) + SIZEOF(.rodata))
+  {
+    _sdata = .;
+    *(.data .data.*);
+    _edata = .;
+  } &gt; RAM
+</code></pre>
+<p>The following situations can occur:</p>
+<ul>
+<li><code>_sbss</code> might be located at the same address as the first variable in the <code>.bss</code>
+section, assuming that the section is not empty.</li>
+<li><code>_ebss</code> will be located at the same address as <code>_sdata</code>, and by extension, it
+will also be located at the same address as the first variable in the <code>.data</code>
+section.</li>
+<li>If the <code>.bss</code> section is empty, both <code>_sbss</code> and <code>_ebss</code> will alias each other.</li>
+<li>If the <code>.data</code> section is empty, both <code>_sdata</code> and <code>_edata</code> will alias each other.</li>
+</ul>
+<p>Rust does not allow to have more than one variable to be located at the same address
+(with ZSTs being a key exception). But even if it did, we are using these variables
+to write the whole global memory area, which effectively is mutably aliasing all
+global data defined in the program.</p>
+<h2 id="abstract-machine-initialization"><a class="header" href="#abstract-machine-initialization">Abstract machine initialization</a></h2>
+<p>Another question is whether it is safe to enter any Rust code before the Rust
+abstract machine has been fully initialized. Can we rely on Rust not using any
+of the global memory while it is not yet initialized? The answer to this question
+is not clear (or does not seem clear to the author of the section at the time of
+this writing).</p>
+<h2 id="more-potential-provenance-issues"><a class="header" href="#more-potential-provenance-issues">More potential provenance issues</a></h2>
+<p>A clever reader might have seen how we compute the offset between <code>_ebss</code> and <code>_sbss</code> and thought,
+couldn't we instad use the <a href="https://doc.rust-lang.org/std/primitive.pointer.html#method.offset_from"><code>offset_from</code></a>
+method of a pointer?</p>
+<p>The problem with this approach, however, is that, as we mentioned above, both <code>_ebss</code>
+and <code>_sbss</code> belong to different allocations, so they do not share the same pointer
+provenance. This is true even if they both are aliased and happen to fall at the
+same address (i.e. when the <code>.bss</code> section is empty).</p>
+<p>Running Miri on this <a href="https://play.rust-lang.org/?version=stable&amp;mode=release&amp;edition=2024&amp;gist=3225a585752704d9c58b1842e0fc5307">Rust Playground Snippet</a>
+shows the undefined behavior.</p>
+<h2 id="ok-but-it-works-doesnt-it"><a class="header" href="#ok-but-it-works-doesnt-it">Ok, but it works, doesn't it?</a></h2>
+<p>Yes. While the code provided at the beginning of this chapter does produce the
+right behavior as of Rust 1.89, the problem is that <strong>we cannot rely on this behavior
+being preserved in future releases</strong>, or even in the optimizer doing something
+funky in the future.</p>
+<p>That is why, overall, the recommendation of this books is to <strong>not</strong> perform the initialization
+using Rust code for this purpose.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="main.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="exceptions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="main.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="exceptions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Logging with symbols - The Embedonomicon</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Embedonomicon</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-embedded/embedonomicon" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="logging-with-symbols"><a class="header" href="#logging-with-symbols">Logging with symbols</a></h1>
+<p>This section will show you how to utilize symbols and the ELF format to achieve
+super cheap logging.</p>
+<h2 id="arbitrary-symbols"><a class="header" href="#arbitrary-symbols">Arbitrary symbols</a></h2>
+<p>Whenever we needed a stable symbol interface between crates we have mainly used
+the <code>no_mangle</code> attribute and sometimes the <code>export_name</code> attribute. The
+<code>export_name</code> attribute takes a string which becomes the name of the symbol
+whereas <code>#[unsafe(no_mangle)]</code> is basically sugar for <code>#[unsafe(export_name = &lt;item-name&gt;)]</code>.</p>
+<p>Turns out we are not limited to single word names; we can use arbitrary strings,
+e.g. sentences, as the argument of the <code>export_name</code> attribute. As least when
+the output format is ELF anything that doesn't contain a null byte is fine.
+This is generally true when using the gnu linker. However, there are some <a href="https://github.com/knurling-rs/defmt/issues/979#issuecomment-3133721969">known
+limitations</a>
+with the macOS and Windows linkers.</p>
+<p>Let's check that out:</p>
+<pre><code class="language-console">$ cargo new --lib foo
+
+$ cat foo/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[unsafe(export_name = "Hello, world!")]
+#[used]
+static A: u8 = 0;
+
+#[unsafe(export_name = "こんにちは")]
+#[used]
+static B: u8 = 0;
+<span class="boring">}</span></code></pre></pre>
+<pre><code class="language-console">$ ( cd foo &amp;&amp; cargo nm --lib )
+foo-d26a39c34b4e80ce.3lnzqy0jbpxj4pld.rcgu.o:
+0000000000000000 r Hello, world!
+0000000000000000 V __rustc_debug_gdb_scripts_section__
+0000000000000000 r こんにちは
+</code></pre>
+<p>Can you see where this is going?</p>
+<h2 id="encoding"><a class="header" href="#encoding">Encoding</a></h2>
+<p>Here's what we'll do: we'll create one <code>static</code> variable per log message but
+instead of storing the messages <em>in</em> the variables we'll store the messages in
+the variables' <em>symbol names</em>. What we'll log then will not be the contents of
+the <code>static</code> variables but their addresses.</p>
+<p>As long as the <code>static</code> variables are not zero sized each one will have a
+different address. What we're doing here is effectively encoding each message
+into a unique identifier, which happens to be the variable address. Some part of
+the log system will have to decode this ID back into the message.</p>
+<p>Let's write some code to illustrate the idea.</p>
+<p>In this example we'll need some way to do I/O so we'll use the
+<a href="https://crates.io/crates/cortex-m-semihosting"><code>cortex-m-semihosting</code></a> crate for that. Semihosting is a technique for having a
+target device borrow the host I/O capabilities; the host here usually refers to
+the machine that's debugging the target device. In our case, QEMU supports
+semihosting out of the box so there's no need for a debugger. On a real device
+you'll have other ways to do I/O like a serial port; we use semihosting in this
+case because it's the easiest way to do I/O on QEMU.</p>
+<p>Here's the code</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use core::fmt::Write;
+use cortex_m_semihosting::{debug, hio};
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let mut hstdout = hio::hstdout().unwrap();
+
+    #[unsafe(export_name = "Hello, world!")]
+    static A: u8 = 0;
+
+    let _ = writeln!(hstdout, "{:#x}", &amp;A as *const u8 as usize);
+
+    #[unsafe(export_name = "Goodbye")]
+    static B: u8 = 0;
+
+    let _ = writeln!(hstdout, "{:#x}", &amp;B as *const u8 as usize);
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}</code></pre></pre>
+<p>We also make use of the <code>debug::exit</code> API to have the program terminate the QEMU
+process. This is a convenience so we don't have to manually terminate the QEMU
+process.</p>
+<p>And here's the <code>dependencies</code> section of the Cargo.toml:</p>
+<pre><code class="language-toml">[dependencies]
+cortex-m-semihosting = "0.3.1"
+rt = { path = "../rt" }
+</code></pre>
+<p>Now we can build the program</p>
+<pre><code class="language-console">$ cargo build
+</code></pre>
+<p>To run it we'll have to add the <code>--semihosting-config</code> flag to our QEMU
+invocation:</p>
+<pre><code class="language-console">$ qemu-system-arm \
+      -cpu cortex-m3 \
+      -machine lm3s6965evb \
+      -nographic \
+      -semihosting-config enable=on,target=native \
+      -kernel target/thumbv7m-none-eabi/debug/app
+</code></pre>
+<pre><code class="language-text">0x1fe0
+0x1fe1
+</code></pre>
+<blockquote>
+<p><strong>NOTE</strong>: These addresses may not be the ones you get locally because the
+addresses of <code>static</code> variables are not guaranteed to remain the same when the
+toolchain is changed (e.g. optimizations may have improved).</p>
+</blockquote>
+<p>Now we have two addresses printed to the console.</p>
+<h2 id="decoding"><a class="header" href="#decoding">Decoding</a></h2>
+<p>How do we convert these addresses into strings? The answer is in the symbol
+table of the ELF file.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.rodata\s*0*1\b'
+</code></pre>
+<pre><code class="language-text">00001fe1 g       .rodata		 00000001 Goodbye
+00001fe0 g       .rodata		 00000001 Hello, world!
+$ # first column is the symbol address; last column is the symbol name
+</code></pre>
+<p><code>objdump -t</code> prints the symbol table. This table contains <em>all</em> the symbols but
+we are only looking for the ones in the <code>.rodata</code> section and whose size is one
+byte (our variables have type <code>u8</code>).</p>
+<p>It's important to note that the addresses of the symbols will likely change when
+optimizing the program. Let's check that.</p>
+<blockquote>
+<p><strong>PROTIP</strong> You can set <code>target.thumbv7m-none-eabi.runner</code> to the long QEMU
+command from before (<code>qemu-system-arm -cpu ... -kernel ...</code>) in the Cargo
+configuration file (<code>.cargo/config.toml</code>) to have <code>cargo run</code> use that <em>runner</em> to
+execute the output binary.</p>
+</blockquote>
+<pre><code class="language-console">$ head -n2 .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[target.thumbv7m-none-eabi]
+runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
+</code></pre>
+<pre><code class="language-console">$ cargo run --release
+     Running `qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7m-none-eabi/release/app`
+</code></pre>
+<pre><code class="language-text">0xb9c
+0xb9d
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app --release -- -t | grep '\.rodata\s*0*1\b'
+</code></pre>
+<pre><code class="language-text">00000b9d g     O .rodata	00000001 Goodbye
+00000b9c g     O .rodata	00000001 Hello, world!
+</code></pre>
+<p>So make sure to always look for the strings in the ELF file you executed.</p>
+<p>Of course, the process of looking up the strings in the ELF file can be automated
+using a tool that parses the symbol table (<code>.symtab</code> section) contained in the
+ELF file. Implementing such tool is out of scope for this book and it's left as
+an exercise for the reader.</p>
+<h2 id="making-it-zero-cost"><a class="header" href="#making-it-zero-cost">Making it zero cost</a></h2>
+<p>Can we do better? Yes, we can!</p>
+<p>The current implementation places the <code>static</code> variables in <code>.rodata</code>, which
+means they occupy space in flash even though we never use their contents. Using
+a little bit of linker script magic we can make them occupy <em>zero</em> space in
+flash.</p>
+<pre><code class="language-console">$ cat log.x
+</code></pre>
+<pre><code class="language-text">SECTIONS
+{
+  .log 0 (INFO) : {
+    *(.log);
+  }
+}
+</code></pre>
+<p>We'll place the <code>static</code> variables in this new output <code>.log</code> section. This
+linker script will collect all the symbols in the <code>.log</code> sections of input
+object files and put them in an output <code>.log</code> section. We have seen this pattern
+in the <a href="memory-layout.html">Memory layout</a> chapter.</p>
+<p>The new bit here is the <code>(INFO)</code> part; this tells the linker that this section
+is a non-allocatable section. Non-allocatable sections are kept in the ELF
+binary as metadata but they are not loaded onto the target device.</p>
+<p>We also specified the start address of this output section: the <code>0</code> in <code>.log 0 (INFO)</code>.</p>
+<p>The other improvement we can do is switch from formatted I/O (<code>fmt::Write</code>) to
+binary I/O, sending the addresses to the host as bytes rather than as strings.</p>
+<p>Binary serialization can be hard but we'll keep things super simple by
+serializing each address as a single byte. With this approach we don't have to
+worry about endianness or framing. The downside of this format is that a single
+byte can only represent up to 256 different addresses.</p>
+<p>Let's make those changes:</p>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_semihosting::{debug, hio};
+
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let mut hstdout = hio::hstdout().unwrap();
+
+    #[unsafe(export_name = "Hello, world!")]
+    #[unsafe(link_section = ".log")] // &lt;- NEW!
+    static A: u8 = 0;
+
+    let address = &amp;A as *const u8 as usize as u8;
+    hstdout.write_all(&amp;[address]).unwrap(); // &lt;- CHANGED!
+
+    #[unsafe(export_name = "Goodbye")]
+    #[unsafe(link_section = ".log")] // &lt;- NEW!
+    static B: u8 = 0;
+
+    let address = &amp;B as *const u8 as usize as u8;
+    hstdout.write_all(&amp;[address]).unwrap(); // &lt;- CHANGED!
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}</code></pre></pre>
+<p>Before you run this you'll have to append <code>-Tlog.x</code> to the arguments passed to
+the linker. That can be done in the Cargo configuration file.</p>
+<pre><code class="language-console">$ cat .cargo/config.toml
+</code></pre>
+<pre><code class="language-toml">[target.thumbv7m-none-eabi]
+runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semihosting-config enable=on,target=native -kernel"
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+  "-C", "link-arg=-Tlog.x", # &lt;- NEW!
+]
+
+[build]
+target = "thumbv7m-none-eabi"
+</code></pre>
+<p>Now you can run it! Since the output now has a binary format we'll pipe it
+through the <code>xxd</code> command to reformat it as a hexadecimal string.</p>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0001
+</code></pre>
+<p>The addresses are <code>0x00</code> and <code>0x01</code>. Let's now look at the symbol table.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000001 g     O .log	00000001 Goodbye
+00000000 g     O .log	00000001 Hello, world!
+</code></pre>
+<p>There are our strings. You'll notice that their addresses now start at zero;
+this is because we set a start address for the output <code>.log</code> section.</p>
+<p>Each variable is 1 byte in size because we are using <code>u8</code> as their type. If we
+used something like <code>u16</code> then all address would be even and we would not be
+able to efficiently use all the address space (<code>0...255</code>).</p>
+<h2 id="packaging-it-up"><a class="header" href="#packaging-it-up">Packaging it up</a></h2>
+<p>You've noticed that the steps to log a string are always the same so we can
+refactor them into a macro that lives in its own crate. Also, we can make the
+logging library more reusable by abstracting the I/O part behind a trait.</p>
+<pre><code class="language-console">$ cargo new --lib log
+
+$ cat log/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>pub trait Log {
+    type Error;
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), Self::Error&gt;;
+}
+
+#[macro_export]
+macro_rules! log {
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log")]
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Given that this library depends on the <code>.log</code> section it should be its
+responsibility to provide the <code>log.x</code> linker script so let's make that happen.</p>
+<pre><code class="language-console">$ mv log.x ../log/
+</code></pre>
+<pre><code class="language-console">$ cat ../log/build.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">use std::{env, error::Error, fs::File, io::Write, path::PathBuf};
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    // Put the linker script somewhere the linker can find it
+    let out = PathBuf::from(env::var("OUT_DIR")?);
+
+    File::create(out.join("log.x"))?.write_all(include_bytes!("log.x"))?;
+
+    println!("cargo:rustc-link-search={}", out.display());
+
+    Ok(())
+}</code></pre></pre>
+<p>Now we can refactor our application to use the <code>log!</code> macro:</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_semihosting::{
+    debug,
+    hio::{self, HStdout},
+};
+
+use log::{log, Log};
+use rt::entry;
+
+struct Logger {
+    hstdout: HStdout,
+}
+
+impl Log for Logger {
+    type Error = ();
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), ()&gt; {
+        self.hstdout.write_all(&amp;[address])
+    }
+}
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let hstdout = hio::hstdout().unwrap();
+    let mut logger = Logger { hstdout };
+
+    let _ = log!(logger, "Hello, world!");
+
+    let _ = log!(logger, "Goodbye");
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}</code></pre></pre>
+<p>Don't forget to update the <code>Cargo.toml</code> file to depend on the new <code>log</code> crate.</p>
+<pre><code class="language-console">$ tail -n4 Cargo.toml
+</code></pre>
+<pre><code class="language-toml">[dependencies]
+cortex-m-semihosting = "0.3.1"
+log = { path = "../log" }
+rt = { path = "../rt" }
+</code></pre>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0001
+</code></pre>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000001 g     O .log	00000001 Goodbye
+00000000 g     O .log	00000001 Hello, world!
+</code></pre>
+<p>Same output as before!</p>
+<h2 id="bonus-multiple-log-levels"><a class="header" href="#bonus-multiple-log-levels">Bonus: Multiple log levels</a></h2>
+<p>Many logging frameworks provide ways to log messages at different <em>log levels</em>.
+These log levels convey the severity of the message: "this is an error", "this
+is just a warning", etc. These log levels can be used to filter out unimportant
+messages when searching for e.g. error messages.</p>
+<p>We can extend our logging library to support log levels without increasing its
+footprint. Here's how we'll do that:</p>
+<p>We have a flat address space for the messages: from <code>0</code> to <code>255</code> (inclusive). To
+keep things simple let's say we only want to differentiate between error
+messages and warning messages. We can place all the error messages at the
+beginning of the address space, and all the warning messages <em>after</em> the error
+messages. If the decoder knows the address of the first warning message then it
+can classify the messages. This idea can be extended to support more than two
+log levels.</p>
+<p>Let's test the idea by replacing the <code>log</code> macro with two new macros: <code>error!</code>
+and <code>warn!</code>.</p>
+<pre><code class="language-console">$ cat ../log/src/lib.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>#![no_std]
+
+<span class="boring">fn main() {
+</span>pub trait Log {
+    type Error;
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), Self::Error&gt;;
+}
+
+/// Logs messages at the ERROR log level
+#[macro_export]
+macro_rules! error {
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log.error")] // &lt;- CHANGED!
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+
+/// Logs messages at the WARNING log level
+#[macro_export]
+macro_rules! warn {
+    ($logger:expr, $string:expr) =&gt; {{
+        #[unsafe(export_name = $string)]
+        #[unsafe(link_section = ".log.warning")] // &lt;- CHANGED!
+        static SYMBOL: u8 = 0;
+
+        $crate::Log::log(&amp;mut $logger, &amp;SYMBOL as *const u8 as usize as u8)
+    }};
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We distinguish errors from warnings by placing the messages in different link
+sections.</p>
+<p>The next thing we have to do is update the linker script to place error messages
+before the warning messages.</p>
+<pre><code class="language-console">$ cat ../log/log.x
+</code></pre>
+<pre><code class="language-text">SECTIONS
+{
+  .log 0 (INFO) : {
+    *(.log.error);
+    __log_warning_start__ = .;
+    *(.log.warning);
+  }
+}
+</code></pre>
+<p>We also give a name, <code>__log_warning_start__</code>, to the boundary between the errors
+and the warnings. The address of this symbol will be the address of the first
+warning message.</p>
+<p>We can now update the application to make use of these new macros.</p>
+<pre><code class="language-console">$ cat src/main.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust">#![no_main]
+#![no_std]
+
+use cortex_m_semihosting::{
+    debug,
+    hio::{self, HStdout},
+};
+
+use log::{error, warn, Log};
+use rt::entry;
+
+entry!(main);
+
+fn main() -&gt; ! {
+    let hstdout = hio::hstdout().unwrap();
+    let mut logger = Logger { hstdout };
+
+    let _ = warn!(logger, "Hello, world!"); // &lt;- CHANGED!
+
+    let _ = error!(logger, "Goodbye"); // &lt;- CHANGED!
+
+    debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}
+
+struct Logger {
+    hstdout: HStdout,
+}
+
+impl Log for Logger {
+    type Error = ();
+
+    fn log(&amp;mut self, address: u8) -&gt; Result&lt;(), ()&gt; {
+        self.hstdout.write_all(&amp;[address])
+    }
+}</code></pre></pre>
+<p>The output won't change much:</p>
+<pre><code class="language-console">$ cargo run | xxd -p
+</code></pre>
+<pre><code class="language-text">0100
+</code></pre>
+<p>We still get two bytes in the output but the error is given the address 0 and
+the warning is given the address 1 even though the warning was logged first.</p>
+<p>Now look at the symbol table.</p>
+<pre><code class="language-console">$ cargo objdump --bin app -- -t | grep '\.log'
+</code></pre>
+<pre><code class="language-text">00000000 g     O .log	00000001 Goodbye
+00000001 g     O .log	00000001 Hello, world!
+00000001 g       .log	00000000 __log_warning_start__
+</code></pre>
+<p>There's now an extra symbol, <code>__log_warning_start__</code>, in the <code>.log</code> section.
+The address of this symbol is the address of the first warning message.
+Symbols with addresses lower than this value are errors, and the rest of symbols
+are warnings.</p>
+<p>With an appropriate decoder you could get the following human readable output
+from all this information:</p>
+<pre><code class="language-text">WARNING Hello, world!
+ERROR Goodbye
+</code></pre>
+<hr />
+<p>If you liked this section check out the <a href="https://crates.io/crates/stlog"><code>stlog</code></a> logging framework which is a
+complete implementation of this idea.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="asm.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="singleton.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="asm.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="singleton.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
